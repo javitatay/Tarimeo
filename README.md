@@ -8,8 +8,8 @@
 
 Una herramienta visual, rápida y sin complicaciones para planificar el montaje de tarimas modulares por días y escenarios. Funciona sin conexión.
 
-[![Descargar APK](https://img.shields.io/badge/⬇️_Descargar_app_Android-APK-c89838?style=for-the-badge)](https://github.com/javitatay/Tarimeo/releases/latest)
-[![Abrir en el navegador](https://img.shields.io/badge/🌐_Abrir_en_el_navegador-141210?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
+[![Instalar Tarimeo](https://img.shields.io/badge/📲_Instalar_Tarimeo-c89838?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
+[![Descargar APK](https://img.shields.io/badge/⬇️_Descargar_APK_(Android)-141210?style=for-the-badge)](https://github.com/javitatay/Tarimeo/releases/latest)
 
 </div>
 
@@ -31,24 +31,34 @@ Tarimeo te ayuda a planificar dónde va cada tarima sobre el plano de un escenar
 
 ---
 
-## 📲 Cómo instalar la app en Android
+## 📲 Cómo instalar Tarimeo (recomendado)
 
-1. Pulsa el botón **⬇️ Descargar app Android** de arriba (o ve a la sección **[Releases](https://github.com/javitatay/Tarimeo/releases/latest)**).
-2. Descarga el archivo **`Tarimeo.apk`** en tu móvil.
-3. Ábrelo. Android te avisará de que procede de un "origen desconocido": es normal en apps que no vienen de Google Play. Concede el permiso para instalar.
-4. ¡Listo! Tarimeo aparecerá en tu lista de apps con su icono.
+La forma más sencilla y con mejor experiencia es instalarla directamente desde el navegador. Se ve **a pantalla completa, como una app normal**, y se actualiza sola.
 
-> **¿Por qué el aviso de "origen desconocido"?** Simplemente porque la app no se distribuye a través de Google Play, sino directamente desde aquí. El aviso es un paso de seguridad estándar de Android, no indica ningún problema.
+**En Android (Chrome):**
+1. Abre **[javitatay.github.io/Tarimeo](https://javitatay.github.io/Tarimeo/)** en Chrome.
+2. Toca el menú de los tres puntos (arriba a la derecha).
+3. Pulsa **"Añadir a pantalla de inicio"** (o "Instalar aplicación").
+4. Confirma. El icono de Tarimeo aparecerá entre tus apps.
+
+**En iPhone / iPad (Safari):**
+1. Abre **[javitatay.github.io/Tarimeo](https://javitatay.github.io/Tarimeo/)** en Safari.
+2. Toca el botón de **compartir** (el cuadrado con la flecha).
+3. Pulsa **"Añadir a pantalla de inicio"**.
+
+Al abrirla desde el icono funciona como una app: pantalla completa, sin barra de navegador y disponible sin conexión.
 
 ---
 
-## 🌐 Usar sin instalar nada
+## ⬇️ Alternativa: instalar el APK (Android)
 
-Si prefieres no instalar la app, puedes usar Tarimeo directamente en el navegador:
+Si prefieres un archivo instalable, también hay un APK disponible:
 
-👉 **[javitatay.github.io/Tarimeo](https://javitatay.github.io/Tarimeo/)**
+1. Ve a la sección **[Releases](https://github.com/javitatay/Tarimeo/releases/latest)** y descarga **`Tarimeo.apk`** en tu móvil.
+2. Ábrelo. Android avisará de que procede de un "origen desconocido": es normal en apps que no vienen de Google Play. Concede el permiso para instalar.
+3. Tarimeo aparecerá en tu lista de apps.
 
-Funciona igual en móvil y en ordenador. Desde el navegador del móvil, además, puedes usar la opción **"Añadir a la pantalla de inicio"** para tenerla como si fuera una app.
+> Nota: instalado por esta vía, es posible que la app muestre una pequeña barra de navegador en la parte superior. Si prefieres la experiencia a pantalla completa, usa el método recomendado de arriba (instalar desde el navegador).
 
 ---
 
