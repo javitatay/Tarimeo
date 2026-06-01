@@ -80,7 +80,11 @@ python3 -m http.server 8080
 
 ## 📄 Licencia
 
-Indica aquí la licencia que prefieras (por ejemplo MIT). Si no añades ninguna, por defecto se consideran todos los derechos reservados.
+Tarimeo se distribuye bajo la licencia **[GNU General Public License v3.0](LICENSE)**.
+
+Eres libre de usar, estudiar, modificar y compartir este software. La única condición importante es que, si distribuyes una versión modificada, debe mantenerse también como código abierto bajo esta misma licencia, para que las mejoras sigan estando disponibles para todos.
+
+[![Licencia: GPL v3](https://img.shields.io/badge/Licencia-GPLv3-c89838?style=flat-square)](LICENSE)
 
 ---
 
