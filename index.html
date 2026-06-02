@@ -1,17 +1,4 @@
 <!DOCTYPE html>
-<!--
-  Tarimeo — Planificación de tarimas y escenarios para festivales.
-  Copyright (C) 2026 javitatay
-
-  Este programa es software libre: puedes redistribuirlo y/o modificarlo
-  bajo los términos de la Licencia Pública General GNU publicada por la
-  Free Software Foundation, ya sea la versión 3 de la Licencia o (a tu
-  elección) cualquier versión posterior.
-
-  Este programa se distribuye con la esperanza de que sea útil, pero SIN
-  NINGUNA GARANTÍA. Consulta la Licencia Pública General GNU para más
-  detalles: <https://www.gnu.org/licenses/>.
--->
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -102,6 +89,49 @@ input,button,select,textarea{font-family:inherit}
 .btn-ghost:hover{color:var(--text);border-color:var(--border2)}
 .btn-icon{background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:5px;font-size:18px;line-height:1;transition:color .15s,background .15s;flex-shrink:0}
 .btn-icon:hover{color:var(--text);background:var(--surface2)}
+/* Botón utilidad: icono SVG + etiqueta corta, estilo homogéneo */
+.ub{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid transparent;color:var(--muted);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;line-height:1;transition:color .15s,background .15s,border-color .15s;flex-shrink:0;white-space:nowrap}
+.ub:hover{color:var(--text);background:var(--surface2);border-color:var(--border)}
+.ub svg{width:17px;height:17px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ub.ub-danger{color:var(--danger)}
+.ub.ub-danger:hover{background:rgba(232,57,74,.12);border-color:rgba(232,57,74,.3)}
+.ub-lbl{display:inline}
+@media(max-width:1180px){.ub-lbl{display:none}.ub{padding:6px 8px}}
+/* Modal de ayuda */
+.help-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:1200;align-items:center;justify-content:center;padding:20px}
+.help-ov.open{display:flex}
+.help-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.help-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:2}
+.help-hd h2{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1.5px;color:var(--accent);margin:0}
+.help-x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:24px;line-height:1;padding:4px 8px;border-radius:6px;transition:all .15s}
+.help-x:hover{color:var(--text);background:var(--surface2)}
+.help-bd{padding:22px 24px}
+.help-bd h3{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--text);margin:22px 0 8px;display:flex;align-items:center;gap:8px}
+.help-bd h3:first-child{margin-top:0}
+.help-bd p{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 8px}
+.help-bd ul{margin:0 0 8px;padding-left:18px}
+.help-bd li{font-size:13px;line-height:1.7;color:var(--muted);margin-bottom:4px}
+.help-bd b{color:var(--text);font-weight:600}
+.help-kbd{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--text)}
+/* Mini-animación de arrastre */
+.help-demo{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px;margin:10px 0 4px;display:flex;align-items:center;justify-content:center;height:130px;position:relative;overflow:hidden}
+.demo-grid{display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(3,32px);gap:4px}
+.demo-cell{background:var(--surface2);border:1px solid var(--border);border-radius:4px}
+.demo-block{position:absolute;width:32px;height:32px;border-radius:4px;background:var(--accent);opacity:.9;animation:demoMove 3.4s ease-in-out infinite}
+.demo-hand{position:absolute;font-size:18px;animation:demoMove 3.4s ease-in-out infinite;pointer-events:none;transform:translate(8px,10px)}
+@keyframes demoMove{
+  0%,12%{transform:translate(-54px,-18px)}
+  40%,58%{transform:translate(20px,16px)}
+  86%,100%{transform:translate(-54px,-18px)}
+}
+.help-demo .demo-hand{transform:translate(-54px,-18px) translate(8px,10px)}
+@keyframes demoHand{
+  0%,12%{transform:translate(-54px,-18px) translate(8px,10px)}
+  40%,58%{transform:translate(20px,16px) translate(8px,10px)}
+  86%,100%{transform:translate(-54px,-18px) translate(8px,10px)}
+}
+.help-demo .demo-hand{animation-name:demoHand}
+@media(prefers-reduced-motion:reduce){.demo-block,.demo-hand{animation:none}.demo-block{transform:translate(20px,16px)}.help-demo .demo-hand{transform:translate(20px,16px) translate(8px,10px)}}
 .exp-wrap{position:relative;flex-shrink:0}
 .exp-menu{display:none;position:absolute;top:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;min-width:160px;z-index:600;box-shadow:0 8px 32px rgba(0,0,0,.6)}
 .exp-wrap.open .exp-menu{display:block}
@@ -600,10 +630,26 @@ body.mobile-more #mobilePanel{display:block}
   <div class="tb-sep"></div>
 
   <!-- Grupo: Utilidades -->
-  <button class="btn-icon" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">☀️</button>
-  <button class="btn-icon" id="langToggle" onclick="toggleLang()" title="Idioma">🌐</button>
-  <button class="btn-icon" id="presentBtn" onclick="togglePresent()" title="Modo presentación">⛶</button>
-  <button class="btn-icon btn-danger" onclick="resetAll()" title="Resetear" data-i18n-title="reset">↺</button>
+  <button class="ub" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">
+    <svg viewBox="0 0 24 24" id="themeIcon"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <span class="ub-lbl" id="themeLbl">Tema</span>
+  </button>
+  <button class="ub" id="langToggle" onclick="toggleLang()" title="Idioma">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>
+    <span class="ub-lbl">Idioma</span>
+  </button>
+  <button class="ub" id="presentBtn" onclick="togglePresent()" title="Modo presentación">
+    <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    <span class="ub-lbl" data-i18n="presentMode">Presentación</span>
+  </button>
+  <button class="ub" id="helpBtn" onclick="openHelp()" title="Ayuda">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><circle cx="12" cy="17.5" r=".6" fill="currentColor" stroke="none"/></svg>
+    <span class="ub-lbl" data-i18n="help">Ayuda</span>
+  </button>
+  <button class="ub ub-danger" onclick="resetAll()" title="Resetear" data-i18n-title="reset">
+    <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>
+    <span class="ub-lbl" data-i18n="reset">Reset</span>
+  </button>
   <button class="btn-icon" id="mobileMore" onclick="toggleMobileMore()" title="Más opciones">⋯</button>
 </div>
 <!-- Panel móvil de opciones secundarias -->
@@ -617,6 +663,9 @@ body.mobile-more #mobilePanel{display:block}
     <!-- Fila 2: utilidades -->
     <div class="mp-row">
       <button class="btn mp-btn btn-ghost" id="presentBtn2" onclick="togglePresent();closeMobileMore()">⛶ <span data-i18n="presentMode">Presentación</span></button>
+      <button class="btn mp-btn btn-ghost" onclick="openHelp();closeMobileMore()">? <span data-i18n="help">Ayuda</span></button>
+    </div>
+    <div class="mp-row">
       <button class="btn mp-btn btn-ghost btn-danger2" onclick="resetAll();closeMobileMore()">↺ <span data-i18n="reset">Reset</span></button>
     </div>
     <!-- Exportar: lista inline expandible -->
@@ -639,6 +688,18 @@ body.mobile-more #mobilePanel{display:block}
 </div>
 
 <button id="exitPresentBtn" onclick="togglePresent()">✕ Exit</button>
+
+<!-- MODAL DE AYUDA -->
+<div class="help-ov" id="helpOverlay" onclick="if(event.target===this)closeHelp()">
+  <div class="help-box">
+    <div class="help-hd">
+      <h2 id="helpTitle">Cómo usar Tarimeo</h2>
+      <button class="help-x" onclick="closeHelp()" title="Cerrar">✕</button>
+    </div>
+    <div class="help-bd" id="helpBody"><!-- contenido generado por renderHelp() --></div>
+  </div>
+</div>
+
 <!-- MAIN -->
 <div class="main">
   <div class="sb-ov" id="sbOv" onclick="closeSb()"></div>
@@ -744,6 +805,8 @@ const LANGS = {
     backupJSON: '📦 Backup JSON',
     importBackup: '📂 Importar backup',
     reset: '↺ Resetear',
+    help: 'Ayuda',
+    themeBtn: 'Tema',
     stockTitle: 'Stock tarimas',
     stockUnit: '(2×1m c/u)',
     totalFestival: 'Total festival',
@@ -902,6 +965,8 @@ const LANGS = {
     backupJSON: '📦 Backup JSON',
     importBackup: '📂 Import backup',
     reset: '↺ Reset',
+    help: 'Help',
+    themeBtn: 'Theme',
     stockTitle: 'Riser stock',
     stockUnit: '(2×1m each)',
     totalFestival: 'Festival total',
@@ -1078,14 +1143,87 @@ function toggleLang() {
 let theme = localStorage.getItem('tarimas-theme') || 'dark';
 function applyTheme(){
   document.body.classList.toggle('light', theme==='light');
-  const btn=document.getElementById('themeToggle');
-  if(btn){btn.textContent = theme==='light' ? '🌙' : '☀️';}
+  // Icono SVG según el tema destino (luna en claro, sol en oscuro)
+  const icon=document.getElementById('themeIcon');
+  if(icon){
+    if(theme==='light'){
+      // mostrar luna (cambiar a oscuro)
+      icon.innerHTML='<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+    }else{
+      // mostrar sol (cambiar a claro)
+      icon.innerHTML='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+    }
+  }
+  const lbl=document.getElementById('themeLbl');
+  if(lbl){const L=LANGS[lang]; lbl.textContent = (L&&L.themeBtn)? L.themeBtn : 'Tema';}
 }
 function toggleTheme(){
   theme = theme==='light' ? 'dark' : 'light';
   localStorage.setItem('tarimas-theme', theme);
   applyTheme();
 }
+
+/* ---------- Panel de ayuda ---------- */
+function renderHelp(){
+  const es = (lang!=='en');
+  const t = es ? {
+    title:'Cómo usar Tarimeo',
+    demo:'Arrastra los bloques sobre la cuadrícula para colocarlos.',
+    s1:'Lo básico',
+    s1b:['Escribe el nombre del festival arriba a la izquierda.','Elige la vista <b>Planta</b> para dibujar el escenario, o <b>Kanban</b> para organizar por días y artistas.','Todo se guarda solo en tu dispositivo: no necesitas conexión ni cuenta.'],
+    s2:'Vista de Planta',
+    s2b:['<b>Añadir tarima:</b> arrastra sobre la cuadrícula para dibujar un bloque del tamaño que quieras.','<b>Mover:</b> arrastra un bloque existente a otra posición.','<b>Editar:</b> toca un bloque para cambiar su nombre, medidas, altura o artista.','<b>Redimensionar:</b> usa los controles + / − de ancho (W) y fondo (D).'],
+    s3:'Días y escenarios',
+    s3b:['Crea varios <b>días</b> y varios <b>escenarios</b> desde el panel lateral (☰).','Cada combinación de día y escenario tiene su propia distribución.','El <b>stock</b> te muestra cuántos módulos usas y cuántos quedan.'],
+    s4:'Guardar y compartir',
+    s4b:['<b>Guardar HTML</b> descarga una copia de la app con tus datos dentro.','<b>Exportar</b> genera planos para imprimir/PDF, CSV, imágenes (PNG/JPG) y copias de seguridad.','Usa <b>Backup JSON</b> para mover tus datos a otro dispositivo (exportar e importar).'],
+    s5:'Atajos',
+    s5b:'En ordenador, <span class="help-kbd">Ctrl</span> + <span class="help-kbd">S</span> guarda el archivo HTML.'
+  } : {
+    title:'How to use Tarimeo',
+    demo:'Drag blocks onto the grid to place them.',
+    s1:'The basics',
+    s1b:['Type the festival name in the top left.','Choose <b>Floor</b> view to draw the stage, or <b>Kanban</b> to organize by days and artists.','Everything is saved only on your device: no connection or account needed.'],
+    s2:'Floor view',
+    s2b:['<b>Add a deck:</b> drag across the grid to draw a block of any size.','<b>Move:</b> drag an existing block to a new position.','<b>Edit:</b> tap a block to change its name, size, height or artist.','<b>Resize:</b> use the + / − controls for width (W) and depth (D).'],
+    s3:'Days and stages',
+    s3b:['Create several <b>days</b> and <b>stages</b> from the side panel (☰).','Each day-and-stage combination has its own layout.','The <b>stock</b> shows how many modules you use and how many remain.'],
+    s4:'Save and share',
+    s4b:['<b>Save HTML</b> downloads a copy of the app with your data inside.','<b>Export</b> generates printable/PDF layouts, CSV, images (PNG/JPG) and backups.','Use <b>JSON Backup</b> to move your data to another device (export and import).'],
+    s5:'Shortcuts',
+    s5b:'On desktop, <span class="help-kbd">Ctrl</span> + <span class="help-kbd">S</span> saves the HTML file.'
+  };
+  const list = arr => '<ul>'+arr.map(i=>'<li>'+i+'</li>').join('')+'</ul>';
+  const demoHtml =
+    '<div class="help-demo" aria-hidden="true">'+
+      '<div class="demo-grid">'+Array(12).fill('<div class="demo-cell"></div>').join('')+'</div>'+
+      '<div class="demo-block"></div>'+
+      '<div class="demo-hand">👆</div>'+
+    '</div>'+
+    '<p style="text-align:center;font-size:12px;margin-top:6px">'+t.demo+'</p>';
+  const html =
+    demoHtml +
+    '<h3>'+t.s1+'</h3>'+list(t.s1b)+
+    '<h3>'+t.s2+'</h3>'+list(t.s2b)+
+    '<h3>'+t.s3+'</h3>'+list(t.s3b)+
+    '<h3>'+t.s4+'</h3>'+list(t.s4b)+
+    '<h3>'+t.s5+'</h3><p>'+t.s5b+'</p>';
+  const titleEl=document.getElementById('helpTitle'); if(titleEl) titleEl.textContent=t.title;
+  const bodyEl=document.getElementById('helpBody'); if(bodyEl) bodyEl.innerHTML=html;
+}
+function openHelp(){
+  renderHelp();
+  const ov=document.getElementById('helpOverlay');
+  if(ov) ov.classList.add('open');
+  closeMobileMore && closeMobileMore();
+}
+function closeHelp(){
+  const ov=document.getElementById('helpOverlay');
+  if(ov) ov.classList.remove('open');
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){const ov=document.getElementById('helpOverlay'); if(ov&&ov.classList.contains('open'))closeHelp();}
+});
 
 function toggleMobileMore(){
   document.body.classList.toggle('mobile-more');
@@ -1115,7 +1253,6 @@ function applyStaticI18n() {
   const vbKanban = document.getElementById('vbKanban'); if(vbKanban) vbKanban.textContent = L.viewKanban;
   const undoBtn = document.getElementById('undoBtn'); if(undoBtn) undoBtn.textContent = L.undo;
   const saveBtn = document.getElementById('saveBtn'); if(saveBtn) saveBtn.textContent = L.saveHtml;
-  const langToggle = document.getElementById('langToggle'); if(langToggle) langToggle.textContent = L.langBtn;
   const spillTxt = document.getElementById('spillTxt');
   if(spillTxt) spillTxt.textContent = hasUnsaved ? L.unsaved : L.noChanges;
   const sbHintEl = document.getElementById('sbHint'); if(sbHintEl) sbHintEl.textContent = L.sbHint;
