@@ -1282,51 +1282,134 @@ function toggleTheme(){
 
 /* ---------- Panel de ayuda ---------- */
 function renderHelp(){
-  const es = (lang!=='en');
-  const t = es ? {
+  const es=(lang!=='en');
+  const h=es?{
     title:'Cómo usar Tarimeo',
-    demo:'Arrastra los bloques sobre la cuadrícula para colocarlos.',
-    s1:'Lo básico',
-    s1b:['Escribe el nombre del festival arriba a la izquierda.','Elige la vista <b>Planta</b> para dibujar el escenario, o <b>Kanban</b> para organizar por días y artistas.','Todo se guarda solo en tu dispositivo: no necesitas conexión ni cuenta.'],
-    s2:'Vista de Planta',
-    s2b:['<b>Añadir tarima:</b> arrastra sobre la cuadrícula para dibujar un bloque del tamaño que quieras.','<b>Mover:</b> arrastra un bloque existente a otra posición.','<b>Editar:</b> toca un bloque para cambiar su nombre, medidas, altura o artista.','<b>Redimensionar:</b> usa los controles + / − de ancho (W) y fondo (D).'],
-    s3:'Días y escenarios',
-    s3b:['Crea varios <b>días</b> y varios <b>escenarios</b> desde el panel lateral (☰).','Cada combinación de día y escenario tiene su propia distribución.','El <b>stock</b> te muestra cuántos módulos usas y cuántos quedan.'],
-    s4:'Guardar y compartir',
-    s4b:['<b>Guardar HTML</b> descarga una copia de la app con tus datos dentro.','<b>Exportar</b> genera planos para imprimir/PDF, CSV, imágenes (PNG/JPG) y copias de seguridad.','Usa <b>Backup JSON</b> para mover tus datos a otro dispositivo (exportar e importar).'],
-    s5:'Atajos',
-    s5b:'En ordenador, <span class="help-kbd">Ctrl</span> + <span class="help-kbd">S</span> guarda el archivo HTML.'
-  } : {
+    demo:'Arrastra sobre la cuadrícula para dibujar un bloque del tamaño que necesites.',
+    s1:'🎛️ Lo básico',
+    s1b:[
+      'Escribe el nombre del festival en la barra superior.',
+      'Usa la vista <b>Planta</b> para dibujar el escenario, o <b>Kanban</b> para ver los bloques organizados por día y artista.',
+      'Todo se guarda automáticamente en tu dispositivo: sin conexión ni cuenta.'
+    ],
+    s2:'📐 Vista de Planta',
+    s2b:[
+      '<b>Dibujar bloque:</b> arrastra sobre celdas vacías para definir el tamaño y suelta para abrir el formulario.',
+      '<b>Mover:</b> arrastra un bloque colocado a otra posición libre.',
+      '<b>Editar:</b> toca o haz clic en un bloque para abrir el panel de detalle.',
+      '<b>Redimensionar:</b> usa los botones + / − de Frente (W) y Fondo (D) en el panel de detalle.',
+      '<b>Buscar:</b> escribe en el campo de búsqueda para resaltar bloques por nombre o artista — el resto se atenúa.'
+    ],
+    s3:'🗂️ Días y escenarios',
+    s3b:[
+      'Crea varios <b>días</b> desde la barra superior y varios <b>escenarios</b> con el botón + en las pestañas.',
+      'Cada combinación de día y escenario tiene su propia distribución independiente.',
+      'Puedes <b>duplicar</b> un día entero con el botón ⧉ para reutilizar una distribución.'
+    ],
+    s4:'📦 Stock y extras',
+    s4b:[
+      'El panel lateral muestra cuántos módulos usas en total y cuántos te quedan.',
+      'Cada bloque puede llevar <b>Faldón</b> 🇫, <b>Ruedas</b> ⚙, <b>Escalera</b> 🪜 y <b>Barandilla</b> 🚧.',
+      'A partir de <b>60 cm de altura</b>, la app sugiere automáticamente escalera y barandilla según normativa de seguridad.',
+      'Los extras aparecen en el plano, en el Kanban y se exportan al CSV.'
+    ],
+    s5:'💾 Guardar y exportar',
+    s5b:[
+      '<b>Guardar HTML</b> descarga una copia de la app con todos tus datos incrustados — ábrela en cualquier navegador sin conexión.',
+      '<b>Exportar</b> genera planos para imprimir/PDF, imágenes PNG/JPG y CSV con todos los bloques y extras.',
+      '<b>Backup JSON</b> exporta e importa todos tus datos para moverlos entre dispositivos.'
+    ],
+    s6:'📱 Uso en móvil',
+    s6b:[
+      '<b>Pan:</b> arrastra con un dedo sobre zona vacía del plano para desplazarte.',
+      '<b>Zoom:</b> pellizca con dos dedos para acercar o alejar — sin interferir con el dibujo de bloques.',
+      'Usa los botones <b>− / +</b> de la barra de herramientas para zoom preciso.',
+      'El botón <b>⊙</b> restaura el zoom al 100%.'
+    ],
+    s7:'⌨️ Atajos de teclado',
+    s7rows:[
+      ['Ctrl + S','Guardar archivo HTML'],
+      ['Ctrl + Z','Deshacer'],
+      ['Ctrl + Y  /  Ctrl + Shift + Z','Rehacer'],
+      ['Escape','Cerrar panel, modal o modo presentación']
+    ]
+  }:{
     title:'How to use Tarimeo',
-    demo:'Drag blocks onto the grid to place them.',
-    s1:'The basics',
-    s1b:['Type the festival name in the top left.','Choose <b>Floor</b> view to draw the stage, or <b>Kanban</b> to organize by days and artists.','Everything is saved only on your device: no connection or account needed.'],
-    s2:'Floor view',
-    s2b:['<b>Add a deck:</b> drag across the grid to draw a block of any size.','<b>Move:</b> drag an existing block to a new position.','<b>Edit:</b> tap a block to change its name, size, height or artist.','<b>Resize:</b> use the + / − controls for width (W) and depth (D).'],
-    s3:'Days and stages',
-    s3b:['Create several <b>days</b> and <b>stages</b> from the side panel (☰).','Each day-and-stage combination has its own layout.','The <b>stock</b> shows how many modules you use and how many remain.'],
-    s4:'Save and share',
-    s4b:['<b>Save HTML</b> downloads a copy of the app with your data inside.','<b>Export</b> generates printable/PDF layouts, CSV, images (PNG/JPG) and backups.','Use <b>JSON Backup</b> to move your data to another device (export and import).'],
-    s5:'Shortcuts',
-    s5b:'On desktop, <span class="help-kbd">Ctrl</span> + <span class="help-kbd">S</span> saves the HTML file.'
+    demo:'Drag across the grid to draw a block — release to open the form.',
+    s1:'🎛️ The basics',
+    s1b:[
+      'Type the festival name in the top bar.',
+      'Use <b>Floor</b> view to draw the stage, or <b>Kanban</b> to see blocks organised by day and artist.',
+      'Everything saves automatically on your device: no connection or account needed.'
+    ],
+    s2:'📐 Floor view',
+    s2b:[
+      '<b>Draw a block:</b> drag across empty cells to set the size, then release to open the form.',
+      '<b>Move:</b> drag a placed block to a new free position.',
+      '<b>Edit:</b> tap or click a block to open the detail panel.',
+      '<b>Resize:</b> use the + / − buttons for Front (W) and Depth (D) in the detail panel.',
+      '<b>Search:</b> type in the search field to highlight blocks by name or artist — the rest dims out.'
+    ],
+    s3:'🗂️ Days and stages',
+    s3b:[
+      'Create several <b>days</b> from the top bar and several <b>stages</b> with the + button on the tabs.',
+      'Each day-and-stage combination has its own independent layout.',
+      'You can <b>duplicate</b> a whole day with the ⧉ button to reuse a layout.'
+    ],
+    s4:'📦 Stock and extras',
+    s4b:[
+      'The side panel shows how many modules you are using and how many remain.',
+      'Each block can have <b>Skirting</b> 🇫, <b>Wheels</b> ⚙, <b>Stairs</b> 🪜 and <b>Railing</b> 🚧.',
+      'Above <b>60 cm height</b>, the app automatically suggests stairs and railing per safety regulations.',
+      'Extras appear on the floor plan, in the Kanban and are exported to CSV.'
+    ],
+    s5:'💾 Save and export',
+    s5b:[
+      '<b>Save HTML</b> downloads a self-contained copy of the app with all your data embedded — open it in any browser offline.',
+      '<b>Export</b> generates printable/PDF layouts, PNG/JPG images and a CSV with all blocks and extras.',
+      '<b>JSON Backup</b> exports and imports all your data to move between devices.'
+    ],
+    s6:'📱 Mobile use',
+    s6b:[
+      '<b>Pan:</b> drag with one finger over an empty area of the floor plan to scroll.',
+      '<b>Zoom:</b> pinch with two fingers to zoom in or out — without interfering with block drawing.',
+      'Use the <b>− / +</b> buttons in the toolbar for precise zoom.',
+      'The <b>⊙</b> button resets zoom to 100%.'
+    ],
+    s7:'⌨️ Keyboard shortcuts',
+    s7rows:[
+      ['Ctrl + S','Save HTML file'],
+      ['Ctrl + Z','Undo'],
+      ['Ctrl + Y  /  Ctrl + Shift + Z','Redo'],
+      ['Escape','Close panel, modal or presentation mode']
+    ]
   };
-  const list = arr => '<ul>'+arr.map(i=>'<li>'+i+'</li>').join('')+'</ul>';
-  const demoHtml =
+  const list=arr=>'<ul>'+arr.map(i=>'<li>'+i+'</li>').join('')+'</ul>';
+  const kbd=k=>'<span class="help-kbd">'+k+'</span>';
+  const shortcutRows=h.s7rows.map(([keys,desc])=>
+    '<tr><td style="padding:5px 12px 5px 0;white-space:nowrap">'+
+    keys.split('/').map(k=>kbd(k.trim())).join(' <span style="color:var(--muted2);font-size:11px">/</span> ')+
+    '</td><td style="padding:5px 0;color:var(--muted);font-size:12px">'+desc+'</td></tr>'
+  ).join('');
+  const demoHtml=
     '<div class="help-demo" aria-hidden="true">'+
       '<div class="demo-grid">'+Array(12).fill('<div class="demo-cell"></div>').join('')+'</div>'+
       '<div class="demo-block"></div>'+
       '<div class="demo-hand">👆</div>'+
     '</div>'+
-    '<p style="text-align:center;font-size:12px;margin-top:6px">'+t.demo+'</p>';
-  const html =
-    demoHtml +
-    '<h3>'+t.s1+'</h3>'+list(t.s1b)+
-    '<h3>'+t.s2+'</h3>'+list(t.s2b)+
-    '<h3>'+t.s3+'</h3>'+list(t.s3b)+
-    '<h3>'+t.s4+'</h3>'+list(t.s4b)+
-    '<h3>'+t.s5+'</h3><p>'+t.s5b+'</p>';
-  const titleEl=document.getElementById('helpTitle'); if(titleEl) titleEl.textContent=t.title;
-  const bodyEl=document.getElementById('helpBody'); if(bodyEl) bodyEl.innerHTML=html;
+    '<p style="text-align:center;font-size:12px;margin-top:6px;color:var(--muted)">'+h.demo+'</p>';
+  const html=
+    demoHtml+
+    '<h3>'+h.s1+'</h3>'+list(h.s1b)+
+    '<h3>'+h.s2+'</h3>'+list(h.s2b)+
+    '<h3>'+h.s3+'</h3>'+list(h.s3b)+
+    '<h3>'+h.s4+'</h3>'+list(h.s4b)+
+    '<h3>'+h.s5+'</h3>'+list(h.s5b)+
+    '<h3>'+h.s6+'</h3>'+list(h.s6b)+
+    '<h3>'+h.s7+'</h3>'+
+    '<table style="border-collapse:collapse;width:100%;margin-top:4px">'+shortcutRows+'</table>';
+  const titleEl=document.getElementById('helpTitle');if(titleEl)titleEl.textContent=h.title;
+  const bodyEl=document.getElementById('helpBody');if(bodyEl)bodyEl.innerHTML=html;
 }
 function openHelp(){
   renderHelp();
