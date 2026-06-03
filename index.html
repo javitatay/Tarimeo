@@ -337,7 +337,7 @@ input,button,select,textarea{font-family:inherit}
 .ruler-h{height:20px;top:-24px;font-size:10px;padding:0 6px}
 .ruler-v{width:20px;left:-26px;font-size:9px;writing-mode:vertical-lr;transform:rotate(180deg);padding:4px 0}
 /* placed bloques */
-.pb{position:absolute;border-radius:6px;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:grab;overflow:hidden;padding:3px;z-index:3;transition:box-shadow .12s,transform .1s,border-color .1s;user-select:none;box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.04)}
+.pb{position:absolute;border-radius:6px;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:grab;overflow:hidden;padding:8px 3px 3px;z-index:3;transition:box-shadow .12s,transform .1s,border-color .1s;user-select:none;box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.04)}
 .pb:hover{box-shadow:0 0 0 3px rgba(255,255,255,.22),0 4px 16px rgba(0,0,0,.5);z-index:8;transform:scale(1.025)}
 .pb:active{cursor:grabbing;transform:scale(1.04)}
 .pb.conflict{border-color:var(--danger)!important;box-shadow:0 0 0 2px rgba(232,57,74,.4)!important}
@@ -345,6 +345,12 @@ input,button,select,textarea{font-family:inherit}
 .pb-name{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;text-align:center;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2}
 .pb-dim{font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.7;text-align:center;line-height:1.1;margin-top:1px}
 .pb-alt{font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.75;text-align:center;line-height:1}
+/* Franja de altura en la parte superior del bloque */
+.pb-alt-bar{
+  position:absolute;top:0;left:0;right:0;
+  height:5px;border-radius:4px 4px 0 0;
+  opacity:.85;pointer-events:none;flex-shrink:0;
+}
 /* draw preview */
 .draw-preview{position:absolute;border:2px dashed var(--accent);background:rgba(200,152,56,.1);border-radius:5px;pointer-events:none;z-index:15;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px}
 .dp-label{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--accent);text-align:center;line-height:1.3}
@@ -2166,6 +2172,7 @@ function renderGrid(){
     const aColor=a?.color||'#666';const aName=esc(a?.name||t('unassigned').replace(/—/g,'').trim());
     el.style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px;background:${aColor}18;border-color:${aColor};color:var(--text)`;
     el.innerHTML=`
+      <div class="pb-alt-bar" style="background:${ac.border}" title="${b.altura}cm"></div>
       ${b.name?`<div class="pb-name" style="color:var(--text);font-weight:700;font-size:12px">${esc(b.name)}</div>`:''}
       <div class="pb-art" style="color:${aColor};font-size:10px;opacity:.85">${aName}</div>
       <div class="pb-dim">${b.metrosW||b.largo}×${b.metrosD||b.ancho}m</div>
@@ -2376,7 +2383,7 @@ function renderGrid(){
   const altLeg=document.createElement('div');
   altLeg.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:8px;border-top:1px solid var(--border2)';
   [[20,'#508c64'],[40,'#b49446'],[60,'#b46e32'],[80,'#a04b37'],[100,'#8c3737']].forEach(([h,c])=>{
-    altLeg.innerHTML+=`<div style="display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)"><div style="width:11px;height:11px;border-radius:2px;background:${c};opacity:.8"></div>≤${h}cm</div>`;
+    altLeg.innerHTML+=`<div style="display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)"><div style="width:18px;height:5px;border-radius:3px;background:${c}"></div>≤${h}cm</div>`;
   });
   wrap.appendChild(altLeg);
   wrap.appendChild(leg);
