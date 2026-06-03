@@ -19,6 +19,7 @@
 Una herramienta visual, rápida y sin complicaciones para planificar el montaje de tarimas modulares por días y escenarios. Funciona sin conexión.
 
 [![Usar en el navegador](https://img.shields.io/badge/🌐_Usar_en_el_navegador-c89838?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
+[![Invítame a un café](https://img.shields.io/badge/☕_Invítame_a_un_café-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000)](https://buymeacoffee.com/javitatay)
 [![Instalar como app](https://img.shields.io/badge/📲_Instalar_como_app-6b7280?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
 [![Descargar APK](https://img.shields.io/badge/⬇️_Descargar_APK_(Android)-141210?style=for-the-badge)](https://github.com/javitatay/Tarimeo/releases/latest)
 
@@ -129,6 +130,7 @@ Eres libre de usar, estudiar, modificar y compartir este software. La única con
 A visual, fast and straightforward tool for planning modular stage riser placement by day and stage. Works offline.
 
 [![Open in browser](https://img.shields.io/badge/🌐_Open_in_browser-c89838?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
+[![Buy me a coffee](https://img.shields.io/badge/☕_Buy_me_a_coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000)](https://buymeacoffee.com/javitatay)
 [![Install as app](https://img.shields.io/badge/📲_Install_as_app-6b7280?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
 [![Download APK](https://img.shields.io/badge/⬇️_Download_APK_(Android)-141210?style=for-the-badge)](https://github.com/javitatay/Tarimeo/releases/latest)
 
