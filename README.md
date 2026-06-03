@@ -8,7 +8,8 @@
 
 Una herramienta visual, rápida y sin complicaciones para planificar el montaje de tarimas modulares por días y escenarios. Funciona sin conexión.
 
-[![Instalar Tarimeo](https://img.shields.io/badge/📲_Instalar_Tarimeo-c89838?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
+[![Usar en el navegador](https://img.shields.io/badge/🌐_Usar_en_el_navegador-c89838?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
+[![Instalar como app](https://img.shields.io/badge/📲_Instalar_como_app-6b7280?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
 [![Descargar APK](https://img.shields.io/badge/⬇️_Descargar_APK_(Android)-141210?style=for-the-badge)](https://github.com/javitatay/Tarimeo/releases/latest)
 
 </div>
