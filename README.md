@@ -26,6 +26,10 @@ Tarimeo te ayuda a planificar dónde va cada tarima sobre el plano de un escenar
 - 🎸 **Asignación a artistas** — visualiza de un vistazo quién ocupa qué, con código de color.
 - 📦 **Control de stock** — sabe en todo momento cuántos módulos usas y cuántos te quedan.
 - 🖨️ **Exporta y comparte** — genera planos para imprimir o PDF, exporta a CSV, guarda imágenes y crea copias de seguridad.
+- 🔍 **Buscador visual** — filtra bloques y artistas en tiempo real; el resto del plano se atenúa para que solo veas lo que buscas.
+- ↩️ **Deshacer y rehacer** — historial de hasta 30 pasos (Ctrl+Z / Ctrl+Y).
+- 🪜 **Extras de seguridad** — marca faldón, ruedas, escalera y barandilla por bloque. A partir de 60 cm de altura, la app sugiere escalera y barandilla automáticamente según normativa.
+- 📱 **Optimizado para móvil** — pan táctil y zoom con pellizco sobre el plano sin interferir con el dibujo de bloques.
 - 🌙 **Modo claro y oscuro** y **bilingüe** (español / inglés).
 - 📴 **Funciona sin conexión**, ideal para usar durante el montaje en el recinto.
 

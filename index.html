@@ -44,7 +44,7 @@
   --accent:#c89838;--accent-dim:rgba(200,152,56,.11);
   --ok:#2ea55a;--warn:#c97d28;--danger:#c04040;
   --text:#e8e8e4;--muted:#828278;--muted2:#5a5a55;
-  --sb-w:340px;--cell:64px;--gap:5px;--th:66px;
+  --sb-w:340px;--cell:84px;--gap:5px;--th:66px;
 }
 /* ── TEMA CLARO ──────────────────────────────────────── */
 body.light{
@@ -57,7 +57,7 @@ body.light{
 /* El favicon/logo SVG del header usa fondo oscuro fijo; en claro lo invertimos vía filtro suave */
 body.light .tb-logo{color:var(--text)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;height:100vh;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;height:100vh;overflow:hidden;overflow-x:hidden;max-width:100vw}
 input,button,select,textarea{font-family:inherit}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;transition:background .2s}::-webkit-scrollbar-thumb:hover{background:var(--muted2)}
 
@@ -217,7 +217,7 @@ input,button,select,textarea{font-family:inherit}
 .sb-hint{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;font-style:italic}
 
 /* CONTENT */
-.content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;max-width:100%}
 .days-bar{display:flex;align-items:stretch;padding:0 18px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto}
 .dt{padding:13px 18px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s;background:none;border-left:none;border-right:none;border-top:none;display:flex;align-items:center;gap:5px}
 .dt:hover{color:var(--text)}
@@ -234,6 +234,35 @@ input,button,select,textarea{font-family:inherit}
 .mode-info.active-hint{color:var(--accent)}
 .grid-ctrl{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted)}
 .gsz{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;width:48px;padding:5px 7px;border-radius:4px;outline:none;-moz-appearance:textfield;text-align:center}
+/* ── BUSCADOR ─────────────────────────────────────────── */
+.search-wrap{display:flex;align-items:center;gap:5px;margin-left:auto}
+.search-in{
+  background:var(--surface);border:1px solid var(--border2);
+  color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;
+  padding:5px 9px;border-radius:6px;outline:none;width:160px;
+  transition:border-color .15s,width .2s;
+}
+.search-in:focus{border-color:var(--accent);width:200px}
+.search-in::placeholder{color:var(--muted2)}
+.search-clear{
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:14px;padding:2px 4px;border-radius:4px;line-height:1;
+  display:none;transition:color .12s;
+}
+.search-clear.visible{display:block}
+.search-clear:hover{color:var(--text)}
+/* Bloques atenuados por el filtro */
+.pb.filter-dim{opacity:.12;pointer-events:none}
+.uc.filter-dim{opacity:.12;pointer-events:none}
+.kcard.filter-dim{opacity:.12;pointer-events:none}
+/* Indicador de filtro activo en la mode-bar */
+.filter-badge{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--accent);background:var(--accent-dim);
+  border:1px solid var(--accent);border-radius:12px;
+  padding:2px 8px;white-space:nowrap;display:none;
+}
+.filter-badge.visible{display:inline-block}
 .gsz::-webkit-outer-spin-button,.gsz::-webkit-inner-spin-button{-webkit-appearance:none}
 .gsz:focus{border-color:var(--accent)}
 
@@ -243,6 +272,32 @@ input,button,select,textarea{font-family:inherit}
 /* STAGE */
 .stage-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;overflow:auto;display:inline-block;min-width:100%;box-shadow:0 4px 24px rgba(0,0,0,.3)}
 .stage-grid{position:relative;display:inline-grid;user-select:none}
+/* ── PAN/ZOOM ─────────────────────────────────────────── */
+.stage-canvas{
+  display:inline-block;
+  transform-origin:0 0;
+  will-change:transform;
+  transition:none;
+}
+.zoom-bar{
+  display:none; /* solo visible en móvil, activado vía media query */
+  align-items:center;gap:6px;
+  position:absolute;bottom:10px;right:10px;z-index:50;
+}
+.zoom-btn{
+  width:34px;height:34px;border-radius:8px;border:1px solid var(--border2);
+  background:var(--surface2);color:var(--text);font-size:18px;font-weight:300;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);backdrop-filter:blur(4px);
+  transition:background .12s;line-height:1;
+}
+.zoom-btn:active{background:var(--surface3)}
+.zoom-level{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:6px;padding:4px 7px;min-width:42px;text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
 /* bg cells */
 .bgc{border:1px solid var(--border2);border-radius:3px;cursor:crosshair;transition:background .08s,border-color .08s;position:relative;z-index:1;display:flex;align-items:center;justify-content:center}
 /* dotted center line to suggest 2:1 module */
@@ -410,19 +465,19 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
 
 /* RESPONSIVE */
 @media(min-width:1600px){
-  :root{--sb-w:380px;--cell:80px;--th:72px}
+  :root{--sb-w:380px;--cell:96px;--th:72px}
   .tb{padding:0 26px;gap:14px}.tb-logo{font-size:32px}.fest-in{font-size:13px;width:180px}
   .vb,.mb{font-size:12px}.days-bar{padding:0 26px}.dt{padding:11px 16px;font-size:12px}
   .view-area{padding:22px 26px}.pb-art{font-size:11px}.pb-name{font-size:9px}.pb-dim,.pb-alt{font-size:8px}
   .sb-scroll{padding:14px}.ac-name{font-size:13px}
 }
 @media(min-width:1280px) and (max-width:1599px){
-  :root{--sb-w:360px;--cell:72px;--th:68px}
+  :root{--sb-w:360px;--cell:92px;--th:68px}
   .tb{padding:0 22px}.tb-logo{font-size:28px}.fest-in{width:160px}
   .days-bar{padding:0 22px}.view-area{padding:20px 22px}
 }
 @media(min-width:1024px) and (max-width:1279px){
-  :root{--sb-w:340px;--cell:64px;--th:66px}
+  :root{--sb-w:340px;--cell:84px;--th:66px}
   .tb{padding:0 16px}.tb-logo{font-size:24px}.fest-in{width:130px}
 }
 @media(max-width:1023px){
@@ -432,23 +487,26 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
   .tb{gap:8px}
 }
 @media(max-width:767px){
-  :root{--cell:46px;--th:54px}
+  :root{--cell:66px;--th:54px}
   /* Header compacto: solo lo esencial visible */
-  .tb{padding:0 8px;gap:4px}
+  .tb{padding:0 8px;gap:4px;overflow:hidden}
+  /* El toggle de tema que se queda en el header: compacto, sin etiqueta */
+  #themeToggle{padding:6px;flex-shrink:0}
+  #themeToggle .ub-lbl{display:none}
   .tb-sub,.tb-sep,.tb-brand .tb-logo,.tb-brand .tb-sub{display:none}
   .tb-brand{gap:0}
   .fest-in{width:0;flex:1;min-width:60px;font-size:12px;letter-spacing:0;padding:2px 4px}
   .spill{display:none}
   .vtog{flex-shrink:0}
   .vb{padding:6px 9px;font-size:11px}
-  /* Botones secundarios → solo en panel móvil */
-  #undoBtn,#langToggle,#presentBtn,.btn-icon.btn-danger,#expWrap{display:none}
+  /* Botones secundarios → solo en panel móvil. En el header se queda el toggle de tema (acceso rápido) y el botón ⋯ */
+  #undoBtn,#redoBtn,#langToggle,#presentBtn,#helpBtn,.ub-danger,.btn-icon.btn-danger,#expWrap{display:none}
   /* Save como icono compacto */
   .save-btn{padding:7px 10px;font-size:0;gap:0}
   .save-btn::before{content:'💾';font-size:15px}
   #mobileMore{display:flex!important}
 
-  .view-area{padding:8px;overflow-x:auto;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .view-area{padding:8px;overflow-x:auto;overflow-y:auto;-webkit-overflow-scrolling:touch;width:100%;max-width:100%;box-sizing:border-box}
   .days-bar{padding:0 6px}.dt{padding:8px 11px;font-size:11px}
   .det{width:100vw;left:0;right:0;border-left:none;border-top:1px solid var(--border);top:auto;bottom:0;height:65vh;transform:translateY(100%);border-radius:16px 16px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.3)}
   .det.open{transform:translateY(0)}
@@ -456,8 +514,11 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
   /* Sidebar a pantalla casi completa con asa de cierre */
   .sb{width:88vw;max-width:360px;box-shadow:4px 0 24px rgba(0,0,0,.4)}
   /* Plano: permitir scroll horizontal cómodo, celdas táctiles mínimas */
-  .stage-wrap{padding:8px;border-radius:8px;box-shadow:none;border:1px solid var(--border)}
+  .stage-wrap{padding:8px;border-radius:8px;box-shadow:none;border:1px solid var(--border);position:relative;overflow:hidden;touch-action:none}
+  .zoom-bar{display:flex}
   .mode-bar{padding:6px 8px;gap:6px;flex-wrap:wrap}
+  .search-in{width:120px;font-size:11px}
+  .search-in:focus{width:140px}
   .mode-info{display:none}
   .grid-ctrl{font-size:11px;flex-shrink:0}
   /* Modales a ancho casi completo */
@@ -608,6 +669,7 @@ body.mobile-more #mobilePanel{display:block}
   <!-- Grupo: Estado + acciones de edición -->
   <div class="spill" id="spill"><div class="spill-dot"></div><span id="spillTxt">Sin cambios</span></div>
   <button class="btn" id="undoBtn" onclick="undo()" disabled style="opacity:.35;font-size:11px;background:var(--surface2);color:#6c8ef0;border:1px solid #6c8ef0">↩ Deshacer</button>
+  <button class="btn" id="redoBtn" onclick="redo()" disabled style="opacity:.35;font-size:11px;background:var(--surface2);color:#6c8ef0;border:1px solid #6c8ef0">↪ Rehacer</button>
 
   <div class="tb-sep"></div>
 
@@ -658,6 +720,10 @@ body.mobile-more #mobilePanel{display:block}
     <!-- Fila 1: acciones de edición -->
     <div class="mp-row">
       <button class="btn mp-btn" id="undoBtn2" onclick="undo()" disabled>↩ <span data-i18n="undo">Deshacer</span></button>
+      <button class="btn mp-btn" id="redoBtn2" onclick="redo()" disabled>↪ <span data-i18n="redo">Rehacer</span></button>
+    </div>
+    <!-- Fila 1b: idioma -->
+    <div class="mp-row">
       <button class="btn mp-btn btn-ghost" id="langToggle2" onclick="toggleLang()">🌐 <span id="langLabel">English</span></button>
     </div>
     <!-- Fila 2: utilidades -->
@@ -738,13 +804,29 @@ body.mobile-more #mobilePanel{display:block}
 
     <!-- GRID TOOLBAR -->
     <div class="mode-bar" id="modeBar">
-      <div class="grid-ctrl" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:8px">
-        <span data-i18n="columns">Columnas</span>
-        <input type="number" class="gsz" id="gcols" value="10" min="1" max="60" oninput="onColsChange()">
+      <div class="grid-ctrl" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span data-i18n="stageWidth">Ancho (m)</span>
+        <input type="number" class="gsz" id="gWidthM" value="20" min="2" max="200" step="2" oninput="onSizeChange()">
+        <span style="color:var(--muted2)">×</span>
+        <span data-i18n="stageDepth">Largo (m)</span>
+        <input type="number" class="gsz" id="gDepthM" value="10" min="1" max="200" step="1" oninput="onSizeChange()">
         <span id="gridDimsLabel" style="color:var(--muted2)"></span>
       </div>
       <div class="mode-info" id="modeInfo" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted2)">
         Arrastra → dibuja · Clic simple → selecciona celdas sueltas · Clic en bloque → edita
+      </div>
+      <!-- Zoom controls: visible only on mobile via CSS -->
+      <div id="modeZoomBar" style="display:none;align-items:center;gap:5px;margin-left:auto">
+        <button class="zoom-btn" onclick="zoomStep(-1)" title="Alejar">−</button>
+        <span class="zoom-level" id="zoomLabel">100%</span>
+        <button class="zoom-btn" onclick="zoomStep(+1)" title="Acercar">+</button>
+        <button class="zoom-btn" onclick="zoomReset()" title="Reset zoom" style="font-size:13px">⊙</button>
+      </div>
+      <!-- Buscador visual -->
+      <div class="search-wrap" id="searchWrap">
+        <input class="search-in" id="searchIn" type="search" placeholder="🔍 Buscar…" autocomplete="off" oninput="onSearchInput(this.value)" data-i18n-ph="searchPh">
+        <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Limpiar">×</button>
+        <span class="filter-badge" id="filterBadge"></span>
       </div>
     </div>
 
@@ -780,6 +862,9 @@ const COLORS=['#f0c040','#e05a2b','#3ecf6e','#6c8ef0','#c96cf0','#f06c8e','#40d4
 const LS='tarimas-v9';
 const ALT_P=[20,30,40,50,60,80,100];
 const GAP=4;
+// Dimensiones físicas de una tarima individual (módulo base)
+const TARIMA_W=2; // metros de ancho por tarima
+const TARIMA_D=1; // metros de fondo (largo) por tarima
 
 // ═════════════════════════════════════════════════════
 // INTERNACIONALIZACIÓN (i18n)
@@ -795,6 +880,7 @@ const LANGS = {
     noChanges: 'Sin cambios',
     unsaved: 'Cambios sin guardar',
     undo: '↩ Deshacer',
+    redo: '↪ Rehacer',
     saveHtml: '💾 Guardar HTML',
     exportBtn: '↓ Exportar ▾',
     printFloor: '🖨 Imprimir planta',
@@ -816,8 +902,12 @@ const LANGS = {
     addArtist: '+ Artista',
     sbHint: 'Selecciona artista para gestionar sus bloques',
     columns: 'Columnas',
+    stageWidth: 'Ancho (m)',
+    stageDepth: 'Largo (m)',
     gridHint: 'Arrastra → dibuja · Clic simple → selecciona celdas sueltas · Clic en bloque → edita',
-    gridDims: (rows, cells, stock) => `= ${rows} filas · ${cells} posiciones · ${stock} tarimas`,
+    searchPh: '🔍 Buscar bloque o artista…',
+    filterActive: (n) => `${n} coincidencia${n!==1?'s':''}`,
+    gridDims: (cols, rows, widthM, depthM, capacity) => `= ${widthM}×${depthM} m · ${cols}×${rows} tarimas · caben ${capacity}`,
     newBlock: 'Nuevo bloque',
     selectedRisers: (n) => `✓ ${n} tarima${n!==1?'s':''} seleccionadas individualmente`,
     blockName: 'Nombre del bloque',
@@ -830,6 +920,8 @@ const LANGS = {
     extras: 'Extras',
     faldon: 'Faldón',
     ruedas: 'Ruedas',
+    escalera: 'Escalera',
+    barandilla: 'Barandilla',
     riserHeight: 'Altura de la tarima',
     notes: 'Notas',
     notesOpt: '(opcional)',
@@ -906,6 +998,10 @@ const LANGS = {
     otherArtistLabel: 'artista',
     faldonLabel: 'Faldón',
     ruedasLabel: 'Ruedas',
+    escaleraLabel: 'Escalera',
+    barandillaLabel: 'Barandilla',
+    safetyHint: '⚠ Altura ≥ 60 cm — se recomienda escalera y barandilla (normativa)',
+    csvEscalera: 'Escalera', csvBarandilla: 'Barandilla',
     modules: 'módulos',
     positions: 'posiciones',
     printTitle: 'TARIMAS ·',
@@ -955,6 +1051,7 @@ const LANGS = {
     noChanges: 'No changes',
     unsaved: 'Unsaved changes',
     undo: '↩ Undo',
+    redo: '↪ Redo',
     saveHtml: '💾 Save HTML',
     exportBtn: '↓ Export ▾',
     printFloor: '🖨 Print floor plan',
@@ -976,8 +1073,12 @@ const LANGS = {
     addArtist: '+ Artist',
     sbHint: 'Select an artist to manage their risers',
     columns: 'Columns',
+    stageWidth: 'Width (m)',
+    stageDepth: 'Depth (m)',
     gridHint: 'Drag → draw · Single click → select cells · Click riser → edit',
-    gridDims: (rows, cells, stock) => `= ${rows} rows · ${cells} positions · ${stock} risers`,
+    searchPh: '🔍 Search block or artist…',
+    filterActive: (n) => `${n} match${n!==1?'es':''}`,
+    gridDims: (cols, rows, widthM, depthM, capacity) => `= ${widthM}×${depthM} m · ${cols}×${rows} risers · fits ${capacity}`,
     newBlock: 'New riser block',
     selectedRisers: (n) => `✓ ${n} riser${n!==1?'s':''} selected individually`,
     blockName: 'Block name',
@@ -990,6 +1091,8 @@ const LANGS = {
     extras: 'Extras',
     faldon: 'Skirting',
     ruedas: 'Wheels',
+    escalera: 'Stairs',
+    barandilla: 'Railing',
     riserHeight: 'Riser height',
     notes: 'Notes',
     notesOpt: '(optional)',
@@ -1066,6 +1169,10 @@ const LANGS = {
     otherArtistLabel: 'artist',
     faldonLabel: 'Skirting',
     ruedasLabel: 'Wheels',
+    escaleraLabel: 'Stairs',
+    barandillaLabel: 'Railing',
+    safetyHint: '⚠ Height ≥ 60 cm — stairs and railing recommended (safety regulations)',
+    csvEscalera: 'Stairs', csvBarandilla: 'Railing',
     modules: 'modules',
     positions: 'positions',
     printTitle: 'RISERS ·',
@@ -1252,11 +1359,13 @@ function applyStaticI18n() {
   const vbGrid = document.getElementById('vbGrid'); if(vbGrid) vbGrid.textContent = L.viewGrid;
   const vbKanban = document.getElementById('vbKanban'); if(vbKanban) vbKanban.textContent = L.viewKanban;
   const undoBtn = document.getElementById('undoBtn'); if(undoBtn) undoBtn.textContent = L.undo;
+  const redoBtn = document.getElementById('redoBtn'); if(redoBtn) redoBtn.textContent = L.redo;
   const saveBtn = document.getElementById('saveBtn'); if(saveBtn) saveBtn.textContent = L.saveHtml;
   const spillTxt = document.getElementById('spillTxt');
   if(spillTxt) spillTxt.textContent = hasUnsaved ? L.unsaved : L.noChanges;
   const sbHintEl = document.getElementById('sbHint'); if(sbHintEl) sbHintEl.textContent = L.sbHint;
   const modeInfoEl = document.getElementById('modeInfo'); if(modeInfoEl) modeInfoEl.textContent = L.gridHint;
+  const searchIn = document.getElementById('searchIn'); if(searchIn) searchIn.placeholder = L.searchPh;
   const langLabel=document.getElementById('langLabel');
   if(langLabel)langLabel.textContent=lang==='es'?'English':'Español';
   const exitBtn=document.getElementById('exitPresentBtn');
@@ -1275,7 +1384,7 @@ let state={
   gridCols:10,gridRows:6,
   days:[],artistas:[],bloques:[],
   placements:{},  // `${bloqueId}_${dayId}_${sceneId}` → {col,row}
-  scenes:[{id:1,name:t('defaultSceneName'),cols:10,rows:6}]
+  scenes:[{id:1,name:t('defaultSceneName'),cols:10,rows:10,widthM:20,depthM:10}]
 };
 let nDayId=1,nArtId=1,nBloqueId=1,nSceneId=2;
 let curSceneId=1;
@@ -1287,7 +1396,7 @@ const drawMode=true; // siempre en modo dibujo
 let modalFlipped=false; // orientación activa en el modal
 let pickedCells=[]; // celdas seleccionadas individualmente {col,row}
 let modalLargo=1,modalAncho=1,modalAlt=40; // estado del modal activo
-let modalFaldon=false,modalRuedas=false; // extras del modal
+let modalFaldon=false,modalRuedas=false,modalEscalera=false,modalBarandilla=false; // extras del modal
 let isDrawing=false,drawStart=null,drawEnd=null;
 
 // ── MODAL STATE ──────────────────────────────────────
@@ -1383,6 +1492,11 @@ function loadData(){
     if(!state.scenes||!state.scenes.length){
       state.scenes=[{id:1,name:t('defaultSceneName'),cols:state.gridCols||10,rows:state.gridRows||6,stock:state.stockTotal||40}];
     }
+    // Migrar a modelo en metros: si una escena no tiene widthM/depthM, derivar de cols/rows
+    state.scenes.forEach(sc=>{
+      if(sc.widthM==null)sc.widthM=(sc.cols||10)*TARIMA_W;
+      if(sc.depthM==null)sc.depthM=(sc.rows||6)*TARIMA_D;
+    });
     // Migrar placements: key format y añadir artistaId desde bloque
     const migratedPl={};
     Object.keys(state.placements).forEach(k=>{
@@ -1454,6 +1568,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.body.classList.contains('present')){togglePresent();return;}
   if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveToFile();}
   if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}
+  if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='Z'))){e.preventDefault();redo();}
   if(e.key==='Escape'){
     if(document.getElementById('modalBg')?.classList.contains('open'))closeModal();
     if(document.getElementById('detPanel')?.classList.contains('open'))closeDet();
@@ -1463,7 +1578,7 @@ document.addEventListener('keydown',e=>{
 function resetAll(){
   if(!confirm(t('resetConfirm')))return;
   localStorage.removeItem(LS);
-  undoStack=[];
+  undoStack=[];redoStack=[];
   location.reload();
 }
 
@@ -1516,6 +1631,7 @@ function handleResize(){
       ov.classList.remove('on');
     }
   }
+  syncZoomBarVisibility();
 }
 window.addEventListener('resize',handleResize);
 window.addEventListener('resize',()=>{if(document.body.classList.contains('present')){const w=document.querySelector('#viewArea .stage-wrap')||document.querySelector('#viewArea .kanban');if(w){w.style.transform='';togglePresent();togglePresent();}}});
@@ -1524,7 +1640,7 @@ window.addEventListener('resize',()=>{if(document.body.classList.contains('prese
 // CELL SIZE
 // ═════════════════════════════════════════════════════
 function CW(){return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell').trim())||40}
-function CH(){return CW();} // celdas cuadradas: 1m×1m
+function CH(){return Math.round(CW()*(TARIMA_D/TARIMA_W));} // celda 2:1 → 1 tarima de 2m×1m
 
 // ═════════════════════════════════════════════════════
 // RENDER ALL
@@ -1533,7 +1649,8 @@ function renderAll(){
   document.getElementById('festIn').value=state.festivalName;
   const sc=curScene()||{stock:40,cols:10};
   document.getElementById('skIn').value=sc.stock||40;
-  const colsEl=document.getElementById('gcols');if(colsEl)colsEl.value=sc.cols||10;
+  const wEl=document.getElementById('gWidthM');if(wEl)wEl.value=sc.widthM||20;
+  const dEl=document.getElementById('gDepthM');if(dEl)dEl.value=sc.depthM||10;
   renderDaysBar();renderDaysList();renderSceneTabs();renderArts();updateStock(true);renderView();
 }
 
@@ -1560,7 +1677,7 @@ function renderDaysBar(){
       copyBtn.onclick=e=>{e.stopPropagation();openCopyDayMenu(d.id,copyBtn);};
     }
     btn.appendChild(lbl);btn.appendChild(dup);if(copyBtn)btn.appendChild(copyBtn);btn.appendChild(del);
-    btn.addEventListener('click',()=>{if(curDayId===d.id)return;curDayId=d.id;selArtId=null;renderDaysBar();renderDaysList();updateStock();renderArts();renderView();});
+    btn.addEventListener('click',()=>{if(curDayId===d.id)return;curDayId=d.id;selArtId=null;resetPanZoom();resetFilter();renderDaysBar();renderDaysList();updateStock();renderArts();renderView();});
 
     // ── Drag to reorder ──
     btn.addEventListener('dragstart',e=>{
@@ -1666,11 +1783,13 @@ function modsDay(dayId,sid){
     return acc;
   },0);
 }
-function calcGridDims(stock,cols){
-  // 1 celda = 1 tarima física
-  cols=Math.max(1,cols);
-  const rows=Math.ceil(stock/cols);
-  return{cols,rows,totalCells:cols*rows,stock};
+function calcGridDims(widthM,depthM){
+  // El escenario se define en metros. 1 celda = 1 tarima de TARIMA_W×TARIMA_D m.
+  widthM=Math.max(TARIMA_W,widthM||TARIMA_W);
+  depthM=Math.max(TARIMA_D,depthM||TARIMA_D);
+  const cols=Math.max(1,Math.floor(widthM/TARIMA_W)); // tarimas a lo ancho
+  const rows=Math.max(1,Math.floor(depthM/TARIMA_D)); // tarimas a lo largo
+  return{cols,rows,widthM,depthM,totalCells:cols*rows,capacity:cols*rows};
 }
 
 function updateStock(noRender){
@@ -1679,18 +1798,28 @@ function updateStock(noRender){
   sc.stock=isNaN(raw)||raw<1?1:raw;
   state.stockTotal=sc.stock;
 
-  // Recalcular cols (desde input si existe, si no usar el guardado en scene)
-  const colsEl=document.getElementById('gcols');
-  const cols=colsEl?Math.max(1,parseInt(colsEl.value)||sc.cols||10):sc.cols||10;
-  const dims=calcGridDims(sc.stock,cols);
+  // Dimensiones del escenario en metros (desde inputs si existen, si no usar lo guardado)
+  const wEl=document.getElementById('gWidthM');
+  const dEl=document.getElementById('gDepthM');
+  const widthM=wEl?Math.max(TARIMA_W,parseFloat(wEl.value)||sc.widthM||20):(sc.widthM||20);
+  const depthM=dEl?Math.max(TARIMA_D,parseFloat(dEl.value)||sc.depthM||10):(sc.depthM||10);
+  const dims=calcGridDims(widthM,depthM);
   sc.cols=dims.cols;
   sc.rows=dims.rows;
+  sc.widthM=dims.widthM;
+  sc.depthM=dims.depthM;
   state.gridCols=dims.cols;
   state.gridRows=dims.rows;
 
-  // Actualizar label
+  // Cálculo combinado: capacidad del espacio, tarimas usadas hoy, ajuste
+  const used=modsDay(curDayId);
+  const capacity=dims.capacity;          // cuántas tarimas caben en el espacio
+  const limit=Math.min(sc.stock,capacity); // límite real = lo menor entre stock y capacidad
+  const free=limit-used;
+
+  // Actualizar label: metros · capacidad · ajuste
   const lbl=document.getElementById('gridDimsLabel');
-  if(lbl)lbl.textContent=t('gridDims',dims.rows,dims.totalCells,dims.stock);
+  if(lbl)lbl.textContent=t('gridDims',dims.cols,dims.rows,dims.widthM,dims.depthM,capacity);
 
   // Eliminar placements fuera del nuevo rango
   Object.keys(state.placements).forEach(k=>{
@@ -1701,8 +1830,7 @@ function updateStock(noRender){
     if(pl.col+b.largo>dims.cols||pl.row+b.ancho>dims.rows)delete state.placements[k];
   });
 
-  const used=modsDay(curDayId),free=sc.stock-used;
-  const pct=Math.min((used/sc.stock)*100,100);
+  const pct=Math.min((used/Math.max(limit,1))*100,100);
   const cls=pct>100?'bar-danger':pct>80?'bar-warn':'bar-ok';
   document.getElementById('skGrid').innerHTML=`
     <div class="sk-cell"><div class="sk-cl">${t('risersToday')}</div><div class="sk-cv" style="color:var(--accent)">${used}</div></div>
@@ -1712,14 +1840,16 @@ function updateStock(noRender){
   document.getElementById('skFill').className='sk-fill '+cls;
 
   if(!noRender)renderView();
-  if(!noRender)sched(); // solo marcar cambios cuando es el usuario quien ajusta el stock
+  if(!noRender)sched();
 }
 
-function onColsChange(){
+function onSizeChange(){
   const sc=curScene();
-  const cols=Math.max(1,Math.min(60,parseInt(document.getElementById('gcols').value)||10));
-  sc.cols=cols;
-  updateStock(); // recalcula filas y re-renderiza
+  const wEl=document.getElementById('gWidthM');
+  const dEl=document.getElementById('gDepthM');
+  if(wEl)sc.widthM=Math.max(TARIMA_W,Math.min(200,parseFloat(wEl.value)||sc.widthM||20));
+  if(dEl)sc.depthM=Math.max(TARIMA_D,Math.min(200,parseFloat(dEl.value)||sc.depthM||10));
+  updateStock(); // recalcula cols/rows y re-renderiza
 }
 
 // ═════════════════════════════════════════════════════
@@ -1804,7 +1934,7 @@ function renderArts(){
         const [hl,hi]=mkDim('H','altura',b.altura,'di-h');
         const hcm=document.createElement('span');hcm.className='dl';hcm.textContent='cm';
         const calc=document.createElement('span');calc.className='dc';
-    const extras=(b.faldon?'🇫':'')+(b.ruedas?'⚙':'');
+    const extras=(b.faldon?'🇫':'')+(b.ruedas?'⚙':'')+(b.escalera?'🪜':'')+(b.barandilla?'🚧':'');
     calc.textContent=`${b.metrosW||b.largo}×${b.metrosD||b.ancho}m · ${b.tarimas||b.largo*b.ancho}${t('riserAbbr')}${extras?' '+extras:''}`;
         [ll,li,al,ai,hl,hi,hcm,calc].forEach(x=>dims.appendChild(x));
 
@@ -1865,6 +1995,8 @@ function setView(v){
   document.getElementById('vbGrid').className='vb'+(v==='grid'?' active':'');
   document.getElementById('vbKanban').className='vb'+(v==='kanban'?' active':'');
   document.getElementById('modeBar').style.display=v==='grid'?'flex':'none';
+  if(v==='grid'){syncZoomBarVisibility();}
+  resetFilter();
   renderView();
 }
 function renderView(){curView==='grid'?renderGrid():renderKanban();}
@@ -1944,7 +2076,7 @@ function renderGrid(){
       ${b.name?`<div class="pb-name" style="color:var(--text);font-weight:700;font-size:12px">${esc(b.name)}</div>`:''}
       <div class="pb-art" style="color:${aColor};font-size:10px;opacity:.85">${aName}</div>
       <div class="pb-dim">${b.metrosW||b.largo}×${b.metrosD||b.ancho}m</div>
-      <div class="pb-dim" style="font-size:10px;color:${ac.border};font-weight:600">${b.altura}cm${b.faldon?' 🇫':''}${b.ruedas?' ⚙':''}${b.notas?' 📝':''}</div>
+      <div class="pb-dim" style="font-size:10px;color:${ac.border};font-weight:600">${b.altura}cm${b.faldon?' 🇫':''}${b.ruedas?' ⚙':''}${b.escalera?' 🪜':''}${b.barandilla?' 🚧':''}${b.notas?' 📝':''}</div>
     `;
     // Indicador de reutilización: puntitos de colores de artistas en otros días
     const otherDays=state.days.filter(d=>d.id!==curDayId);
@@ -2122,7 +2254,18 @@ function renderGrid(){
   // Attach draw/select events
   attachGridEvents(grid,cw,ch,sc);
 
-  wrap.appendChild(grid);
+  // Wrap grid in the pan/zoom canvas layer
+  const canvas=document.createElement('div');canvas.className='stage-canvas';canvas.id='stageCanvas';
+  canvas.appendChild(grid);
+  wrap.appendChild(canvas);
+
+  // Zoom bar overlay (mobile)
+  const zb=document.createElement('div');zb.className='zoom-bar';
+  zb.innerHTML=`<button class="zoom-btn" onclick="zoomStep(-1)" title="Alejar">−</button><span class="zoom-level" id="zoomBadge">100%</span><button class="zoom-btn" onclick="zoomStep(+1)" title="Acercar">+</button><button class="zoom-btn" onclick="zoomReset()" title="Reset" style="font-size:13px">⊙</button>`;
+  wrap.appendChild(zb);
+
+  // Attach pan/zoom touch gestures to wrap
+  attachPanZoom(wrap,canvas);
 
   // Legend
   const leg=document.createElement('div');leg.className='gl';
@@ -2154,6 +2297,8 @@ function renderGrid(){
   }
 
   area.appendChild(wrap);
+  // Re-apply active filter after render
+  if(filterQuery)applyFilter();
 
   // Unassigned
   const unass=state.bloques.filter(b=>state.placements[plKey(b.id,curDayId)]===undefined);
@@ -2180,8 +2325,12 @@ function renderGrid(){
 // ═════════════════════════════════════════════════════
 function cellFromXY(grid,x,y,cw,ch){
   const rect=grid.getBoundingClientRect();
-  const col=Math.floor((x-rect.left)/(cw+GAP));
-  const row=Math.floor((y-rect.top)/(ch+GAP));
+  // getBoundingClientRect already accounts for CSS transform scale,
+  // so we divide by the visual cell size (which includes zoom scaling).
+  const visualCW=(cw+GAP)*_pz.scale;
+  const visualCH=(ch+GAP)*_pz.scale;
+  const col=Math.floor((x-rect.left)/visualCW);
+  const row=Math.floor((y-rect.top)/visualCH);
   if(col<0||col>=state.gridCols||row<0||row>=state.gridRows)return null;
   return{col,row};
 }
@@ -2252,6 +2401,8 @@ function attachGridEvents(grid,cw,ch,sc){
 
   // ── TOUCH ─────────────────────────────────────────────
   grid.addEventListener('touchstart',e=>{
+    // If pan/zoom gesture is active (pinch or pan on wrap), ignore draw
+    if(_pz.active||e.touches.length>=2){isDrawing=false;dragMoved=false;return;}
     const t=e.touches[0];
     const cell=cellFromXY(grid,t.clientX,t.clientY,cw,ch);
     if(!cell)return;
@@ -2264,6 +2415,8 @@ function attachGridEvents(grid,cw,ch,sc){
   },{passive:false});
 
   grid.addEventListener('touchmove',e=>{
+    // Second finger joined → cancel draw (becoming a pinch)
+    if(e.touches.length>=2){isDrawing=false;dragMoved=false;hideDrawPreview();return;}
     if(!isDrawing)return;
     const t=e.touches[0];
     const cell=cellFromXY(grid,t.clientX,t.clientY,cw,ch);
@@ -2276,10 +2429,12 @@ function attachGridEvents(grid,cw,ch,sc){
     isDrawing=false;
     hideDrawPreview();
     resetBgcColors(grid);
-    if(dragMoved){
+    // Don't open modal if the gesture was a pinch/pan (second finger may have already cleared isDrawing)
+    if(dragMoved&&!_pz.active){
       const rect=normRect(drawStart,drawEnd);
       if(rect.largo>=1&&rect.ancho>=1)openDrawModal(rect);
     }
+    dragMoved=false;
   });
 
   // ── CLICK en bloque colocado (sin drag) ───────────────
@@ -2385,16 +2540,20 @@ function confirmPickedCells(){
 function toggleOpt(opt){
   if(opt==='faldon'){
     modalFaldon=!modalFaldon;
-    const el=document.getElementById('togFaldon');
-    const chk=document.getElementById('chkFaldon');
-    if(el)el.classList.toggle('on',modalFaldon);
-    if(chk)chk.textContent=modalFaldon?'✓':'';
+    const el=document.getElementById('togFaldon');const chk=document.getElementById('chkFaldon');
+    if(el)el.classList.toggle('on',modalFaldon);if(chk)chk.textContent=modalFaldon?'✓':'';
   } else if(opt==='ruedas'){
     modalRuedas=!modalRuedas;
-    const el=document.getElementById('togRuedas');
-    const chk=document.getElementById('chkRuedas');
-    if(el)el.classList.toggle('on',modalRuedas);
-    if(chk)chk.textContent=modalRuedas?'✓':'';
+    const el=document.getElementById('togRuedas');const chk=document.getElementById('chkRuedas');
+    if(el)el.classList.toggle('on',modalRuedas);if(chk)chk.textContent=modalRuedas?'✓':'';
+  } else if(opt==='escalera'){
+    modalEscalera=!modalEscalera;
+    const el=document.getElementById('togEscalera');const chk=document.getElementById('chkEscalera');
+    if(el)el.classList.toggle('on',modalEscalera);if(chk)chk.textContent=modalEscalera?'✓':'';
+  } else if(opt==='barandilla'){
+    modalBarandilla=!modalBarandilla;
+    const el=document.getElementById('togBarandilla');const chk=document.getElementById('chkBarandilla');
+    if(el)el.classList.toggle('on',modalBarandilla);if(chk)chk.textContent=modalBarandilla?'✓':'';
   }
 }
 let refreshDimInfoGlobal=null; // referencia a refreshDimInfo del modal activo
@@ -2405,7 +2564,7 @@ function openDrawModal(rect){
   const mods=rect.largo*rect.ancho; // N tarimas
   modalAlt=40;
   modalFlipped=false; modalLargo=rect.largo; modalAncho=rect.ancho;
-  modalFaldon=false; modalRuedas=false; // reset extras
+  modalFaldon=false; modalRuedas=false; modalEscalera=false; modalBarandilla=false; // reset extras
   // setOrientA/B definidas globalmente abajo
   function refreshDimInfo(){
     const n=modalLargo*modalAncho; // N tarimas (1 celda = 1 tarima)
@@ -2471,7 +2630,18 @@ function openDrawModal(rect){
           <span class="toggle-label">${t('ruedas')}</span>
           <span class="toggle-check" id="chkRuedas"></span>
         </label>
+        <label class="toggle-opt" id="togEscalera" onclick="toggleOpt('escalera')">
+          <span class="toggle-icon">🪜</span>
+          <span class="toggle-label">${t('escalera')}</span>
+          <span class="toggle-check" id="chkEscalera"></span>
+        </label>
+        <label class="toggle-opt" id="togBarandilla" onclick="toggleOpt('barandilla')">
+          <span class="toggle-icon">🚧</span>
+          <span class="toggle-label">${t('barandilla')}</span>
+          <span class="toggle-check" id="chkBarandilla"></span>
+        </label>
       </div>
+      <div id="mSafetyHint" style="display:none;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--warn);background:rgba(201,125,40,.1);border:1px solid rgba(201,125,40,.3);border-radius:5px;padding:5px 8px">${t('safetyHint')}</div>
     </div>
     <div class="modal-field">
       <div class="modal-lbl">${t('riserHeight')}</div>
@@ -2513,10 +2683,24 @@ function openDrawModal(rect){
 function mAltD(d){
   modalAlt=Math.max(5,modalAlt+d);
   document.getElementById('mAltDisp').textContent=modalAlt;
-  renderMPresets();
+  renderMPresets();updateSafetyHint();
 }
 function mAltSet(h){
-  modalAlt=h;document.getElementById('mAltDisp').textContent=h;renderMPresets();
+  modalAlt=h;document.getElementById('mAltDisp').textContent=h;renderMPresets();updateSafetyHint();
+}
+function updateSafetyHint(){
+  const el=document.getElementById('mSafetyHint');if(!el)return;
+  const show=modalAlt>=60;
+  el.style.display=show?'block':'none';
+  // Auto-suggest: activate escalera+barandilla toggles on first crossing of 60cm threshold
+  if(show&&!modalEscalera&&!modalBarandilla){
+    modalEscalera=true;modalBarandilla=true;
+    ['togEscalera','togBarandilla'].forEach(id=>{
+      const t2=document.getElementById(id);if(t2)t2.classList.add('on');
+    });
+    const ce=document.getElementById('chkEscalera');if(ce)ce.textContent='✓';
+    const cb=document.getElementById('chkBarandilla');if(cb)cb.textContent='✓';
+  }
 }
 function renderMPresets(){
   const el=document.getElementById('mPresets');if(!el)return;el.innerHTML='';
@@ -2552,7 +2736,7 @@ function confirmDraw(col,row,largo,ancho){
   const mNotasEl=document.getElementById('mNotas');
   const b={id:nBloqueId++,name,largo:modalLargo,ancho:modalAncho,
     altura:modalAlt,tarimas:nTarimas,metrosW:bLargoM,metrosD:bAnchoM,
-    faldon:modalFaldon,ruedas:modalRuedas,
+    faldon:modalFaldon,ruedas:modalRuedas,escalera:modalEscalera,barandilla:modalBarandilla,
     notas:mNotasEl?mNotasEl.value.trim():''};
   snapshot();
   state.bloques.push(b);
@@ -2749,7 +2933,7 @@ function openDet(bid,did){
   ef.innerHTML=`<div class="det-l">${t('extras')}</div>`;
   const etg=document.createElement('div');etg.className='toggle-group';
   etg.style.cssText='display:flex;gap:7px';
-  [{key:'faldon',icon:'🇫',label:t('faldonLabel')},{key:'ruedas',icon:'⚙',label:t('ruedasLabel')}].forEach(opt=>{
+  [{key:'faldon',icon:'🇫',label:t('faldonLabel')},{key:'ruedas',icon:'⚙',label:t('ruedasLabel')},{key:'escalera',icon:'🪜',label:t('escaleraLabel')},{key:'barandilla',icon:'🚧',label:t('barandillaLabel')}].forEach(opt=>{
     const tog=document.createElement('div');
     tog.className='toggle-opt'+(b[opt.key]?' on':'');
     tog.style.cssText='flex:1;min-width:100px';
@@ -2867,6 +3051,8 @@ function openDupModal(bid,did){
   window._dupAlt=b.altura;
   window._dupFaldon=b.faldon||false;
   window._dupRuedas=b.ruedas||false;
+  window._dupEscalera=b.escalera||false;
+  window._dupBarandilla=b.barandilla||false;
 
   const artOpts=state.artistas.map(x=>
     `<option value="${x.id}" ${x.id===artId?'selected':''}>${esc(x.name||'Sin nombre')}</option>`
@@ -2913,6 +3099,16 @@ function openDupModal(bid,did){
           <span class="toggle-label">${t('ruedas')}</span>
           <span class="toggle-check">${b.ruedas?'✓':''}</span>
         </label>
+        <label class="toggle-opt ${b.escalera?'on':''}" id="dupTogEscalera" onclick="dupToggle('escalera')">
+          <span class="toggle-icon">🪜</span>
+          <span class="toggle-label">${t('escalera')}</span>
+          <span class="toggle-check">${b.escalera?'✓':''}</span>
+        </label>
+        <label class="toggle-opt ${b.barandilla?'on':''}" id="dupTogBarandilla" onclick="dupToggle('barandilla')">
+          <span class="toggle-icon">🚧</span>
+          <span class="toggle-label">${t('barandilla')}</span>
+          <span class="toggle-check">${b.barandilla?'✓':''}</span>
+        </label>
       </div>
     </div>
     <div class="modal-field">
@@ -2951,15 +3147,12 @@ function dupRenderPresets(cur){
   });
 }
 function dupToggle(opt){
-  if(opt==='faldon'){
-    window._dupFaldon=!window._dupFaldon;
-    const el=document.getElementById('dupTogFaldon');
-    if(el){el.classList.toggle('on',window._dupFaldon);el.querySelector('.toggle-check').textContent=window._dupFaldon?'✓':'';}
-  } else {
-    window._dupRuedas=!window._dupRuedas;
-    const el=document.getElementById('dupTogRuedas');
-    if(el){el.classList.toggle('on',window._dupRuedas);el.querySelector('.toggle-check').textContent=window._dupRuedas?'✓':'';}
-  }
+  const map={faldon:'_dupFaldon',ruedas:'_dupRuedas',escalera:'_dupEscalera',barandilla:'_dupBarandilla'};
+  const idMap={faldon:'dupTogFaldon',ruedas:'dupTogRuedas',escalera:'dupTogEscalera',barandilla:'dupTogBarandilla'};
+  const key=map[opt];if(!key)return;
+  window[key]=!window[key];
+  const el=document.getElementById(idMap[opt]);
+  if(el){el.classList.toggle('on',window[key]);el.querySelector('.toggle-check').textContent=window[key]?'✓':'';}
 }
 function confirmDup(srcBid,did){
   const src=state.bloques.find(x=>x.id===srcBid);if(!src)return;
@@ -2978,6 +3171,8 @@ function confirmDup(srcBid,did){
     metrosW:src.metrosW,metrosD:src.metrosD,
     faldon:window._dupFaldon,
     ruedas:window._dupRuedas,
+    escalera:window._dupEscalera,
+    barandilla:window._dupBarandilla,
     notas:dupNotasEl?dupNotasEl.value.trim():'',
   };
   snapshot();
@@ -3027,7 +3222,7 @@ function renderKanban(){
       const card=document.createElement('div');card.className='kcard';card.style.borderLeftColor=a.color;
       card.innerHTML=`<div class="kcard-name" style="color:${a.color}">${esc(a.name||'Sin nombre')}</div>`;
       bls.forEach(b=>{
-        card.innerHTML+=`<div class="kbr"><div class="kbd" style="background:${a.color}99"></div><div class="kbn">${esc(b.name||t('blockFallback'))}</div><div class="kbi">${b.metrosW||b.largo}×${b.metrosD||b.ancho}m·${b.tarimas||b.largo*b.ancho}${t('riserAbbr')}·${b.altura}cm${b.faldon?'·🇫':''}${b.ruedas?'·⚙':''}</div></div>`;
+        card.innerHTML+=`<div class="kbr"><div class="kbd" style="background:${a.color}99"></div><div class="kbn">${esc(b.name||t('blockFallback'))}</div><div class="kbi">${b.metrosW||b.largo}×${b.metrosD||b.ancho}m·${b.tarimas||b.largo*b.ancho}${t('riserAbbr')}·${b.altura}cm${b.faldon?'·🇫':''}${b.ruedas?'·⚙':''}${b.escalera?'·🪜':''}${b.barandilla?'·🚧':''}</div></div>`;
       });
       card.innerHTML+=`<div class="ktot"><span>Total</span><span style="color:var(--accent)">${t('risersM2',tot,bls.reduce((s,b)=>s+b.largo*b.ancho,0))}</span></div>`;
       body.appendChild(card);
@@ -3037,6 +3232,7 @@ function renderKanban(){
     col.appendChild(body);wrap.appendChild(col);
   });
   area.appendChild(wrap);
+  if(filterQuery)applyFilter();
 }
 
 // ═════════════════════════════════════════════════════
@@ -3082,10 +3278,12 @@ function renderSceneTabs(){
     btn.addEventListener('click',()=>{
       if(curSceneId===sc.id)return;
       curSceneId=sc.id;
-      const colsEl=document.getElementById('gcols');
-      if(colsEl)colsEl.value=sc.cols||10;
+      const wEl=document.getElementById('gWidthM');
+      if(wEl)wEl.value=sc.widthM||20;
+      const dEl=document.getElementById('gDepthM');
+      if(dEl)dEl.value=sc.depthM||10;
       document.getElementById('skIn').value=sc.stock||40;
-      clearPickedCells();renderSceneTabs();updateStock(true);renderArts();renderView();
+      clearPickedCells();resetPanZoom();resetFilter();renderSceneTabs();updateStock(true);renderArts();renderView();
     });
     bar.appendChild(btn);
   });
@@ -3095,9 +3293,10 @@ function renderSceneTabs(){
 }
 function addScene(){
   snapshot();
-  const sc={id:nSceneId++,name:t('sceneN',state.scenes.length+1),cols:10,rows:4,stock:40};
+  const sc={id:nSceneId++,name:t('sceneN',state.scenes.length+1),cols:10,rows:10,widthM:20,depthM:10,stock:40};
   state.scenes.push(sc);curSceneId=sc.id;
-  const colsEl=document.getElementById('gcols');if(colsEl)colsEl.value=sc.cols;
+  const wEl=document.getElementById('gWidthM');if(wEl)wEl.value=sc.widthM;
+  const dEl=document.getElementById('gDepthM');if(dEl)dEl.value=sc.depthM;
   document.getElementById('skIn').value=sc.stock;
   renderSceneTabs();updateStock(true);renderArts();renderView();sched();
 }
@@ -3254,7 +3453,7 @@ function showToast(msg,type){
 }
 
 function exportCSV(){
-  const rows=[[t('csvDay'),t('csvArtist'),t('csvBlock'),t('csvW'),t('csvD'),t('csvRisers'),t('csvHeight'),t('csvFaldon'),t('csvWheels'),t('csvCol'),t('csvRow')]];
+  const rows=[[t('csvDay'),t('csvArtist'),t('csvBlock'),t('csvW'),t('csvD'),t('csvRisers'),t('csvHeight'),t('csvFaldon'),t('csvWheels'),t('csvEscalera'),t('csvBarandilla'),t('csvCol'),t('csvRow')]];
   state.days.forEach(day=>{
     state.bloques.forEach(b=>{
       const pl=state.placements[plKey(b.id,day.id)];
@@ -3274,6 +3473,8 @@ function exportCSV(){
         b.altura,
         b.faldon?t('csvYes'):t('csvNo'),
         b.ruedas?t('csvYes'):t('csvNo'),
+        b.escalera?t('csvYes'):t('csvNo'),
+        b.barandilla?t('csvYes'):t('csvNo'),
         pl?pl.col+1:t('csvUnplaced'),
         pl?pl.row+1:''
       ]);
@@ -3481,7 +3682,7 @@ function printView(){
     const a=state.artistas.find(x=>x.id===pl.artistaId);
     if(!a)return;
     const ac=alturaColor(b.altura);
-    const extras=[b.faldon?t('faldonLabel'):'',b.ruedas?t('ruedasLabel'):''].filter(Boolean).join(', ')||'—';
+    const extras=[b.faldon?t('faldonLabel'):'',b.ruedas?t('ruedasLabel'):'',b.escalera?t('escaleraLabel'):'',b.barandilla?t('barandillaLabel'):''].filter(Boolean).join(', ')||'—';
     tableHTML+=`<tr>
       <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${a.color};margin-right:6px;vertical-align:middle"></span><strong>${esc(a.name||'?')}</strong></td>
       <td>${esc(b.name||'—')}</td>
@@ -3671,39 +3872,258 @@ function printKanban(){
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
 
-// ── FEAT 6: historial / undo ──────────────────────────
+// ── FEAT 6: historial / undo + redo ──────────────────────────
 const UNDO_MAX=30;
 let undoStack=[];
+let redoStack=[];
 let undoIsRestoring=false;
 
 function snapshot(){
   if(undoIsRestoring)return;
   undoStack.push(JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId}));
   if(undoStack.length>UNDO_MAX)undoStack.shift();
-  updateUndoBtn();
+  // Cualquier acción nueva invalida el historial futuro
+  redoStack=[];
+  updateHistoryBtns();
 }
-function undo(){
-  if(undoStack.length===0)return;
+
+function _restoreSnapshot(snap){
   undoIsRestoring=true;
-  const prev=JSON.parse(undoStack.pop());
-  state=prev.state;nDayId=prev.nDayId;nArtId=prev.nArtId;nBloqueId=prev.nBloqueId;
-  if(prev.nSceneId)nSceneId=prev.nSceneId;
-  if(prev.curSceneId)curSceneId=prev.curSceneId;
+  state=snap.state;nDayId=snap.nDayId;nArtId=snap.nArtId;nBloqueId=snap.nBloqueId;
+  if(snap.nSceneId)nSceneId=snap.nSceneId;
+  if(snap.curSceneId)curSceneId=snap.curSceneId;
   if(!state.days.find(d=>d.id===curDayId))curDayId=state.days[0]?.id;
   if(!state.artistas.find(a=>a.id===selArtId))selArtId=null;
   undoIsRestoring=false;
-  // Asegurar que curDayId y curSceneId son válidos tras el undo
   if(!state.days.find(d=>d.id===curDayId))curDayId=state.days[0]?.id;
   if(!state.scenes?.find(s=>s.id===curSceneId))curSceneId=state.scenes?.[0]?.id||1;
   renderAll();
-  updateUndoBtn();
+  updateHistoryBtns();
   sched();
 }
-function updateUndoBtn(){
-  const btn=document.getElementById('undoBtn');
-  if(btn){btn.disabled=undoStack.length===0;btn.style.opacity=undoStack.length===0?'.35':'1';}
-  const btn2=document.getElementById('undoBtn2');
-  if(btn2){btn2.disabled=undoStack.length===0;btn2.style.opacity=undoStack.length===0?'.35':'1';}
+
+function undo(){
+  if(undoStack.length===0)return;
+  // Guardar estado actual en redoStack antes de restaurar
+  redoStack.push(JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId}));
+  if(redoStack.length>UNDO_MAX)redoStack.shift();
+  const prev=JSON.parse(undoStack.pop());
+  _restoreSnapshot(prev);
+}
+
+function redo(){
+  if(redoStack.length===0)return;
+  // Guardar estado actual en undoStack antes de avanzar
+  undoStack.push(JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId}));
+  if(undoStack.length>UNDO_MAX)undoStack.shift();
+  const next=JSON.parse(redoStack.pop());
+  _restoreSnapshot(next);
+}
+
+function updateHistoryBtns(){
+  const canUndo=undoStack.length>0;
+  const canRedo=redoStack.length>0;
+  ['undoBtn','undoBtn2'].forEach(id=>{
+    const b=document.getElementById(id);
+    if(b){b.disabled=!canUndo;b.style.opacity=canUndo?'1':'.35';}
+  });
+  ['redoBtn','redoBtn2'].forEach(id=>{
+    const b=document.getElementById(id);
+    if(b){b.disabled=!canRedo;b.style.opacity=canRedo?'1':'.35';}
+  });
+}
+// Alias para retrocompatibilidad con llamadas directas a updateUndoBtn
+function updateUndoBtn(){updateHistoryBtns();}
+
+// ── PAN / ZOOM (móvil) ────────────────────────────────────────
+const PZ_MIN=0.35,PZ_MAX=3,PZ_STEP=0.25;
+const _pz={scale:1,tx:0,ty:0,active:false};
+
+function _applyPZ(canvas){
+  if(!canvas)return;
+  canvas.style.transform=`translate(${_pz.tx}px,${_pz.ty}px) scale(${_pz.scale})`;
+  // Update all zoom labels
+  const pct=Math.round(_pz.scale*100)+'%';
+  document.querySelectorAll('#zoomBadge,#zoomLabel').forEach(el=>{if(el)el.textContent=pct;});
+}
+
+function _clampPan(canvas,wrap){
+  if(!canvas||!wrap)return;
+  const ww=wrap.clientWidth,wh=wrap.clientHeight;
+  const cw=canvas.scrollWidth*_pz.scale,ch=canvas.scrollHeight*_pz.scale;
+  // Allow panning only when content is larger than viewport
+  const maxTx=Math.max(0,cw-ww);
+  const maxTy=Math.max(0,ch-wh);
+  _pz.tx=Math.max(-maxTx,Math.min(0,_pz.tx));
+  _pz.ty=Math.max(-maxTy,Math.min(0,_pz.ty));
+}
+
+function zoomStep(dir){
+  const canvas=document.getElementById('stageCanvas');
+  const wrap=canvas?.parentElement;
+  _pz.scale=Math.max(PZ_MIN,Math.min(PZ_MAX,_pz.scale+dir*PZ_STEP));
+  _clampPan(canvas,wrap);
+  _applyPZ(canvas);
+}
+
+function zoomReset(){
+  const canvas=document.getElementById('stageCanvas');
+  _pz.scale=1;_pz.tx=0;_pz.ty=0;
+  _applyPZ(canvas);
+}
+
+function attachPanZoom(wrap,canvas){
+  if(!isMobile())return; // desktop uses native overflow scroll
+  let panning=false,panSx=0,panSy=0,panTx0=0,panTy0=0;
+  let pinching=false,pinchDist0=0,pinchScale0=1;
+
+  function dist(t){
+    const dx=t[0].clientX-t[1].clientX,dy=t[0].clientY-t[1].clientY;
+    return Math.hypot(dx,dy);
+  }
+  function midpoint(t){
+    return{x:(t[0].clientX+t[1].clientX)/2,y:(t[0].clientY+t[1].clientY)/2};
+  }
+
+  wrap.addEventListener('touchstart',e=>{
+    // Let block drag and grid draw handle their own events via stopPropagation
+    if(e.target.closest('.pb'))return; // block: let block handler take it
+    if(e.touches.length>=2){
+      // Pinch start — cancel any draw already in progress
+      pinching=true;panning=false;
+      _pz.active=true;
+      pinchDist0=dist(e.touches);
+      pinchScale0=_pz.scale;
+      // Cancel any draw gesture that started with the first finger
+      isDrawing=false;dragMoved=false;hideDrawPreview();
+      e.preventDefault();
+    } else if(e.touches.length===1){
+      // Could be pan (on wrap bg) or draw (on grid bgc) — only pan if NOT on grid cell
+      const onGrid=e.target.closest('.stage-grid');
+      if(!onGrid){
+        panning=true;pinching=false;
+        _pz.active=true;
+        panSx=e.touches[0].clientX;panSy=e.touches[0].clientY;
+        panTx0=_pz.tx;panTy0=_pz.ty;
+        e.preventDefault();
+      }
+    }
+  },{passive:false});
+
+  wrap.addEventListener('touchmove',e=>{
+    if(pinching&&e.touches.length>=2){
+      const d=dist(e.touches);
+      const newScale=Math.max(PZ_MIN,Math.min(PZ_MAX,pinchScale0*(d/pinchDist0)));
+      // Zoom toward pinch midpoint
+      const mid=midpoint(e.touches);
+      const wr=wrap.getBoundingClientRect();
+      const ox=(mid.x-wr.left-_pz.tx)/(_pz.scale);
+      const oy=(mid.y-wr.top -_pz.ty)/(_pz.scale);
+      _pz.scale=newScale;
+      _pz.tx=mid.x-wr.left-ox*newScale;
+      _pz.ty=mid.y-wr.top -oy*newScale;
+      _clampPan(canvas,wrap);
+      _applyPZ(canvas);
+      e.preventDefault();
+    } else if(panning&&e.touches.length===1){
+      _pz.tx=panTx0+(e.touches[0].clientX-panSx);
+      _pz.ty=panTy0+(e.touches[0].clientY-panSy);
+      _clampPan(canvas,wrap);
+      _applyPZ(canvas);
+      e.preventDefault();
+    }
+  },{passive:false});
+
+  wrap.addEventListener('touchend',e=>{
+    if(e.touches.length<2)pinching=false;
+    if(e.touches.length===0){panning=false;_pz.active=false;}
+  });
+
+  // Initial render
+  _applyPZ(canvas);
+}
+
+// Reset zoom state whenever the grid is re-rendered
+function resetPanZoom(){
+  _pz.scale=1;_pz.tx=0;_pz.ty=0;
+  const canvas=document.getElementById('stageCanvas');
+  if(canvas)_applyPZ(canvas);
+}
+
+// ── BUSCADOR / FILTRO VISUAL ─────────────────────────────────────
+let filterQuery='';
+
+function onSearchInput(val){
+  filterQuery=val.trim().toLowerCase();
+  const clearBtn=document.getElementById('searchClear');
+  if(clearBtn)clearBtn.classList.toggle('visible',filterQuery.length>0);
+  applyFilter();
+}
+
+function clearSearch(){
+  filterQuery='';
+  const inp=document.getElementById('searchIn');
+  if(inp)inp.value='';
+  const clearBtn=document.getElementById('searchClear');
+  if(clearBtn)clearBtn.classList.remove('visible');
+  applyFilter();
+}
+
+function applyFilter(){
+  const q=filterQuery;
+  const badge=document.getElementById('filterBadge');
+  if(!q){
+    // No filter — show everything
+    document.querySelectorAll('.pb,.uc,.kcard').forEach(el=>el.classList.remove('filter-dim'));
+    if(badge){badge.textContent='';badge.classList.remove('visible');}
+    return;
+  }
+  let hits=0;
+  // ── Vista Planta: bloques colocados (.pb) ──────────────
+  document.querySelectorAll('.pb').forEach(el=>{
+    const bid=parseInt(el.dataset.bid);
+    if(isNaN(bid)){el.classList.add('filter-dim');return;}
+    const b=state.bloques.find(x=>x.id===bid);
+    if(!b){el.classList.add('filter-dim');return;}
+    const pl=state.placements[plKey(b.id,curDayId)];
+    const artId=pl?.artistaId||null;
+    const a=artId?state.artistas.find(x=>x.id===artId):null;
+    const haystack=((b.name||'')+' '+(a?.name||'')+' '+(b.notas||'')).toLowerCase();
+    const match=haystack.includes(q);
+    el.classList.toggle('filter-dim',!match);
+    if(match)hits++;
+  });
+  // ── Vista Planta: chips sin colocar (.uc) ──────────────
+  document.querySelectorAll('.uc').forEach(el=>{
+    // chips have text: "ArtistName · BlockName · …"
+    const txt=(el.textContent||'').toLowerCase();
+    const match=txt.includes(q);
+    el.classList.toggle('filter-dim',!match);
+    if(match)hits++;
+  });
+  // ── Vista Kanban: tarjetas de artista (.kcard) ─────────
+  document.querySelectorAll('.kcard').forEach(el=>{
+    const txt=(el.textContent||'').toLowerCase();
+    const match=txt.includes(q);
+    el.classList.toggle('filter-dim',!match);
+    if(match)hits++;
+  });
+  // Badge
+  if(badge){
+    badge.textContent=t('filterActive',hits);
+    badge.classList.toggle('visible',true);
+  }
+}
+
+// Limpiar filtro al cambiar de contexto
+function resetFilter(){
+  clearSearch();
+}
+
+// Show zoom controls bar only on mobile
+function syncZoomBarVisibility(){
+  const bar=document.getElementById('modeZoomBar');
+  if(bar)bar.style.display=isMobile()?'flex':'none';
 }
 // BOOT
 // Estado incrustado al guardar (generado por saveToFile)
@@ -3719,9 +4139,10 @@ renderAll();
 applyStaticI18n();
 updateUndoBtn();
 enableSaveBtn();
+syncZoomBarVisibility();
 
 
-function resizeGrid(){onColsChange();}
+function resizeGrid(){onSizeChange();}
 </script>
 <script>
 // Registro del service worker: habilita instalación y funcionamiento offline.

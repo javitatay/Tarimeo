@@ -3,7 +3,7 @@
    Como la app es un único index.html autocontenido, basta con cachear
    ese archivo, el manifest y los iconos. */
 
-const CACHE = 'tarimeo-v1';
+const CACHE = 'tarimeo-v2';
 
 // Archivos propios de la app que queremos disponibles offline.
 const ASSETS = [
