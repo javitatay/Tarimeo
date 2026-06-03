@@ -2121,12 +2121,13 @@ function dimFull(cols,rows){
 }
 // ── FEAT 7: color por altura ──────────────────────────
 function alturaColor(cm){
-  // Tierra=20, Trigo=40, Ocre=60, Siena=80+
-  if(cm<=20) return {bg:'rgba(80,140,100,',  border:'#508c64'};
-  if(cm<=40) return {bg:'rgba(180,148,70,',  border:'#b49446'};
-  if(cm<=60) return {bg:'rgba(180,110,50,',  border:'#b46e32'};
-  if(cm<=80) return {bg:'rgba(160,75,55,',   border:'#a04b37'};
-  return       {bg:'rgba(140,55,55,',        border:'#8c3737'};
+  // Opción C — escala dorado accent de Tarimeo
+  // border: color de la franja visual  |  text: color legible en fondo oscuro
+  if(cm<=20) return {bg:'rgba(253,230,138,', border:'#fde68a', text:'#c89838'};
+  if(cm<=40) return {bg:'rgba(251,191,36,',  border:'#fbbf24', text:'#fbbf24'};
+  if(cm<=60) return {bg:'rgba(217,119,6,',   border:'#d97706', text:'#d97706'};
+  if(cm<=80) return {bg:'rgba(194,65,12,',   border:'#c2410c', text:'#e07040'};
+  return       {bg:'rgba(153,27,27,',        border:'#991b1b', text:'#e05555'};
 }
 // ═════════════════════════════════════════════════════
 // GRID VIEW
@@ -2176,7 +2177,7 @@ function renderGrid(){
       ${b.name?`<div class="pb-name" style="color:var(--text);font-weight:700;font-size:12px">${esc(b.name)}</div>`:''}
       <div class="pb-art" style="color:${aColor};font-size:10px;opacity:.85">${aName}</div>
       <div class="pb-dim">${b.metrosW||b.largo}×${b.metrosD||b.ancho}m</div>
-      <div class="pb-dim" style="font-size:10px;color:${ac.border};font-weight:600">${b.altura}cm${b.faldon?' 🇫':''}${b.ruedas?' ⚙':''}${b.escalera?' 🪜':''}${b.barandilla?' 🚧':''}${b.notas?' 📝':''}</div>
+      <div class="pb-dim" style="font-size:10px;color:${ac.text};font-weight:600">${b.altura}cm${b.faldon?' 🇫':''}${b.ruedas?' ⚙':''}${b.escalera?' 🪜':''}${b.barandilla?' 🚧':''}${b.notas?' 📝':''}</div>
     `;
     // Indicador de reutilización: puntitos de colores de artistas en otros días
     const otherDays=state.days.filter(d=>d.id!==curDayId);
@@ -2261,7 +2262,7 @@ function renderGrid(){
               snapGuide.style.width=gw+'px';
               snapGuide.style.height=gh+'px';
               snapGuide.style.background=fits?'rgba(80,140,100,.25)':'rgba(160,75,55,.25)';
-              snapGuide.style.border='2px solid '+(fits?'#508c64':'#a04b37');
+              snapGuide.style.border='2px solid '+(fits?'#fbbf24':'#991b1b');
             } else if(snapGuide){
               snapGuide.remove();snapGuide=null;
             }
@@ -2382,7 +2383,7 @@ function renderGrid(){
   // Leyenda de alturas
   const altLeg=document.createElement('div');
   altLeg.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:8px;border-top:1px solid var(--border2)';
-  [[20,'#508c64'],[40,'#b49446'],[60,'#b46e32'],[80,'#a04b37'],[100,'#8c3737']].forEach(([h,c])=>{
+  [[20,'#fde68a'],[40,'#fbbf24'],[60,'#d97706'],[80,'#c2410c'],[100,'#991b1b']].forEach(([h,c])=>{
     altLeg.innerHTML+=`<div style="display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)"><div style="width:18px;height:5px;border-radius:3px;background:${c}"></div>≤${h}cm</div>`;
   });
   wrap.appendChild(altLeg);
@@ -3844,7 +3845,7 @@ function printView(){
     <span>${Math.round(usedMods/stockSc*100)}%</span>
   </div>
   <div class="legend">
-    ${[[20,'#3ecf6e'],[40,'#f0c040'],[60,'#f5a623'],[80,'#e05a2b'],[100,'#e8394a']].map(([h,c])=>`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>≤${h}cm</div>`).join('')}
+    ${[[20,'#fde68a'],[40,'#fbbf24'],[60,'#d97706'],[80,'#c2410c'],[100,'#991b1b']].map(([h,c])=>`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>≤${h}cm</div>`).join('')}
     ${state.artistas.map(a=>`<div class="legend-item"><div class="legend-dot" style="background:${a.color};border-radius:50%"></div>${esc(a.name||'?')}</div>`).join('')}
   </div>
   <div class="grid-wrap"><div class="grid">${gridHTML}</div></div>
