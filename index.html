@@ -235,7 +235,12 @@ input,button,select,textarea{font-family:inherit}
 .grid-ctrl{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted)}
 .gsz{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;width:48px;padding:5px 7px;border-radius:4px;outline:none;-moz-appearance:textfield;text-align:center}
 /* ── BUSCADOR ─────────────────────────────────────────── */
-.search-wrap{display:flex;align-items:center;gap:5px;margin-left:auto}
+.search-bar{
+  display:flex;align-items:center;padding:5px 18px;
+  background:var(--surface2);border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.search-wrap{display:flex;align-items:center;gap:5px}
 .search-in{
   background:var(--surface);border:1px solid var(--border2);
   color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;
@@ -517,6 +522,7 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
   .stage-wrap{padding:8px;border-radius:8px;box-shadow:none;border:1px solid var(--border);position:relative;overflow:hidden;touch-action:none}
   .zoom-bar{display:flex}
   .mode-bar{padding:6px 8px;gap:6px;flex-wrap:wrap}
+  .search-bar{padding:4px 8px}
   .search-in{width:120px;font-size:11px}
   .search-in:focus{width:140px}
   .mode-info{display:none}
@@ -536,6 +542,7 @@ body.present .tb,
 body.present .sb,
 body.present .sb-ov,
 body.present .det,
+body.present .search-bar,
 body.present .mode-bar,
 body.present .unass,
 body.present #pickBar { display:none!important; }
@@ -822,7 +829,10 @@ body.mobile-more #mobilePanel{display:block}
         <button class="zoom-btn" onclick="zoomStep(+1)" title="Acercar">+</button>
         <button class="zoom-btn" onclick="zoomReset()" title="Reset zoom" style="font-size:13px">⊙</button>
       </div>
-      <!-- Buscador visual -->
+    </div>
+
+    <!-- Buscador visual — siempre visible en planta y kanban -->
+    <div class="search-bar" id="searchBar">
       <div class="search-wrap" id="searchWrap">
         <input class="search-in" id="searchIn" type="search" placeholder="🔍 Buscar…" autocomplete="off" oninput="onSearchInput(this.value)" data-i18n-ph="searchPh">
         <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Limpiar">×</button>
@@ -2297,8 +2307,6 @@ function renderGrid(){
   }
 
   area.appendChild(wrap);
-  // Re-apply active filter after render
-  if(filterQuery)applyFilter();
 
   // Unassigned
   const unass=state.bloques.filter(b=>state.placements[plKey(b.id,curDayId)]===undefined);
@@ -2318,6 +2326,8 @@ function renderGrid(){
     });
     up.appendChild(ul);area.appendChild(up);
   }
+  // Re-apply active filter after full render (including unplaced chips)
+  if(filterQuery)applyFilter();
 }
 
 // ═════════════════════════════════════════════════════
@@ -2939,6 +2949,7 @@ function openDet(bid,did){
     tog.style.cssText='flex:1;min-width:100px';
     tog.innerHTML=`<span class="toggle-icon">${opt.icon}</span><span class="toggle-label">${opt.label}</span><span class="toggle-check">${b[opt.key]?'✓':''}</span>`;
     tog.addEventListener('click',()=>{
+      snapshot();
       b[opt.key]=!b[opt.key];
       tog.classList.toggle('on',b[opt.key]);
       tog.querySelector('.toggle-check').textContent=b[opt.key]?'✓':'';
@@ -3426,6 +3437,7 @@ function importBackupJSON(input){
       const p=JSON.parse(e.target.result);
       if(!p.state||!p.state.days)throw new Error(t('invalidFormat'));
       if(!loadEmbedded(p)){throw new Error('No se pudieron cargar los datos');}
+      undoStack=[];redoStack=[];updateHistoryBtns();
       saveData();
       document.getElementById('festIn').value=state.festivalName||'Festival';
       renderAll();
@@ -3507,6 +3519,8 @@ function importCSV(){
         const iH    = col(['altura (cm)','altura']);
         const iFal  = col(['faldón','faldon','skirting']);
         const iRue  = col(['ruedas','wheels']);
+        const iEsc  = col(['escalera','stairs']);
+        const iBar  = col(['barandilla','railing']);
         const iC    = col(['posición col','col','column']);
         const iR    = col(['posición fila','fila','row','position row']);
 
@@ -3537,6 +3551,8 @@ function importCSV(){
           const altura   =iH>=0 ? parseInt(row[iH])||40 : 40;
           const faldon   =iFal>=0 ? (row[iFal]||'').toLowerCase().includes('sí')||(row[iFal]||'').toLowerCase().includes('yes')||row[iFal]==='true' : false;
           const ruedas   =iRue>=0 ? (row[iRue]||'').toLowerCase().includes('sí')||(row[iRue]||'').toLowerCase().includes('yes')||row[iRue]==='true' : false;
+          const escalera =iEsc>=0 ? (row[iEsc]||'').toLowerCase().includes('sí')||(row[iEsc]||'').toLowerCase().includes('yes')||row[iEsc]==='true' : false;
+          const barandilla=iBar>=0 ? (row[iBar]||'').toLowerCase().includes('sí')||(row[iBar]||'').toLowerCase().includes('yes')||row[iBar]==='true' : false;
           const pcol     =iC>=0 ? parseInt(row[iC])-1 : NaN;
           const prow     =iR>=0 ? parseInt(row[iR])-1 : NaN;
 
@@ -3564,7 +3580,7 @@ function importCSV(){
               largo:tarimas,ancho:1,   // en celdas: tarimas columnas × 1 fila (aprox)
               altura,tarimas,
               metrosW,metrosD,
-              faldon,ruedas
+              faldon,ruedas,escalera,barandilla
             };
             ns.bloques.push(b);
             bloqMap[blKey]=b.id;
@@ -3613,7 +3629,7 @@ function parseCSVLine(line){
 
 async function exportImg(fmt){
   const ov=document.getElementById('ov');ov.classList.add('on');
-  const hide=document.querySelectorAll('#sbBtn,.sb,.days-bar,.det,#modeBar,#expWrap,.sb-ov');
+  const hide=document.querySelectorAll('#sbBtn,.sb,.days-bar,.det,#modeBar,#searchBar,#expWrap,.sb-ov');
   hide.forEach(el=>el.style.visibility='hidden');
   await new Promise(r=>setTimeout(r,150));
   try{
@@ -4045,7 +4061,7 @@ function attachPanZoom(wrap,canvas){
 
 // Reset zoom state whenever the grid is re-rendered
 function resetPanZoom(){
-  _pz.scale=1;_pz.tx=0;_pz.ty=0;
+  _pz.scale=1;_pz.tx=0;_pz.ty=0;_pz.active=false;
   const canvas=document.getElementById('stageCanvas');
   if(canvas)_applyPZ(canvas);
 }
