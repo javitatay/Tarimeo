@@ -399,8 +399,9 @@ input,button,select,textarea{font-family:inherit}
   display:none;position:fixed;inset:0;
   background:rgba(0,0,0,.72);backdrop-filter:blur(4px);
   z-index:800;
-  align-items:flex-start;justify-content:center;
-  padding:calc(var(--th) + 18px) 16px 24px;
+  align-items:center;justify-content:center;
+  /* Padding top = header para que el modal nunca tape el toolbar */
+  padding:calc(var(--th) + 8px) 16px 16px;
   box-sizing:border-box;overflow-y:auto;
 }
 .modal-bg.open{display:flex}
@@ -412,7 +413,8 @@ input,button,select,textarea{font-family:inherit}
   width:440px;max-width:min(96vw,100%);
   display:flex;flex-direction:column;gap:0;
   box-shadow:0 24px 72px rgba(0,0,0,.75);
-  max-height:calc(100vh - var(--th) - 56px);
+  /* Altura máxima: viewport - header - padding top/bottom del backdrop */
+  max-height:calc(100vh - var(--th) - 40px);
   overflow:hidden;
   margin:0 auto;flex-shrink:0;
 }
@@ -467,6 +469,7 @@ input,button,select,textarea{font-family:inherit}
     flex-direction:row;
     padding:0;overflow:hidden;
     gap:0;
+    flex:1;min-height:0;
   }
   .modal-wide .modal-col-l{
     flex:0 0 310px;
@@ -474,12 +477,22 @@ input,button,select,textarea{font-family:inherit}
     padding:18px 20px;
     overflow-y:auto;
     background:var(--surface2);
+    border-radius:0 0 0 13px; /* esquina inf-izq del modal */
   }
   .modal-wide .modal-col-r{
     flex:1;
     padding:18px 20px;
     overflow-y:auto;
   }
+}
+
+/* Centrado vertical cuando el modal cabe en el viewport */
+.modal-bg.open{
+  align-items:center;
+}
+/* Si el viewport es muy bajo, alinear al top */
+@media(max-height:700px){
+  .modal-bg.open{align-items:flex-start}
 }
 
 /* ── Móvil: apiladas ── */
@@ -498,15 +511,37 @@ input,button,select,textarea{font-family:inherit}
 .modal-in:focus{border-color:var(--accent)}
 
 /* Toggle switches */
-.toggle-group{display:flex;gap:6px;flex-wrap:wrap}
-.toggle-opt{display:flex;align-items:center;gap:9px;flex:1;min-width:120px;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:all .2s;user-select:none}
+.toggle-group{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.toggle-opt{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:8px;padding:10px 10px;
+  cursor:pointer;transition:all .2s;user-select:none;
+  min-width:0; /* evita desbordamiento en grid */
+  overflow:hidden;
+}
 .modal-wide .modal-col-l .toggle-opt{background:var(--surface)}
 .toggle-opt.on{background:var(--accent-dim)!important;border-color:var(--accent)}
 .toggle-opt input[type=checkbox]{display:none}
-.toggle-icon{font-size:17px;line-height:1;flex-shrink:0}
-.toggle-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);line-height:1.3;transition:color .2s}
+.toggle-icon{font-size:16px;line-height:1;flex-shrink:0}
+.toggle-label{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--muted);line-height:1.2;transition:color .2s;
+  flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
 .toggle-opt.on .toggle-label{color:var(--accent)}
-.toggle-check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border);background:var(--bg);margin-left:auto;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s}
+.toggle-check{
+  width:16px;height:16px;border-radius:4px;
+  border:1.5px solid var(--border);background:var(--bg);
+  flex-shrink:0; /* nunca se achica */
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;transition:all .2s;
+}
 .toggle-opt.on .toggle-check{background:var(--accent);border-color:var(--accent);color:#111}
 
 select.modal-in{-webkit-appearance:none;cursor:pointer}
@@ -581,20 +616,40 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
 
 /* RESPONSIVE */
 @media(min-width:1600px){
-  :root{--sb-w:380px;--cell:96px;--th:72px}
+  :root{--sb-w:380px;--cell:100px;--th:72px}
   .tb{padding:0 26px;gap:14px}.tb-logo{font-size:32px}.fest-in{font-size:13px;width:180px}
+  .ub-lbl{display:inline}.ub{padding:6px 10px}
   .vb,.mb{font-size:12px}.days-bar{padding:0 26px}.dt{padding:11px 16px;font-size:12px}
   .view-area{padding:22px 26px}.pb-art{font-size:11px}.pb-name{font-size:9px}.pb-dim,.pb-alt{font-size:8px}
   .sb-scroll{padding:14px}.ac-name{font-size:13px}
 }
-@media(min-width:1280px) and (max-width:1599px){
-  :root{--sb-w:360px;--cell:92px;--th:68px}
-  .tb{padding:0 22px}.tb-logo{font-size:28px}.fest-in{width:160px}
+/* ── 1400–1599px: MacBook Pro M3 16" (1512px lógicos) ── */
+@media(min-width:1400px) and (max-width:1599px){
+  :root{--sb-w:360px;--cell:88px;--th:68px}
+  .tb{padding:0 18px;gap:10px}.tb-logo{font-size:28px}.fest-in{width:150px}
   .days-bar{padding:0 22px}.view-area{padding:20px 22px}
+  .ub-lbl{display:none}.ub{padding:6px 9px}
 }
+/* ── 1280–1399px: MacBook Pro 14" ── */
+@media(min-width:1280px) and (max-width:1399px){
+  :root{--sb-w:340px;--cell:80px;--th:66px}
+  .tb{padding:0 14px;gap:8px}.tb-logo{font-size:26px}.fest-in{width:140px}
+  .days-bar{padding:0 18px}.view-area{padding:18px}
+  .ub-lbl{display:none}.ub{padding:6px 8px}
+  #undoBtn,#redoBtn{padding:6px 9px;font-size:13px}
+  .tb-sep{margin:0 1px}
+}
+/* ── 1024–1279px: MacBook Air / tablets landscape ── */
 @media(min-width:1024px) and (max-width:1279px){
-  :root{--sb-w:340px;--cell:84px;--th:66px}
-  .tb{padding:0 16px}.tb-logo{font-size:24px}.fest-in{width:130px}
+  :root{--sb-w:320px;--cell:70px;--th:62px}
+  .tb{padding:0 10px;gap:6px}.tb-logo{font-size:22px}.fest-in{width:110px;font-size:12px}
+  .days-bar{padding:0 14px}.view-area{padding:16px}
+  .ub-lbl{display:none}.ub{padding:5px 7px}
+  #undoBtn,#redoBtn{display:none}
+  #expWrap{display:none}
+  #mobileMore{display:flex!important}
+  .spill span{display:none}
+  .tb-sep{display:none}
 }
 @media(max-width:1023px){
   .sb{position:absolute;left:0;top:0;bottom:0;z-index:50;transform:translateX(-100%);box-shadow:4px 0 24px rgba(0,0,0,.3)}
@@ -734,7 +789,7 @@ body.mobile-more #mobilePanel{display:block}
   cursor:pointer;transition:background .15s;text-align:left;
 }
 .mp-exp-list button:hover{background:var(--surface2)}
-@media(min-width:768px){#mobilePanel{display:none!important}}
+@media(min-width:1280px){#mobilePanel{display:none!important}}
 
 
 /* ── Días: reordenar + copiar ────────────────────────── */
