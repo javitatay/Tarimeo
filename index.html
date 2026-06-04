@@ -96,7 +96,7 @@ input,button,select,textarea{font-family:inherit}
 .ub.ub-danger{color:var(--danger)}
 .ub.ub-danger:hover{background:rgba(232,57,74,.12);border-color:rgba(232,57,74,.3)}
 .ub-lbl{display:inline}
-/* ub-lbl ocultos: gestionado por breakpoints individuales arriba */
+@media(max-width:1180px){.ub-lbl{display:none}.ub{padding:6px 8px}}
 /* Modal de ayuda */
 .help-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:1200;align-items:center;justify-content:center;padding:20px}
 .help-ov.open{display:flex}
@@ -393,11 +393,33 @@ input,button,select,textarea{font-family:inherit}
 .kemp{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted2);text-align:center;padding:18px;font-style:italic}
 
 /* MODAL */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:800;align-items:center;justify-content:center}
+.modal-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.7);z-index:800;
+  align-items:flex-start;justify-content:center;
+  /* Padding top = header + holgura; bottom = holgura inferior */
+  padding:calc(var(--th) + 16px) 12px 24px;
+  box-sizing:border-box;
+  overflow-y:auto;
+}
 .modal-bg.open{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;width:420px;max-width:96vw;display:flex;flex-direction:column;gap:16px;box-shadow:0 16px 48px rgba(0,0,0,.6)}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--accent)}
-.modal-field{display:flex;flex-direction:column;gap:5px}
+.modal{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:24px;
+  width:420px;max-width:min(96vw, 100%);
+  display:flex;flex-direction:column;gap:16px;
+  box-shadow:0 16px 48px rgba(0,0,0,.6);
+  /* Limitar altura: viewport - header - padding top/bottom */
+  max-height:calc(100vh - var(--th) - 56px);
+  overflow-y:auto;
+  /* Centrado horizontal; vertial gestionado por padding del backdrop */
+  margin:0 auto;
+  flex-shrink:0;
+  align-self:flex-start;
+}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--accent);flex-shrink:0}
+.modal-field{display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+
 .modal-lbl{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)}
 .modal-in{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;padding:10px 12px;border-radius:6px;outline:none;width:100%;transition:border-color .2s}
 .modal-in:focus{border-color:var(--accent)}
@@ -415,7 +437,17 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
 .modal-row{display:flex;gap:8px}
 .modal-info{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);background:var(--surface2);border-radius:6px;padding:8px 10px;display:flex;gap:12px;flex-wrap:wrap}
 .mi-val{color:var(--accent);font-weight:500}
-.modal-actions{display:flex;gap:8px;margin-top:4px}
+.modal-actions{
+  display:flex;gap:8px;
+  /* Sticky al fondo del scroll container (.modal) */
+  position:sticky;bottom:0;
+  background:var(--surface);
+  /* Sangría negativa para extender hasta bordes del .modal (padding:24px) */
+  margin:12px -24px -24px;
+  padding:12px 24px 20px;
+  border-top:1px solid var(--border);
+  z-index:2;
+}
 .modal-btn{flex:1;border:none;border-radius:7px;padding:11px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;font-weight:500}
 .modal-btn.primary{background:var(--accent);color:#111}
 .modal-btn.primary:hover{opacity:.88}
@@ -481,45 +513,15 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
   .vb,.mb{font-size:12px}.days-bar{padding:0 26px}.dt{padding:11px 16px;font-size:12px}
   .view-area{padding:22px 26px}.pb-art{font-size:11px}.pb-name{font-size:9px}.pb-dim,.pb-alt{font-size:8px}
   .sb-scroll{padding:14px}.ac-name{font-size:13px}
-  /* En pantallas grandes hay espacio para las etiquetas */
-  .ub-lbl{display:inline}
-  .ub{padding:6px 10px}
 }
-/* ── 1400–1599px: MacBook Pro 16" / MacBook Pro M3 (1512px lógicos) ── */
-@media(min-width:1400px) and (max-width:1599px){
+@media(min-width:1280px) and (max-width:1599px){
   :root{--sb-w:360px;--cell:92px;--th:68px}
-  .tb{padding:0 18px;gap:10px}.tb-logo{font-size:28px}.fest-in{width:150px}
+  .tb{padding:0 22px}.tb-logo{font-size:28px}.fest-in{width:160px}
   .days-bar{padding:0 22px}.view-area{padding:20px 22px}
-  /* Solo iconos para los botones de utilidad — labels toman demasiado espacio */
-  .ub-lbl{display:none}
-  .ub{padding:6px 9px}
 }
-/* ── 1280–1399px: MacBook Pro 14" / pantallas intermedias ── */
-@media(min-width:1280px) and (max-width:1399px){
-  :root{--sb-w:340px;--cell:88px;--th:66px}
-  .tb{padding:0 14px;gap:8px}.tb-logo{font-size:26px}.fest-in{width:140px}
-  .days-bar{padding:0 18px}.view-area{padding:18px}
-  /* Condensar botones de utilidad — solo iconos */
-  .ub-lbl{display:none}
-  .ub{padding:6px 8px}
-  /* Undo/Redo más compactos */
-  #undoBtn,#redoBtn{padding:6px 9px;font-size:13px}
-  .tb-sep{margin:0 1px}
-}
-/* ── 1024–1279px: MacBook Air / tablets grandes landscape ── */
 @media(min-width:1024px) and (max-width:1279px){
-  :root{--sb-w:320px;--cell:80px;--th:62px}
-  .tb{padding:0 10px;gap:6px}.tb-logo{font-size:22px}.fest-in{width:110px;font-size:12px}
-  .days-bar{padding:0 14px}.view-area{padding:16px}
-  .ub-lbl{display:none}
-  .ub{padding:5px 7px}
-  /* En este tamaño ocultamos undo/redo del header — están en panel ⋯ */
-  #undoBtn,#redoBtn{display:none}
-  #expWrap{display:none}
-  /* Mostrar botón ⋯ para acceder a lo oculto */
-  #mobileMore{display:flex!important}
-  .spill span{display:none}
-  .tb-sep{display:none}
+  :root{--sb-w:340px;--cell:84px;--th:66px}
+  .tb{padding:0 16px}.tb-logo{font-size:24px}.fest-in{width:130px}
 }
 @media(max-width:1023px){
   .sb{position:absolute;left:0;top:0;bottom:0;z-index:50;transform:translateX(-100%);box-shadow:4px 0 24px rgba(0,0,0,.3)}
@@ -563,8 +565,9 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
   .search-in:focus{width:140px}
   .mode-info{display:none}
   .grid-ctrl{font-size:11px;flex-shrink:0}
-  /* Modales a ancho casi completo */
-  .modal{width:94vw!important;max-width:none!important}
+  /* Modales a ancho casi completo, altura máxima adaptada */
+  .modal-bg{padding:calc(var(--th) + 8px) 6px 12px}
+  .modal{width:100%!important;max-width:none!important;max-height:calc(100vh - var(--th) - 32px);border-radius:12px}
   /* Botones del plano más grandes para dedos */
   .pb{min-height:42px}
   /* FAB de menú móvil */
@@ -659,7 +662,7 @@ body.mobile-more #mobilePanel{display:block}
   cursor:pointer;transition:background .15s;text-align:left;
 }
 .mp-exp-list button:hover{background:var(--surface2)}
-@media(min-width:1280px){#mobilePanel{display:none!important}}
+@media(min-width:768px){#mobilePanel{display:none!important}}
 
 
 /* ── Días: reordenar + copiar ────────────────────────── */
