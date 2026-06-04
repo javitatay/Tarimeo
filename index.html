@@ -370,6 +370,120 @@ input,button,select,textarea{font-family:inherit}
 
 /* Scene tabs */
 .scene-bar{display:flex;align-items:stretch;padding:0 18px;background:var(--surface2);border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;gap:0}
+/* ── BARRA DE SITUACIONES ─────────────────────────────── */
+.situ-bar{
+  display:flex;align-items:stretch;padding:0 18px;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  flex-shrink:0;overflow-x:auto;gap:0;
+}
+.situ-tab{
+  display:flex;align-items:center;gap:5px;
+  padding:7px 14px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;
+  color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;transition:color .2s,border-color .2s;
+  background:none;border-left:none;border-right:none;border-top:none;
+}
+.situ-tab:hover{color:var(--text)}
+.situ-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.situ-tab-num{
+  font-family:'Bebas Neue',sans-serif;font-size:15px;
+  color:var(--muted2);line-height:1;transition:color .2s;
+}
+.situ-tab.active .situ-tab-num{color:var(--accent)}
+.situ-name-in{
+  background:none;border:none;color:inherit;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;
+  outline:none;min-width:30px;max-width:120px;
+  border-bottom:1px solid transparent;transition:border-color .2s;padding:0 0 1px;
+}
+.situ-name-in:focus{border-bottom-color:var(--accent)}
+.situ-del{font-size:9px;color:var(--muted2);background:none;border:none;cursor:pointer;padding:1px 3px;border-radius:3px;transition:color .15s;line-height:1}
+.situ-del:hover{color:var(--danger)}
+.situ-add{padding:6px 10px;color:var(--muted2);cursor:pointer;font-size:15px;background:none;border:none;transition:color .2s;line-height:1}
+.situ-add:hover{color:var(--accent)}
+/* Botón de transición entre situaciones */
+.situ-trans-btn{
+  display:flex;align-items:center;gap:3px;
+  padding:4px 8px;margin:auto 2px;
+  font-size:11px;color:var(--muted2);
+  background:none;border:1px solid var(--border);border-radius:5px;
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+  font-family:'JetBrains Mono',monospace;
+  flex-shrink:0;
+}
+.situ-trans-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+
+/* ── MODAL DE TRANSICIÓN ──────────────────────────────── */
+.trans-overlay{
+  display:none;position:fixed;inset:0;z-index:850;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(4px);
+  padding:calc(var(--th)+8px) 16px 16px;
+  box-sizing:border-box;overflow-y:auto;
+  align-items:flex-start;justify-content:center;
+}
+.trans-overlay.open{display:flex}
+.trans-modal{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  width:min(1000px,96vw);max-height:calc(100vh - var(--th) - 40px);
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 24px 72px rgba(0,0,0,.75);margin:0 auto;flex-shrink:0;
+}
+.trans-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px 12px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.trans-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--accent)}
+.trans-bd{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px}
+/* Comparación lado a lado */
+.trans-stages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.trans-stages{grid-template-columns:1fr}}
+.trans-stage{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:12px;display:flex;flex-direction:column;gap:8px;
+}
+.trans-stage-hd{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  text-transform:uppercase;letter-spacing:1px;color:var(--muted);
+  display:flex;align-items:center;gap:8px;
+}
+.trans-mini-grid{position:relative;display:inline-grid;user-select:none;flex-shrink:0}
+.trans-mini-bloque{
+  position:absolute;border-radius:3px;border:1.5px solid;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;
+  overflow:hidden;cursor:default;
+}
+.trans-mini-bloque.moving{
+  border-style:dashed!important;
+  opacity:0.85;
+}
+.trans-mini-bloque.moving::after{
+  content:'→';position:absolute;bottom:1px;right:2px;
+  font-size:9px;color:inherit;opacity:.7;
+}
+/* Lista de movimientos */
+.trans-move-list{
+  display:flex;flex-direction:column;gap:6px;
+}
+.trans-move-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg);border:1px solid var(--border);border-radius:6px;
+  padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;
+}
+.trans-move-viable{
+  margin-left:auto;font-size:10px;font-weight:600;white-space:nowrap;
+}
+.viable-ok{color:var(--ok)}
+.viable-warn{color:var(--warn)}
+.trans-arrow{color:var(--muted2);font-size:13px;flex-shrink:0}
+.trans-move-dist{color:var(--muted);font-size:10px}
+.trans-ft{
+  border-top:1px solid var(--border);padding:11px 20px;
+  display:flex;align-items:center;justify-content:flex-end;gap:8px;
+  flex-shrink:0;
+}
 .sc-tab{display:flex;align-items:center;gap:6px;padding:9px 16px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:border-color .2s;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);white-space:nowrap}
 .sc-tab.active{border-bottom-color:var(--ok);color:var(--ok)}
 .sc-tab:hover{color:var(--text)}
@@ -710,6 +824,7 @@ body.present .sb-ov,
 body.present .det,
 body.present .search-bar,
 body.present .mode-bar,
+body.present .situ-bar,
 body.present .unass,
 body.present #pickBar { display:none!important; }
 body.present .main { padding:0; }
@@ -974,6 +1089,7 @@ body.mobile-more #mobilePanel{display:block}
   <div class="content">
     <div class="days-bar" id="daysBar"></div>
     <div class="scene-bar" id="sceneBar"></div>
+    <div class="situ-bar" id="situBar"></div>
 
     <!-- GRID TOOLBAR -->
     <div class="mode-bar" id="modeBar">
@@ -1009,6 +1125,20 @@ body.mobile-more #mobilePanel{display:block}
     <div class="view-area" id="viewArea"></div>
   </div>
 </div>
+</div>
+
+<!-- MODAL DE TRANSICIÓN -->
+<div class="trans-overlay" id="transOverlay" onclick="if(event.target===this)closeTransModal()">
+  <div class="trans-modal" id="transModal">
+    <div class="trans-hd">
+      <div class="trans-title" id="transTitle">Transición</div>
+      <button class="modal-close-btn" onclick="closeTransModal()" title="Cerrar">✕</button>
+    </div>
+    <div class="trans-bd" id="transBody"></div>
+    <div class="trans-ft">
+      <button class="btn btn-ghost" onclick="closeTransModal()" data-i18n="close">Cerrar</button>
+    </div>
+  </div>
 </div>
 
 <!-- DRAW MODAL -->
@@ -1187,6 +1317,7 @@ const LANGS = {
     printThArtist: 'Artista', printThBlock: 'Bloque', printThSurface: 'Superficie',
     printThRisers: 'Tarimas', printThHeight: 'Altura', printThExtras: 'Extras', printThPos: 'Posición',
     csvYes: 'Sí', csvNo: 'No',
+    csvSituation: 'Situación',
     resetConfirm: '¿Borrar TODOS los datos del festival? Esta acción no se puede deshacer.',
     invalidFormat: 'Formato inválido',
     emptyCSV: 'El archivo CSV está vacío',
@@ -1218,6 +1349,21 @@ const LANGS = {
     defaultFestivalName: 'Festival',
     titlePrefix: 'Tarimas ·',
     langBtn: '🌐 English',
+    // Situaciones
+    situations: 'Situaciones',
+    situN: (n) => `S${n}`,
+    addSituation: '+ Situación',
+    deleteSituation: '¿Eliminar esta situación? Se perderán sus posiciones.',
+    minSituation: 'Debe quedar al menos una situación.',
+    transitionTitle: (a, b) => `Transición: ${a} → ${b}`,
+    transNoMoves: 'Sin movimientos — las posiciones son idénticas.',
+    transViable: '✓ Con ruedas',
+    transCheck: '⚠ Verificar paso',
+    transBlockedBy: (n) => `bloqueado por ${n} bloque${n!==1?'s':''}`,
+    transMoveRow: (name, art, from, to, dx, dy) => ({name, art, from, to, dx, dy}),
+    transFromTo: (c1,r1,c2,r2) => `(${c1},${r1}) → (${c2},${r2})`,
+    transDist: (m) => `${m}m`,
+    transNoChanges: 'Sin cambios de posición entre estas situaciones.',
   },
   en: {
     logoSub: '2×1 m · module',
@@ -1358,6 +1504,7 @@ const LANGS = {
     printThArtist: 'Artist', printThBlock: 'Block', printThSurface: 'Surface',
     printThRisers: 'Risers', printThHeight: 'Height', printThExtras: 'Extras', printThPos: 'Position',
     csvYes: 'Yes', csvNo: 'No',
+    csvSituation: 'Situation',
     resetConfirm: 'Delete ALL festival data? This action cannot be undone.',
     invalidFormat: 'Invalid format',
     emptyCSV: 'CSV file is empty',
@@ -1389,6 +1536,20 @@ const LANGS = {
     defaultFestivalName: 'Festival',
     titlePrefix: 'Risers ·',
     langBtn: '🌐 Español',
+    // Situations
+    situations: 'Situations',
+    situN: (n) => `S${n}`,
+    addSituation: '+ Situation',
+    deleteSituation: 'Delete this situation? Its positions will be lost.',
+    minSituation: 'At least one situation must remain.',
+    transitionTitle: (a, b) => `Transition: ${a} → ${b}`,
+    transNoMoves: 'No moves — positions are identical.',
+    transViable: '✓ On wheels',
+    transCheck: '⚠ Verify clearance',
+    transBlockedBy: (n) => `blocked by ${n} block${n!==1?'s':''}`,
+    transMoveRow: (name, art, from, to, dx, dy) => ({name, art, from, to, dx, dy}),
+    transFromTo: (c1,r1,c2,r2) => `(${c1},${r1}) → (${c2},${r2})`,
+    transNoChanges: 'No position changes between these situations.',
   }
 };
 
@@ -1463,37 +1624,44 @@ function renderHelp(){
       '<b>Dibujar bloque:</b> arrastra sobre celdas vacías para definir el tamaño y suelta para abrir el formulario.',
       '<b>Mover:</b> arrastra un bloque colocado a otra posición libre.',
       '<b>Editar:</b> toca o haz clic en un bloque para abrir el panel de detalle.',
-      '<b>Redimensionar:</b> usa los botones + / − de Frente (W) y Fondo (D) en el panel de detalle.',
+      '<b>Redimensionar:</b> usa los botones + / − de Frente y Fondo en el panel de detalle.',
       '<b>Buscar:</b> escribe en el campo de búsqueda para resaltar bloques por nombre o artista — el resto se atenúa.'
     ],
     s3:'🗂️ Días y escenarios',
     s3b:[
       'Crea varios <b>días</b> desde la barra superior y varios <b>escenarios</b> con el botón + en las pestañas.',
       'Cada combinación de día y escenario tiene su propia distribución independiente.',
-      'Puedes <b>duplicar</b> un día entero con el botón ⧉ para reutilizar una distribución.'
+      'Puedes <b>duplicar</b> un día entero con el botón ⧉ para reutilizar una distribución, o <b>copiarlo</b> a otro día existente con ⎘.'
     ],
-    s4:'📦 Stock y extras',
+    s4:'🎭 Situaciones',
     s4b:[
+      'Una <b>situación</b> es una foto fija de cómo están colocadas las tarimas en un momento concreto dentro del mismo día y escenario — por ejemplo: soundcheck del grupo A, show del grupo B, show del grupo A.',
+      'Pulsa <b>+</b> en la barra de situaciones para añadir una nueva. Las posiciones actuales se copian como punto de partida.',
+      'El botón <b>⇒</b> entre dos situaciones abre la <b>vista de transición</b>: compara los dos planos en paralelo y muestra qué bloques se mueven, a qué distancia y si el paso está libre (✓ Con ruedas) o necesita comprobación (⚠ Verificar paso).',
+      'La impresión de planta genera una página por situación, permitiendo entregar un dossier completo al equipo de producción.'
+    ],
+    s5:'📦 Stock y extras',
+    s5b:[
       'El panel lateral muestra cuántos módulos usas en total y cuántos te quedan.',
       'Cada bloque puede llevar <b>Faldón</b> 🇫, <b>Ruedas</b> ⚙, <b>Escalera</b> 🪜 y <b>Barandilla</b> 🚧.',
       'A partir de <b>60 cm de altura</b>, la app sugiere automáticamente escalera y barandilla según normativa de seguridad.',
       'Los extras aparecen en el plano, en el Kanban y se exportan al CSV.'
     ],
-    s5:'💾 Guardar y exportar',
-    s5b:[
+    s6:'💾 Guardar y exportar',
+    s6b:[
       '<b>Guardar HTML</b> descarga una copia de la app con todos tus datos incrustados — ábrela en cualquier navegador sin conexión.',
-      '<b>Exportar</b> genera planos para imprimir/PDF, imágenes PNG/JPG y CSV con todos los bloques y extras.',
+      '<b>Exportar</b> genera planos para imprimir/PDF (una página por situación), imágenes PNG/JPG y CSV con todos los bloques, extras y situaciones.',
       '<b>Backup JSON</b> exporta e importa todos tus datos para moverlos entre dispositivos.'
     ],
-    s6:'📱 Uso en móvil',
-    s6b:[
+    s7:'📱 Uso en móvil',
+    s7b:[
       '<b>Pan:</b> arrastra con un dedo sobre zona vacía del plano para desplazarte.',
       '<b>Zoom:</b> pellizca con dos dedos para acercar o alejar — sin interferir con el dibujo de bloques.',
       'Usa los botones <b>− / +</b> de la barra de herramientas para zoom preciso.',
       'El botón <b>⊙</b> restaura el zoom al 100%.'
     ],
-    s7:'⌨️ Atajos de teclado',
-    s7rows:[
+    s8:'⌨️ Atajos de teclado',
+    s8rows:[
       ['Ctrl + S','Guardar archivo HTML'],
       ['Ctrl + Z','Deshacer'],
       ['Ctrl + Y  /  Ctrl + Shift + Z','Rehacer'],
@@ -1513,37 +1681,44 @@ function renderHelp(){
       '<b>Draw a block:</b> drag across empty cells to set the size, then release to open the form.',
       '<b>Move:</b> drag a placed block to a new free position.',
       '<b>Edit:</b> tap or click a block to open the detail panel.',
-      '<b>Resize:</b> use the + / − buttons for Front (W) and Depth (D) in the detail panel.',
+      '<b>Resize:</b> use the + / − buttons for Front and Depth in the detail panel.',
       '<b>Search:</b> type in the search field to highlight blocks by name or artist — the rest dims out.'
     ],
     s3:'🗂️ Days and stages',
     s3b:[
       'Create several <b>days</b> from the top bar and several <b>stages</b> with the + button on the tabs.',
       'Each day-and-stage combination has its own independent layout.',
-      'You can <b>duplicate</b> a whole day with the ⧉ button to reuse a layout.'
+      'You can <b>duplicate</b> a whole day with the ⧉ button to reuse a layout, or <b>copy</b> it to an existing day with ⎘.'
     ],
-    s4:'📦 Stock and extras',
+    s4:'🎭 Situations',
     s4b:[
+      'A <b>situation</b> is a snapshot of how the risers are arranged at a specific moment within the same day and stage — for example: group A soundcheck, group B show, group A show.',
+      'Press <b>+</b> in the situations bar to add a new one. Current positions are copied as a starting point.',
+      'The <b>⇒</b> button between two situations opens the <b>transition view</b>: compare both layouts side by side and see which blocks move, how far, and whether the path is clear (✓ On wheels) or needs checking (⚠ Verify clearance).',
+      'The floor plan print generates one page per situation, producing a complete handout for your production crew.'
+    ],
+    s5:'📦 Stock and extras',
+    s5b:[
       'The side panel shows how many modules you are using and how many remain.',
       'Each block can have <b>Skirting</b> 🇫, <b>Wheels</b> ⚙, <b>Stairs</b> 🪜 and <b>Railing</b> 🚧.',
       'Above <b>60 cm height</b>, the app automatically suggests stairs and railing per safety regulations.',
       'Extras appear on the floor plan, in the Kanban and are exported to CSV.'
     ],
-    s5:'💾 Save and export',
-    s5b:[
+    s6:'💾 Save and export',
+    s6b:[
       '<b>Save HTML</b> downloads a self-contained copy of the app with all your data embedded — open it in any browser offline.',
-      '<b>Export</b> generates printable/PDF layouts, PNG/JPG images and a CSV with all blocks and extras.',
+      '<b>Export</b> generates printable/PDF layouts (one page per situation), PNG/JPG images and a CSV with all blocks, extras and situations.',
       '<b>JSON Backup</b> exports and imports all your data to move between devices.'
     ],
-    s6:'📱 Mobile use',
-    s6b:[
+    s7:'📱 Mobile use',
+    s7b:[
       '<b>Pan:</b> drag with one finger over an empty area of the floor plan to scroll.',
       '<b>Zoom:</b> pinch with two fingers to zoom in or out — without interfering with block drawing.',
       'Use the <b>− / +</b> buttons in the toolbar for precise zoom.',
       'The <b>⊙</b> button resets zoom to 100%.'
     ],
-    s7:'⌨️ Keyboard shortcuts',
-    s7rows:[
+    s8:'⌨️ Keyboard shortcuts',
+    s8rows:[
       ['Ctrl + S','Save HTML file'],
       ['Ctrl + Z','Undo'],
       ['Ctrl + Y  /  Ctrl + Shift + Z','Redo'],
@@ -1552,7 +1727,7 @@ function renderHelp(){
   };
   const list=arr=>'<ul>'+arr.map(i=>'<li>'+i+'</li>').join('')+'</ul>';
   const kbd=k=>'<span class="help-kbd">'+k+'</span>';
-  const shortcutRows=h.s7rows.map(([keys,desc])=>
+  const shortcutRows=h.s8rows.map(([keys,desc])=>
     '<tr><td style="padding:5px 12px 5px 0;white-space:nowrap">'+
     keys.split('/').map(k=>kbd(k.trim())).join(' <span style="color:var(--muted2);font-size:11px">/</span> ')+
     '</td><td style="padding:5px 0;color:var(--muted);font-size:12px">'+desc+'</td></tr>'
@@ -1572,7 +1747,8 @@ function renderHelp(){
     '<h3>'+h.s4+'</h3>'+list(h.s4b)+
     '<h3>'+h.s5+'</h3>'+list(h.s5b)+
     '<h3>'+h.s6+'</h3>'+list(h.s6b)+
-    '<h3>'+h.s7+'</h3>'+
+    '<h3>'+h.s7+'</h3>'+list(h.s7b)+
+    '<h3>'+h.s8+'</h3>'+
     '<table style="border-collapse:collapse;width:100%;margin-top:4px">'+shortcutRows+'</table>';
   const titleEl=document.getElementById('helpTitle');if(titleEl)titleEl.textContent=h.title;
   const bodyEl=document.getElementById('helpBody');if(bodyEl)bodyEl.innerHTML=html;
@@ -1650,8 +1826,8 @@ let state={
   placements:{},  // `${bloqueId}_${dayId}_${sceneId}` → {col,row}
   scenes:[{id:1,name:t('defaultSceneName'),cols:10,rows:10,widthM:20,depthM:10}]
 };
-let nDayId=1,nArtId=1,nBloqueId=1,nSceneId=2;
-let curSceneId=1;
+let nDayId=1,nArtId=1,nBloqueId=1,nSceneId=2,nSituId=2;
+let curSceneId=1,curSituId=1;
 let curDayId=null,curView='grid';
 let selArtId=null,detBid=null,detDid=null;
 let sbOpen=window.innerWidth>=1024; // desktop: starts open
@@ -1674,7 +1850,8 @@ function initDefault(){
   state.artistas=[{id:nArtId++,name:'',color:COLORS[0]}];
   state.bloques=[];state.placements={};
   state.scenes=[{id:1,name:t('defaultSceneName'),cols:10,rows:6,stock:40}];
-  curDayId=state.days[0].id;curSceneId=1;
+  state.situaciones=[{id:1,name:'S1'}];
+  curDayId=state.days[0].id;curSceneId=1;curSituId=1;
 }
 // Helper: obtener artista asignado a un bloque en un día dado
 function bloqueArtId(bid,dayId){
@@ -1687,7 +1864,7 @@ function bloqueArtId(bid,dayId){
 // ═════════════════════════════════════════════════════
 function saveData(){
   // Respaldo silencioso en localStorage
-  try{localStorage.setItem(LS,JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId}));}
+  try{localStorage.setItem(LS,JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,nSituId,curSceneId,curSituId}));}
   catch(e){}
 }
 
@@ -1695,7 +1872,7 @@ function saveData(){
 // Guardar: reconstruir el HTML insertando el state en el marcador
 function saveToFile(){
   try{
-    const payload=JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId});
+    const payload=JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,nSituId,curSceneId,curSituId});
     const fname=(state.festivalName||t('riserFull')).replace(/[^\w\s\u00e0-\u00ff_-]/g,'').trim()||'tarimas';
     // Obtener el source del script original usando un truco: el script tag tiene id __main__
     const fullSrc='<!DOCTYPE html>'+document.documentElement.outerHTML;
@@ -1731,12 +1908,27 @@ function loadEmbedded(data){
     state=data.state;
     nDayId=data.nDayId||20;nArtId=data.nArtId||20;
     nBloqueId=data.nBloqueId||200;nSceneId=data.nSceneId||10;
+    nSituId=data.nSituId||10;
     curSceneId=data.curSceneId||1;
+    curSituId=data.curSituId||1;
     if(!state.days?.length)return false;
     if(!state.artistas)state.artistas=[];
     if(!state.bloques)state.bloques=[];
     if(!state.placements)state.placements={};
     if(!state.scenes?.length)state.scenes=[{id:1,name:t('defaultSceneName'),cols:10,rows:6,stock:40}];
+    if(!state.situaciones)state.situaciones=[{id:1,name:'S1'}];
+    // Migrar placements de 3 a 4 partes si es necesario
+    const anyOld=Object.keys(state.placements).some(k=>k.split('_').length<4);
+    if(anyOld){
+      const mp={};
+      Object.keys(state.placements).forEach(k=>{
+        const parts=k.split('_');const pl=state.placements[k];
+        if(parts.length===3)mp[parts[0]+'_'+parts[1]+'_'+parts[2]+'_1']={...pl};
+        else if(parts.length===2)mp[parts[0]+'_'+parts[1]+'_1_1']={...pl};
+        else mp[k]={...pl};
+      });
+      state.placements=mp;
+    }
     return true;
   }catch(e){return false}
 }
@@ -1745,13 +1937,14 @@ function loadData(){
   try{
     const raw=localStorage.getItem(LS);if(!raw)return false;
     const p=JSON.parse(raw);
-    state=p.state;nDayId=p.nDayId||20;nArtId=p.nArtId||20;nBloqueId=p.nBloqueId||200;nSceneId=p.nSceneId||10;curSceneId=p.curSceneId||1;
+    state=p.state;nDayId=p.nDayId||20;nArtId=p.nArtId||20;nBloqueId=p.nBloqueId||200;nSceneId=p.nSceneId||10;nSituId=p.nSituId||10;curSceneId=p.curSceneId||1;curSituId=p.curSituId||1;
     if(!state.days?.length)return false;
     if(!state.artistas)state.artistas=[];
     if(!state.bloques)state.bloques=[];
     if(!state.placements)state.placements={};
     if(!state.gridCols)state.gridCols=10;
     if(!state.gridRows)state.gridRows=6;
+    if(!state.situaciones)state.situaciones=[{id:1,name:'S1'}];
     // Migrar scenes
     if(!state.scenes||!state.scenes.length){
       state.scenes=[{id:1,name:t('defaultSceneName'),cols:state.gridCols||10,rows:state.gridRows||6,stock:state.stockTotal||40}];
@@ -1762,17 +1955,20 @@ function loadData(){
       if(sc.depthM==null)sc.depthM=(sc.rows||6)*TARIMA_D;
     });
     // Migrar placements: key format y añadir artistaId desde bloque
+    // Migrar situaciones: inicializar si no existen
+    if(!state.situaciones)state.situaciones=[{id:1,name:'S1'}];
     const migratedPl={};
     Object.keys(state.placements).forEach(k=>{
       const parts=k.split('_');
       const pl=state.placements[k];
-      let bid,did,sid,artId;
-      if(parts.length===2){bid=parseInt(parts[0]);did=parseInt(parts[1]);sid=1;}
-      else{bid=parseInt(parts[0]);did=parseInt(parts[1]);sid=parseInt(parts[2]);}
+      let bid,did,sid,situId,artId;
+      if(parts.length===2){bid=parseInt(parts[0]);did=parseInt(parts[1]);sid=1;situId=1;}
+      else if(parts.length===3){bid=parseInt(parts[0]);did=parseInt(parts[1]);sid=parseInt(parts[2]);situId=1;}
+      else{bid=parseInt(parts[0]);did=parseInt(parts[1]);sid=parseInt(parts[2]);situId=parseInt(parts[3]);}
       // Recuperar artistaId del bloque (modelo viejo)
       const bloque=state.bloques.find(b=>b.id===bid);
       artId=pl.artistaId||(bloque?.artistaId)||null;
-      migratedPl[`${bid}_${did}_${sid}`]={col:pl.col,row:pl.row,artistaId:artId};
+      migratedPl[`${bid}_${did}_${sid}_${situId}`]={col:pl.col,row:pl.row,artistaId:artId};
     });
     state.placements=migratedPl;
     // Limpiar artistaId de los bloques (ya no se usa)
@@ -1791,7 +1987,7 @@ function sched(){
     markUnsaved();
   }
   // Guardar siempre en localStorage como respaldo silencioso
-  try{localStorage.setItem(LS,JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId}));}
+  try{localStorage.setItem(LS,JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,nSituId,curSceneId,curSituId}));}
   catch(e){}
 }
 
@@ -1915,7 +2111,7 @@ function renderAll(){
   document.getElementById('skIn').value=sc.stock||40;
   const wEl=document.getElementById('gWidthM');if(wEl)wEl.value=sc.widthM||20;
   const dEl=document.getElementById('gDepthM');if(dEl)dEl.value=sc.depthM||10;
-  renderDaysBar();renderDaysList();renderSceneTabs();renderArts();updateStock(true);renderView();
+  renderDaysBar();renderDaysList();renderSceneTabs();renderSituBar();renderArts();updateStock(true);renderView();
 }
 
 // ═════════════════════════════════════════════════════
@@ -2003,17 +2199,18 @@ function copyDayInto(srcId,dstId){
   if(!src||!dst)return;
   if(!confirm(t('copyDayConfirm',src.label,dst.label)))return;
   snapshot();
-  // Borrar placements existentes del día destino (en TODOS los escenarios)
+  // Borrar placements existentes del día destino (en TODOS los escenarios y situaciones)
   Object.keys(state.placements).forEach(k=>{
     if(parseInt(k.split('_')[1])===dstId)delete state.placements[k];
   });
-  // Copiar todos los placements del origen al destino (todos los escenarios)
+  // Copiar todos los placements del origen al destino (todos los escenarios y situaciones)
   Object.keys(state.placements).forEach(k=>{
     const parts=k.split('_');
     if(parseInt(parts[1])===srcId){
       const bid=parseInt(parts[0]);
       const sid=parseInt(parts[2]);
-      state.placements[plKey(bid,dstId,sid)]={...state.placements[k]};
+      const situId=parseInt(parts[3])||1;
+      state.placements[plKey(bid,dstId,sid,situId)]={...state.placements[k]};
     }
   });
   curDayId=dstId;
@@ -2036,13 +2233,14 @@ function renderDaysList(){
 // ═════════════════════════════════════════════════════
 // STOCK
 // ═════════════════════════════════════════════════════
-function plKey(bid,dayId,sid){return `${bid}_${dayId}_${sid!==undefined?sid:curSceneId}`;}
+function plKey(bid,dayId,sid,situId){return `${bid}_${dayId}_${sid!==undefined?sid:curSceneId}_${situId!==undefined?situId:curSituId}`;}
 function curScene(){return state.scenes.find(s=>s.id===curSceneId)||state.scenes[0];}
-function modsDay(dayId,sid){
+function modsDay(dayId,sid,situId){
   // 1 celda = 1 tarima → tarimas usadas = suma de celdas de cada bloque
-  const s=sid||curSceneId;
+  const s=sid!==undefined?sid:curSceneId;
+  const sit=situId!==undefined?situId:curSituId;
   return state.bloques.reduce((acc,b)=>{
-    const p=state.placements[plKey(b.id,dayId,s)];
+    const p=state.placements[plKey(b.id,dayId,s,sit)];
     if(p!==undefined)acc+=b.largo*b.ancho; // largo*ancho celdas = largo*ancho tarimas
     return acc;
   },0);
@@ -2131,7 +2329,7 @@ function renderArts(){
   });
 
   state.artistas.forEach(a=>{
-    // Bloques donde este artista está asignado en al menos un día/escenario
+    // Bloques donde este artista está asignado en al menos un día/escenario/situación del escenario actual
     const bl=state.bloques.filter(b=>{
       if(b._tempArtId===a.id) return true;
       return Object.keys(state.placements).some(k=>{
@@ -3541,14 +3739,15 @@ function dupDay(srcId){
   const src=state.days.find(d=>d.id===srcId);
   const newDay={id:nDayId++,label:`${src.label} (copia)`};
   state.days.push(newDay);
-  // Copiar todos los placements del día origen al nuevo
+  // Copiar todos los placements del día origen al nuevo (todos los escenarios y situaciones)
   Object.keys(state.placements).forEach(k=>{
     const parts=k.split('_');
     const did=parseInt(parts[1]);
-    const sid=parseInt(parts[2]);
-    if(did===srcId&&sid===curSceneId){
+    if(did===srcId){
       const bid=parseInt(parts[0]);
-      state.placements[plKey(bid,newDay.id,curSceneId)]={...state.placements[k]};
+      const sid=parseInt(parts[2]);
+      const situId=parseInt(parts[3])||1;
+      state.placements[plKey(bid,newDay.id,sid,situId)]={...state.placements[k]};
     }
   });
   curDayId=newDay.id;
@@ -3556,6 +3755,257 @@ function dupDay(srcId){
 }
 
 // ── FEAT 5: CRUD escenarios ──────────────────────────
+
+// ═════════════════════════════════════════════════════
+// SITUACIONES
+// ═════════════════════════════════════════════════════
+
+function renderSituBar(){
+  const bar=document.getElementById('situBar');if(!bar)return;
+  bar.innerHTML='';
+  if(!state.situaciones)state.situaciones=[{id:1,name:'S1'}];
+  const situaciones=state.situaciones;
+  situaciones.forEach((s,idx)=>{
+    // Botón de transición antes de cada situación (excepto la primera)
+    if(idx>0){
+      const prev=situaciones[idx-1];
+      const tb=document.createElement('button');
+      tb.className='situ-trans-btn';
+      tb.title=`Ver transición ${prev.name} → ${s.name}`;
+      tb.innerHTML='⇒';
+      tb.onclick=()=>openTransModal(prev.id,s.id);
+      bar.appendChild(tb);
+    }
+    const btn=document.createElement('button');
+    btn.className='situ-tab'+(s.id===curSituId?' active':'');
+    const num=document.createElement('span');
+    num.className='situ-tab-num';
+    num.textContent=idx+1;
+    const nm=document.createElement('input');
+    nm.className='situ-name-in';nm.value=s.name;
+    nm.title='Renombrar situación';
+    nm.addEventListener('click',e=>e.stopPropagation());
+    nm.addEventListener('input',e=>{s.name=e.target.value;sched();});
+    nm.addEventListener('keydown',e=>{if(e.key==='Enter')nm.blur();});
+    const del=document.createElement('button');
+    del.className='situ-del';del.textContent='×';
+    del.title='Eliminar situación';
+    del.style.display=situaciones.length<=1?'none':'';
+    del.onclick=e=>{e.stopPropagation();delSitu(s.id);};
+    btn.appendChild(num);btn.appendChild(nm);btn.appendChild(del);
+    btn.addEventListener('click',()=>{
+      if(curSituId===s.id)return;
+      curSituId=s.id;
+      resetFilter();
+      renderSituBar();renderView();
+    });
+    bar.appendChild(btn);
+  });
+  const addBtn=document.createElement('button');
+  addBtn.className='situ-add';addBtn.textContent='+';
+  addBtn.title=t('addSituation');
+  addBtn.onclick=addSitu;
+  bar.appendChild(addBtn);
+}
+
+function addSitu(){
+  if(!state.situaciones)state.situaciones=[{id:1,name:'S1'}];
+  snapshot();
+  const newId=nSituId++;
+  const idx=state.situaciones.length+1;
+  const newS={id:newId,name:t('situN',idx)};
+  // Copiar posiciones de la situación actual como punto de partida
+  const keysToClone=Object.keys(state.placements).filter(k=>{
+    const parts=k.split('_');
+    return parseInt(parts[2])===curSceneId&&parseInt(parts[3])===curSituId;
+  });
+  keysToClone.forEach(k=>{
+    const parts=k.split('_');
+    const newKey=`${parts[0]}_${parts[1]}_${parts[2]}_${newId}`;
+    state.placements[newKey]={...state.placements[k]};
+  });
+  state.situaciones.push(newS);
+  curSituId=newId;
+  renderSituBar();renderView();sched();
+}
+
+function delSitu(id){
+  if(!state.situaciones||state.situaciones.length<=1){alert(t('minSituation'));return;}
+  if(!confirm(t('deleteSituation')))return;
+  snapshot();
+  state.situaciones=state.situaciones.filter(s=>s.id!==id);
+  Object.keys(state.placements).forEach(k=>{
+    if(parseInt(k.split('_')[3])===id)delete state.placements[k];
+  });
+  if(curSituId===id)curSituId=state.situaciones[0].id;
+  renderSituBar();renderView();sched();
+}
+
+// ─── Vista de Transición ───────────────────────────────
+function openTransModal(fromId,toId){
+  const fromS=state.situaciones.find(s=>s.id===fromId);
+  const toS=state.situaciones.find(s=>s.id===toId);
+  if(!fromS||!toS)return;
+
+  const titleEl=document.getElementById('transTitle');
+  if(titleEl)titleEl.textContent=t('transitionTitle',fromS.name,toS.name);
+
+  const body=document.getElementById('transBody');
+  body.innerHTML='';
+
+  const sc=curScene();
+  const MINI_CELL=32; // px por celda en el mini-plano
+  const MINI_GAP=2;
+
+  // Función para crear un mini-plano
+  function makeMiniGrid(situId,movingBids){
+    const wrap=document.createElement('div');
+    wrap.className='trans-mini-grid';
+    const W=sc.cols*(MINI_CELL+MINI_GAP)-MINI_GAP;
+    const H=sc.rows*(MINI_CELL+MINI_GAP)-MINI_GAP;
+    wrap.style.cssText=`width:${W}px;height:${H}px;grid-template-columns:repeat(${sc.cols},${MINI_CELL}px);grid-template-rows:repeat(${sc.rows},${MINI_CELL}px);gap:${MINI_GAP}px;background:var(--bg);border-radius:6px;padding:4px;`;
+    // BG cells
+    for(let r=0;r<sc.rows;r++)for(let c=0;c<sc.cols;c++){
+      const bg=document.createElement('div');
+      bg.style.cssText=`grid-column:${c+1};grid-row:${r+1};background:var(--surface2);border-radius:2px;`;
+      wrap.appendChild(bg);
+    }
+    // Bloques
+    state.bloques.forEach(b=>{
+      const pk=plKey(b.id,curDayId,curSceneId,situId);
+      const pl=state.placements[pk];if(!pl)return;
+      const aId=pl.artistaId;
+      const a=aId?state.artistas.find(x=>x.id===aId):null;
+      const aColor=a?.color||'#666';
+      const el=document.createElement('div');
+      el.className='trans-mini-bloque'+(movingBids.has(b.id)?' moving':'');
+      const L=pl.col*(MINI_CELL+MINI_GAP);
+      const T=pl.row*(MINI_CELL+MINI_GAP);
+      const W2=b.largo*(MINI_CELL+MINI_GAP)-MINI_GAP;
+      const H2=b.ancho*(MINI_CELL+MINI_GAP)-MINI_GAP;
+      el.style.cssText=`left:${L}px;top:${T}px;width:${W2}px;height:${H2}px;background:${aColor}22;border-color:${aColor};color:${aColor}`;
+      el.title=`${b.name||'Bloque'} · ${a?.name||''}`;
+      el.textContent=b.name?b.name.slice(0,4):'';
+      wrap.appendChild(el);
+    });
+    return wrap;
+  }
+
+  // Calcular movimientos: bloques que cambian de posición
+  const moves=[];
+  state.bloques.forEach(b=>{
+    const pkF=plKey(b.id,curDayId,curSceneId,fromId);
+    const pkT=plKey(b.id,curDayId,curSceneId,toId);
+    const plF=state.placements[pkF];
+    const plT=state.placements[pkT];
+    if(!plF&&!plT)return; // no aparece en ninguna
+    if(!plF||!plT)return; // aparece solo en una (no es movimiento, es aparición/desaparición)
+    if(plF.col===plT.col&&plF.row===plT.row)return; // no se mueve
+    const a=plF.artistaId?state.artistas.find(x=>x.id===plF.artistaId):null;
+    const dx=(plT.col-plF.col)*sc.widthM/sc.cols;  // metros
+    const dy=(plT.row-plF.row)*sc.depthM/sc.rows;
+    moves.push({b,plF,plT,a,dx,dy});
+  });
+
+  const movingBids=new Set(moves.map(m=>m.b.id));
+
+  // Sección: comparación lado a lado
+  const stages=document.createElement('div');
+  stages.className='trans-stages';
+
+  const fromBox=document.createElement('div');fromBox.className='trans-stage';
+  const fromHd=document.createElement('div');fromHd.className='trans-stage-hd';
+  fromHd.innerHTML=`<span style="color:var(--accent)">${esc(fromS.name)}</span>`;
+  fromBox.appendChild(fromHd);
+  fromBox.appendChild(makeMiniGrid(fromId,movingBids));
+  stages.appendChild(fromBox);
+
+  const toBox=document.createElement('div');toBox.className='trans-stage';
+  const toHd=document.createElement('div');toHd.className='trans-stage-hd';
+  toHd.innerHTML=`<span style="color:var(--accent)">${esc(toS.name)}</span>`;
+  toBox.appendChild(toHd);
+  toBox.appendChild(makeMiniGrid(toId,movingBids));
+  stages.appendChild(toBox);
+
+  body.appendChild(stages);
+
+  // Sección: lista de movimientos
+  if(moves.length===0){
+    const empty=document.createElement('div');
+    empty.style.cssText='font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted);text-align:center;padding:16px';
+    empty.textContent=t('transNoChanges');
+    body.appendChild(empty);
+  } else {
+    const listTitle=document.createElement('div');
+    listTitle.style.cssText='font-family:"JetBrains Mono",monospace;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px';
+    listTitle.textContent='Movimientos';
+    body.appendChild(listTitle);
+
+    const list=document.createElement('div');
+    list.className='trans-move-list';
+
+    moves.forEach(({b,plF,plT,a,dx,dy})=>{
+      // Viabilidad: detectar si hay bloques FIJOS (sin ruedas) en la trayectoria
+      // Trayectoria: rectángulo que cubre origen y destino
+      const minC=Math.min(plF.col,plT.col),maxC=Math.max(plF.col+b.largo,plT.col+b.largo)-1;
+      const minR=Math.min(plF.row,plT.row),maxR=Math.max(plF.row+b.ancho,plT.row+b.ancho)-1;
+      let blockers=0;
+      state.bloques.forEach(ob=>{
+        if(ob.id===b.id)return;
+        if(ob.ruedas)return; // si tiene ruedas también puede moverse
+        const opk=plKey(ob.id,curDayId,curSceneId,fromId);
+        const opl=state.placements[opk];if(!opl)return;
+        // ¿El bloque ob ocupa alguna celda en la trayectoria?
+        for(let r=opl.row;r<opl.row+ob.ancho;r++)
+          for(let c=opl.col;c<opl.col+ob.largo;c++)
+            if(c>=minC&&c<=maxC&&r>=minR&&r<=maxR){blockers++;return;}
+      });
+      const isViable=blockers===0;
+
+      const row=document.createElement('div');
+      row.className='trans-move-row';
+      const aColor=a?.color||'var(--muted)';
+      const distM=Math.round(Math.sqrt((dx*dx)+(dy*dy)));
+      // Dirección en texto
+      const dirParts=[];
+      if(dy<0)dirParts.push(`${Math.abs(Math.round(dy))}m frente`);
+      else if(dy>0)dirParts.push(`${Math.round(dy)}m fondo`);
+      if(dx<0)dirParts.push(`${Math.abs(Math.round(dx))}m izq`);
+      else if(dx>0)dirParts.push(`${Math.round(dx)}m der`);
+      const dirStr=dirParts.join(' + ')||'sin desplazamiento';
+
+      row.innerHTML=`
+        <div style="width:10px;height:10px;border-radius:50%;background:${aColor};flex-shrink:0"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.name||'Bloque')} <span style="color:${aColor};font-weight:400">${esc(a?.name||'')}</span></div>
+          <div class="trans-move-dist">${t('transFromTo',plF.col+1,plF.row+1,plT.col+1,plT.row+1)} · ${dirStr}</div>
+        </div>
+        <div class="trans-move-viable ${isViable?'viable-ok':'viable-warn'}">
+          ${isViable?t('transViable'):t('transCheck')+' ('+t('transBlockedBy',blockers)+')'}
+        </div>
+      `;
+      list.appendChild(row);
+    });
+    body.appendChild(list);
+  }
+
+  const ov=document.getElementById('transOverlay');
+  if(ov)ov.classList.add('open');
+}
+
+function closeTransModal(){
+  const ov=document.getElementById('transOverlay');
+  if(ov)ov.classList.remove('open');
+}
+
+// Cerrar transición con Escape
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    const ov=document.getElementById('transOverlay');
+    if(ov&&ov.classList.contains('open')){closeTransModal();return;}
+  }
+});
+
 function renderSceneTabs(){
   const bar=document.getElementById('sceneBar');if(!bar)return;
   bar.innerHTML='';
@@ -3579,7 +4029,7 @@ function renderSceneTabs(){
       const dEl=document.getElementById('gDepthM');
       if(dEl)dEl.value=sc.depthM||10;
       document.getElementById('skIn').value=sc.stock||40;
-      clearPickedCells();resetPanZoom();resetFilter();renderSceneTabs();updateStock(true);renderArts();renderView();
+      curSituId=(state.situaciones&&state.situaciones.length)?state.situaciones[0].id:1;clearPickedCells();resetPanZoom();resetFilter();renderSceneTabs();renderSituBar();updateStock(true);renderArts();renderView();
     });
     bar.appendChild(btn);
   });
@@ -3591,6 +4041,8 @@ function addScene(){
   snapshot();
   const sc={id:nSceneId++,name:t('sceneN',state.scenes.length+1),cols:10,rows:10,widthM:20,depthM:10,stock:40};
   state.scenes.push(sc);curSceneId=sc.id;
+  if(!state.situaciones)state.situaciones=[{id:1,name:'S1'}];
+  curSituId=state.situaciones[0].id;
   const wEl=document.getElementById('gWidthM');if(wEl)wEl.value=sc.widthM;
   const dEl=document.getElementById('gDepthM');if(dEl)dEl.value=sc.depthM;
   document.getElementById('skIn').value=sc.stock;
@@ -3602,6 +4054,7 @@ function delScene(id){
   snapshot();
   state.scenes=state.scenes.filter(s=>s.id!==id);
   Object.keys(state.placements).forEach(k=>{if(parseInt(k.split('_')[2])===id)delete state.placements[k];});
+  if(!state.situaciones?.length)state.situaciones=[{id:1,name:'S1'}];
   if(curSceneId===id){curSceneId=state.scenes[0].id;const sc=curScene();state.gridCols=sc.cols;state.gridRows=sc.rows;}
   renderSceneTabs();updateStock();renderArts();renderView();sched();
 }
@@ -3703,7 +4156,7 @@ document.addEventListener('click',e=>{
 
 // ── BACKUP JSON (para GitHub Pages / cambio de navegador) ──────────────────
 function exportBackupJSON(){
-  const payload={state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId,_v:2};
+  const payload={state,nDayId,nArtId,nBloqueId,nSceneId,nSituId,curSceneId,curSituId,_v:3};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
@@ -3750,31 +4203,35 @@ function showToast(msg,type){
 }
 
 function exportCSV(){
-  const rows=[[t('csvDay'),t('csvArtist'),t('csvBlock'),t('csvW'),t('csvD'),t('csvRisers'),t('csvHeight'),t('csvFaldon'),t('csvWheels'),t('csvEscalera'),t('csvBarandilla'),t('csvCol'),t('csvRow')]];
+  const rows=[[t('csvDay'),t('csvArtist'),t('csvBlock'),t('csvW'),t('csvD'),t('csvRisers'),t('csvHeight'),t('csvFaldon'),t('csvWheels'),t('csvEscalera'),t('csvBarandilla'),t('csvCol'),t('csvRow'),t('csvSituation')]];
+  const situaciones=state.situaciones||[{id:1,name:'S1'}];
   state.days.forEach(day=>{
-    state.bloques.forEach(b=>{
-      const pl=state.placements[plKey(b.id,day.id)];
-      const artId=pl?.artistaId||null;
-      const a=artId?state.artistas.find(x=>x.id===artId):null;
-      // Usar metrosW/metrosD si existen, si no calcular desde largo/ancho (celdas)
-      const mW=b.metrosW||(b.largo*2);
-      const mD=b.metrosD||b.ancho;
-      const nTar=b.tarimas||(b.largo*b.ancho);
-      rows.push([
-        day.label,
-        a?.name||'Sin asignar',
-        b.name||'',
-        mW,
-        mD,
-        nTar,
-        b.altura,
-        b.faldon?t('csvYes'):t('csvNo'),
-        b.ruedas?t('csvYes'):t('csvNo'),
-        b.escalera?t('csvYes'):t('csvNo'),
-        b.barandilla?t('csvYes'):t('csvNo'),
-        pl?pl.col+1:t('csvUnplaced'),
-        pl?pl.row+1:''
-      ]);
+    situaciones.forEach(situ=>{
+      state.bloques.forEach(b=>{
+        const pl=state.placements[plKey(b.id,day.id,curSceneId,situ.id)];
+        const artId=pl?.artistaId||null;
+        const a=artId?state.artistas.find(x=>x.id===artId):null;
+        // Usar metrosW/metrosD si existen, si no calcular desde largo/ancho (celdas)
+        const mW=b.metrosW||(b.largo*2);
+        const mD=b.metrosD||b.ancho;
+        const nTar=b.tarimas||(b.largo*b.ancho);
+        rows.push([
+          day.label,
+          a?.name||'Sin asignar',
+          b.name||'',
+          mW,
+          mD,
+          nTar,
+          b.altura,
+          b.faldon?t('csvYes'):t('csvNo'),
+          b.ruedas?t('csvYes'):t('csvNo'),
+          b.escalera?t('csvYes'):t('csvNo'),
+          b.barandilla?t('csvYes'):t('csvNo'),
+          pl?pl.col+1:t('csvUnplaced'),
+          pl?pl.row+1:'',
+          situ.name
+        ]);
+      });
     });
   });
   const csv=rows.map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n');
@@ -3931,76 +4388,108 @@ function printView(){
   const cw=CW(),ch=CH();
   const W=sc.cols*(cw+GAP)-GAP;
   const H=sc.rows*(ch+GAP)-GAP;
-
-  // Construir el HTML del plano actual
-  let gridHTML='';
-  // Fondo de celdas: completamente invisibles, solo posicionamiento
-  for(let r=0;r<sc.rows;r++)
-    for(let c=0;c<sc.cols;c++){
-      const idx=r*sc.cols+c;
-      const inStock=idx<sc.stock;
-      // Celdas dentro del stock: fondo muy sutil; celdas fuera: invisibles
-      gridHTML+=`<div style="grid-column:${c+1};grid-row:${r+1};${inStock?'border:1px solid rgba(255,255,255,0.04);border-radius:2px;':''}" ></div>`;
-    }
-
-  // Bloques colocados: SOLO los que tienen artista asignado
-  state.bloques.forEach(b=>{
-    const pl=state.placements[plKey(b.id,curDayId)];
-    if(!pl||!pl.artistaId)return; // sin colocar o sin artista → no aparece
-    const a=state.artistas.find(x=>x.id===pl.artistaId);
-    if(!a)return;
-    const ac=alturaColor(b.altura);
-    const left=pl.col*(cw+GAP),top=pl.row*(ch+GAP);
-    const w=b.largo*(cw+GAP)-GAP,h2=b.ancho*(ch+GAP)-GAP;
-    const extras=(b.faldon?'🇫 ':'')+(b.ruedas?'⚙':'');
-    gridHTML+=`<div style="position:absolute;left:${left}px;top:${top}px;width:${w}px;height:${h2}px;
-      background:${ac.bg}0.28);border:2px solid ${ac.border};border-radius:4px;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:3px">
-      <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:${a.color}"></div>
-      <div style="font-weight:700;font-size:10px;color:${a.color};padding-left:6px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.name||'?')}</div>
-      ${b.name?`<div style="font-size:8px;color:#bbb;padding-left:6px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(b.name)}</div>`:''}
-      <div style="font-size:8px;color:${ac.border};font-weight:600;margin-top:1px">${b.metrosW||b.largo*2}×${b.metrosD||b.ancho}m · ${b.altura}cm${extras?' · '+extras:''}</div>
-    </div>`;
-  });
-
-  // Tabla resumen
-  // Tabla: solo bloques colocados Y con artista asignado en este día
-  let tableHTML=`<tr><th>${t('printThArtist')}</th><th>${t('printThBlock')}</th><th>${t('printThSurface')}</th><th>${t('printThRisers')}</th><th>${t('printThHeight')}</th><th>${t('printThExtras')}</th><th>${t('printThPos')}</th></tr>`;
-  const bloquesPrint=state.bloques.filter(b=>{
-    const pl=state.placements[plKey(b.id,curDayId)];
-    return pl&&pl.artistaId;
-  });
-  // Ordenar por artista
-  bloquesPrint.sort((a,b2)=>{
-    const pa=state.placements[plKey(a.id,curDayId)];
-    const pb=state.placements[plKey(b2.id,curDayId)];
-    const na=state.artistas.find(x=>x.id===pa.artistaId)?.name||'';
-    const nb=state.artistas.find(x=>x.id===pb.artistaId)?.name||'';
-    return na.localeCompare(nb);
-  });
-  bloquesPrint.forEach(b=>{
-    const pl=state.placements[plKey(b.id,curDayId)];
-    const a=state.artistas.find(x=>x.id===pl.artistaId);
-    if(!a)return;
-    const ac=alturaColor(b.altura);
-    const extras=[b.faldon?t('faldonLabel'):'',b.ruedas?t('ruedasLabel'):'',b.escalera?t('escaleraLabel'):'',b.barandilla?t('barandillaLabel'):''].filter(Boolean).join(', ')||'—';
-    tableHTML+=`<tr>
-      <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${a.color};margin-right:6px;vertical-align:middle"></span><strong>${esc(a.name||'?')}</strong></td>
-      <td>${esc(b.name||'—')}</td>
-      <td>${b.metrosW||b.largo*2}×${b.metrosD||b.ancho} m</td>
-      <td style="text-align:center">${b.tarimas||b.largo*b.ancho}</td>
-      <td><span style="color:${ac.border};font-weight:700">${b.altura} cm</span></td>
-      <td style="color:#666">${extras}</td>
-      <td style="font-family:monospace">(${pl.col+1}, ${pl.row+1})</td>
-    </tr>`;
-  });
-  // Si no hay bloques asignados
-  if(!bloquesPrint.length)
-    tableHTML+=`<tr><td colspan="7" style="text-align:center;color:#999;padding:20px">${t('printNoBlocks')}</td></tr>`;
-
   const day=state.days.find(d=>d.id===curDayId);
-  const usedMods=modsDay(curDayId);
   const stockSc=sc.stock||40;
+  const situaciones=state.situaciones||[{id:1,name:'S1'}];
+
+  // ── Construye el HTML de un plano para una situación concreta ──
+  function buildGridHTML(situId){
+    let gridHTML='';
+    for(let r=0;r<sc.rows;r++)
+      for(let c=0;c<sc.cols;c++){
+        const idx=r*sc.cols+c;
+        const inStock=idx<sc.stock;
+        gridHTML+=`<div style="grid-column:${c+1};grid-row:${r+1};${inStock?'border:1px solid rgba(255,255,255,0.06);border-radius:2px;':''}" ></div>`;
+      }
+    state.bloques.forEach(b=>{
+      const pl=state.placements[plKey(b.id,curDayId,sc.id,situId)];
+      if(!pl||!pl.artistaId)return;
+      const a=state.artistas.find(x=>x.id===pl.artistaId);
+      if(!a)return;
+      const ac=alturaColor(b.altura);
+      const left=pl.col*(cw+GAP),top=pl.row*(ch+GAP);
+      const w=b.largo*(cw+GAP)-GAP,h2=b.ancho*(ch+GAP)-GAP;
+      const extraStr=(b.faldon?'🇫 ':'')+(b.ruedas?'⚙ ':'')+(b.escalera?'🪜 ':'')+(b.barandilla?'🚧':'');
+      gridHTML+=`<div style="position:absolute;left:${left}px;top:${top}px;width:${w}px;height:${h2}px;
+        background:${ac.bg}0.28);border:2px solid ${ac.border};border-radius:4px;
+        display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:3px">
+        <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:${a.color}"></div>
+        <div style="font-weight:700;font-size:10px;color:${a.color};padding-left:6px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.name||'?')}</div>
+        ${b.name?`<div style="font-size:8px;color:#bbb;padding-left:6px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(b.name)}</div>`:''}
+        <div style="font-size:8px;color:${ac.border};font-weight:600;margin-top:1px">${b.metrosW||b.largo*2}×${b.metrosD||b.ancho}m · ${b.altura}cm${extraStr?' · '+extraStr.trim():''}</div>
+      </div>`;
+    });
+    return gridHTML;
+  }
+
+  // ── Construye la tabla resumen para una situación ──
+  function buildTableHTML(situId){
+    let tableHTML=`<tr><th>${t('printThArtist')}</th><th>${t('printThBlock')}</th><th>${t('printThSurface')}</th><th>${t('printThRisers')}</th><th>${t('printThHeight')}</th><th>${t('printThExtras')}</th><th>${t('printThPos')}</th></tr>`;
+    const bloquesPrint=state.bloques.filter(b=>{
+      const pl=state.placements[plKey(b.id,curDayId,sc.id,situId)];
+      return pl&&pl.artistaId;
+    });
+    bloquesPrint.sort((a,b2)=>{
+      const pa=state.placements[plKey(a.id,curDayId,sc.id,situId)];
+      const pb=state.placements[plKey(b2.id,curDayId,sc.id,situId)];
+      const na=state.artistas.find(x=>x.id===pa.artistaId)?.name||'';
+      const nb=state.artistas.find(x=>x.id===pb.artistaId)?.name||'';
+      return na.localeCompare(nb);
+    });
+    bloquesPrint.forEach(b=>{
+      const pl=state.placements[plKey(b.id,curDayId,sc.id,situId)];
+      const a=state.artistas.find(x=>x.id===pl.artistaId);
+      if(!a)return;
+      const ac=alturaColor(b.altura);
+      const extras=[b.faldon?t('faldonLabel'):'',b.ruedas?t('ruedasLabel'):'',b.escalera?t('escaleraLabel'):'',b.barandilla?t('barandillaLabel'):''].filter(Boolean).join(', ')||'—';
+      tableHTML+=`<tr>
+        <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${a.color};margin-right:6px;vertical-align:middle"></span><strong>${esc(a.name||'?')}</strong></td>
+        <td>${esc(b.name||'—')}</td>
+        <td>${b.metrosW||b.largo*2}×${b.metrosD||b.ancho} m</td>
+        <td style="text-align:center">${b.tarimas||b.largo*b.ancho}</td>
+        <td><span style="color:${ac.border};font-weight:700">${b.altura} cm</span></td>
+        <td style="color:#666">${extras}</td>
+        <td style="font-family:monospace">(${pl.col+1}, ${pl.row+1})</td>
+      </tr>`;
+    });
+    if(!bloquesPrint.length)
+      tableHTML+=`<tr><td colspan="7" style="text-align:center;color:#999;padding:20px">${t('printNoBlocks')}</td></tr>`;
+    return tableHTML;
+  }
+
+  // ── Construye un bloque de página completo para una situación ──
+  function buildSituPage(situ,isFirst){
+    const situId=situ.id;
+    const usedMods=modsDay(curDayId,sc.id,situId);
+    const gridHTML=buildGridHTML(situId);
+    const tableHTML=buildTableHTML(situId);
+    const pageBreak=isFirst?'':'<div style="page-break-before:always;margin-top:32px;padding-top:24px;border-top:2px solid #333"></div>';
+    const situLabel=situaciones.length>1?` <span style="font-size:14px;color:#888;font-weight:400;letter-spacing:1px">· ${esc(situ.name)}</span>`:'';
+    return `${pageBreak}
+    <h1 style="font-size:20px;letter-spacing:2px;margin-bottom:4px">${t('printTitle')} ${esc(state.festivalName)}${situLabel}</h1>
+    <div class="meta">
+      <span>📅 ${esc(day?.label||'')}</span>
+      <span>🎪 ${esc(sc.name)}</span>
+      ${situaciones.length>1?`<span>🎭 ${esc(situ.name)}</span>`:''}
+      <span>📦 ${usedMods} / ${stockSc} ${t('modules')}</span>
+      <span>${sc.cols}×${sc.rows} ${t('positions')}</span>
+    </div>
+    <div class="stock-bar-wrap">
+      <span>Stock</span>
+      <div class="stock-bar"><div class="stock-fill" style="width:${Math.min(usedMods/stockSc*100,100)}%;background:${usedMods/stockSc>1?'#e8394a':usedMods/stockSc>.8?'#f5a623':'#3ecf6e'}"></div></div>
+      <span>${Math.round(Math.min(usedMods/stockSc,1)*100)}%</span>
+    </div>
+    <div class="legend">
+      ${[[20,'#fde68a'],[40,'#fbbf24'],[60,'#d97706'],[80,'#c2410c'],[100,'#991b1b']].map(([h,c])=>`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>≤${h}cm</div>`).join('')}
+      ${state.artistas.filter(a=>state.bloques.some(b=>{const p=state.placements[plKey(b.id,curDayId,sc.id,situId)];return p&&p.artistaId===a.id;})).map(a=>`<div class="legend-item"><div class="legend-dot" style="background:${a.color};border-radius:50%"></div>${esc(a.name||'?')}</div>`).join('')}
+    </div>
+    <div class="grid-wrap"><div class="grid">${gridHTML}</div></div>
+    <h2>${t('printBlockDist')}</h2>
+    <table><thead>${tableHTML.slice(0,tableHTML.indexOf('</tr>')+5)}</thead><tbody>${tableHTML.slice(tableHTML.indexOf('</tr>')+5)}</tbody></table>`;
+  }
+
+  // ── Ensamblar todas las páginas ──
+  const allPagesHTML=situaciones.map((s,i)=>buildSituPage(s,i===0)).join('');
 
   const win=window.open('','_blank');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
@@ -4008,43 +4497,28 @@ function printView(){
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'JetBrains Mono',monospace;background:#fff;color:#111;padding:24px}
-    h1{font-size:22px;letter-spacing:2px;margin-bottom:4px}
-    .meta{font-size:11px;color:#666;margin-bottom:20px;display:flex;gap:20px;flex-wrap:wrap}
-    .grid-wrap{background:#111;border:1px solid #333;border-radius:8px;padding:12px;display:inline-block;margin-bottom:24px;overflow:auto}
+    h1{margin-bottom:4px}
+    h2{font-size:13px;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;color:#555}
+    .meta{font-size:11px;color:#666;margin-bottom:14px;display:flex;gap:16px;flex-wrap:wrap}
+    .grid-wrap{background:#111;border:1px solid #333;border-radius:8px;padding:12px;display:inline-block;margin-bottom:20px;overflow:auto;max-width:100%}
     .grid{position:relative;display:inline-grid;gap:${GAP}px;grid-template-columns:repeat(${sc.cols},${cw}px);grid-template-rows:repeat(${sc.rows},${ch}px);width:${W}px;height:${H}px}
     table{width:100%;border-collapse:collapse;font-size:11px}
     th{background:#111;color:#f0c040;padding:6px 10px;text-align:left;font-weight:600;border-bottom:2px solid #333}
     td{padding:5px 10px;border-bottom:1px solid #ddd;vertical-align:middle}
     tr:hover td{background:#f9f9f9}
-    .legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:10px}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;font-size:10px}
     .legend-item{display:flex;align-items:center;gap:4px}
     .legend-dot{width:12px;height:12px;border-radius:2px}
-    h2{font-size:13px;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;color:#555}
-    .stock-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:11px}
+    .stock-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:11px}
     .stock-bar{height:8px;background:#eee;border-radius:99px;flex:1;overflow:hidden}
-    .stock-fill{height:100%;border-radius:99px;background:${usedMods/stockSc>1?'#e8394a':usedMods/stockSc>.8?'#f5a623':'#3ecf6e'}}
-    @media print{body{padding:12px}.grid-wrap{page-break-after:avoid}}
+    .stock-fill{height:100%;border-radius:99px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+    @media print{
+      body{padding:12px}
+      .grid-wrap{page-break-inside:avoid}
+    }
   </style>
   </head><body>
-  <h1>${t('printTitle')} ${esc(state.festivalName)}</h1>
-  <div class="meta">
-    <span>📅 ${esc(day?.label||'')}</span>
-    <span>🎪 ${esc(sc.name)}</span>
-    <span>📦 ${usedMods} / ${stockSc} ${t('modules')}</span>
-    <span>${sc.cols}×${sc.rows} ${t('positions')}</span>
-  </div>
-  <div class="stock-bar-wrap">
-    <span>Stock</span>
-    <div class="stock-bar"><div class="stock-fill" style="width:${Math.min(usedMods/stockSc*100,100)}%"></div></div>
-    <span>${Math.round(usedMods/stockSc*100)}%</span>
-  </div>
-  <div class="legend">
-    ${[[20,'#fde68a'],[40,'#fbbf24'],[60,'#d97706'],[80,'#c2410c'],[100,'#991b1b']].map(([h,c])=>`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>≤${h}cm</div>`).join('')}
-    ${state.artistas.map(a=>`<div class="legend-item"><div class="legend-dot" style="background:${a.color};border-radius:50%"></div>${esc(a.name||'?')}</div>`).join('')}
-  </div>
-  <div class="grid-wrap"><div class="grid">${gridHTML}</div></div>
-  <h2>${t('printBlockDist')}</h2>
-  <table><thead>${tableHTML.slice(0,tableHTML.indexOf('</tr>')+5)}</thead><tbody>${tableHTML.slice(tableHTML.indexOf('</tr>')+5)}</tbody></table>
+  ${allPagesHTML}
   <script>window.onload=()=>window.print();<\/script>
   </body></html>`);
   win.document.close();
@@ -4052,85 +4526,114 @@ function printView(){
 
 // ── VISTA IMPRIMIBLE KANBAN ──────────────────────────
 function printKanban(){
-  const day=state.days.find(d=>d.id===curDayId);
   const sc=curScene();
-  const usedMods=modsDay(curDayId);
   const stockSc=sc.stock||40;
-  const pct=Math.min(Math.round(usedMods/stockSc*100),100);
+  const situaciones=state.situaciones||[{id:1,name:'S1'}];
 
-  // Construir columnas del kanban (todos los días)
-  let colsHTML='';
-  state.days.forEach(d=>{
-    const mods=modsDay(d.id);
-    const isToday=d.id===curDayId;
-    const artsDay=state.artistas.filter(a=>
-      state.bloques.some(b=>{const p=state.placements[plKey(b.id,d.id)];return p&&p.artistaId===a.id;})
+  // Para el kanban imprimimos el día activo × todas las situaciones
+  // Cada situación es una columna; los días aparecen agrupados si hay varios
+  // Modelo: columnas = situaciones, filas de artistas con sus bloques
+
+  // Calcular stock total del día activo (situación activa)
+  const usedMods=modsDay(curDayId,sc.id,curSituId);
+  const pct=Math.min(Math.round(usedMods/stockSc*100),100);
+  const day=state.days.find(d=>d.id===curDayId);
+
+  // ── Construye el HTML de tarjeta de artista para un día+situación ──
+  function buildArtCard(a,dayId,situId){
+    const bls=state.bloques.filter(b=>{
+      const p=state.placements[plKey(b.id,dayId,sc.id,situId)];
+      return p&&p.artistaId===a.id;
+    });
+    if(!bls.length)return '';
+    const tot=bls.reduce((s,b)=>s+(b.tarimas||b.largo*b.ancho),0);
+    const totM2=bls.reduce((s,b)=>s+b.largo*b.ancho,0);
+    let rowsHTML='';
+    bls.forEach(b=>{
+      const pl=state.placements[plKey(b.id,dayId,sc.id,situId)];
+      const ac=alturaColor(b.altura);
+      const extras=[b.faldon?t('faldonLabel'):'',b.ruedas?t('ruedasLabel'):'',b.escalera?t('escaleraLabel'):'',b.barandilla?t('barandillaLabel'):''].filter(Boolean).join(', ');
+      rowsHTML+=`
+        <tr>
+          <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;color:#ccc">
+            <span style="display:inline-block;width:6px;height:6px;border-radius:2px;background:${a.color}88;margin-right:5px;vertical-align:middle"></span>
+            ${esc(b.name||'—')}
+          </td>
+          <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;color:#aaa;white-space:nowrap">${b.metrosW||b.largo*2}×${b.metrosD||b.ancho} m</td>
+          <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;text-align:center;color:#aaa">${b.tarimas||b.largo*b.ancho}</td>
+          <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;color:${ac.border};font-weight:600;text-align:center">${b.altura}cm</td>
+          <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:10px;color:#666">${extras||'—'}</td>
+          <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:10px;color:#555;font-family:monospace">${pl?`(${pl.col+1},${pl.row+1})`:''}</td>
+        </tr>`;
+    });
+    return `
+      <div style="background:#1a1a1d;border:1px solid #2a2a32;border-radius:8px;overflow:hidden;margin-bottom:10px;border-left:4px solid ${a.color}">
+        <div style="padding:8px 12px;background:#1e1e23;display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700;font-size:13px;color:${a.color}">${esc(a.name||'Sin nombre')}</div>
+          <div style="font-family:monospace;font-size:11px;color:#f0c040">${tot} ${t('riserAbbr')} · ${totM2} m²</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr style="background:#111">
+              <th style="padding:4px 8px;font-size:9px;text-align:left;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThBlock')}</th>
+              <th style="padding:4px 8px;font-size:9px;text-align:left;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThSurface')}</th>
+              <th style="padding:4px 8px;font-size:9px;text-align:center;color:#555;text-transform:uppercase;letter-spacing:1px">${t('riserAbbr').toUpperCase()}</th>
+              <th style="padding:4px 8px;font-size:9px;text-align:center;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThHeight').slice(0,4)}</th>
+              <th style="padding:4px 8px;font-size:9px;text-align:left;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThExtras')}</th>
+              <th style="padding:4px 8px;font-size:9px;text-align:left;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThPos')}</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHTML}</tbody>
+        </table>
+      </div>`;
+  }
+
+  // ── Construye la columna de una situación dentro de un día ──
+  function buildSituCol(situ,dayId,isActive){
+    const situId=situ.id;
+    const mods=modsDay(dayId,sc.id,situId);
+    const free=stockSc-mods;
+    const artsInSitu=state.artistas.filter(a=>
+      state.bloques.some(b=>{const p=state.placements[plKey(b.id,dayId,sc.id,situId)];return p&&p.artistaId===a.id;})
     );
     let cardsHTML='';
-    if(!artsDay.length){
+    if(!artsInSitu.length){
       cardsHTML=`<div style="text-align:center;color:#888;font-style:italic;padding:16px;font-size:11px">${t('printSinBloques')}</div>`;
     } else {
-      artsDay.forEach(a=>{
-        const bls=state.bloques.filter(b=>{const p=state.placements[plKey(b.id,d.id)];return p&&p.artistaId===a.id;});
-        const tot=bls.reduce((s,b)=>s+(b.tarimas||b.largo*b.ancho),0);
-        const totM2=bls.reduce((s,b)=>s+b.largo*b.ancho,0);
-        let rowsHTML='';
-        bls.forEach(b=>{
-          const ac=alturaColor(b.altura);
-          const extras=[b.faldon?t('faldonLabel'):'',b.ruedas?t('ruedasLabel'):''].filter(Boolean).join(', ');
-          rowsHTML+=`
-            <tr>
-              <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;color:#ccc">
-                <span style="display:inline-block;width:6px;height:6px;border-radius:2px;background:${a.color}88;margin-right:5px;vertical-align:middle"></span>
-                ${esc(b.name||'—')}
-              </td>
-              <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;color:#aaa;white-space:nowrap">
-                ${b.metrosW||b.largo*2}×${b.metrosD||b.ancho} m
-              </td>
-              <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;text-align:center;color:#aaa">
-                ${b.tarimas||b.largo*b.ancho}
-              </td>
-              <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;color:${ac.border};font-weight:600;text-align:center">
-                ${b.altura}cm
-              </td>
-              <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:10px;color:#666">
-                ${extras||'—'}
-              </td>
-            </tr>`;
-        });
-        cardsHTML+=`
-          <div style="background:#1a1a1d;border:1px solid #2a2a32;border-radius:8px;overflow:hidden;margin-bottom:10px;border-left:4px solid ${a.color}">
-            <div style="padding:8px 12px;background:#1e1e23;display:flex;justify-content:space-between;align-items:center">
-              <div style="font-weight:700;font-size:13px;color:${a.color}">${esc(a.name||'Sin nombre')}</div>
-              <div style="font-family:monospace;font-size:11px;color:#f0c040">${tot} tarimas · ${totM2} m²</div>
-            </div>
-            <table style="width:100%;border-collapse:collapse">
-              <thead>
-                <tr style="background:#111">
-                  <th style="padding:4px 8px;font-size:9px;text-align:left;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThBlock')}</th>
-                  <th style="padding:4px 8px;font-size:9px;text-align:left;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThSurface')}</th>
-                  <th style="padding:4px 8px;font-size:9px;text-align:center;color:#555;text-transform:uppercase;letter-spacing:1px">${t('riserAbbr').toUpperCase()}</th>
-                  <th style="padding:4px 8px;font-size:9px;text-align:center;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThHeight').slice(0,4)}</th>
-                  <th style="padding:4px 8px;font-size:9px;text-align:left;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThExtras')}</th>
-                </tr>
-              </thead>
-              <tbody>${rowsHTML}</tbody>
-            </table>
-          </div>`;
-      });
-      // Tarimas libres
-      const free=stockSc-mods;
-      if(free>0) cardsHTML+=`<div style="text-align:center;color:#444;font-size:10px;font-family:monospace;padding:8px 0;border-top:1px solid #2a2a32;margin-top:4px">${free} tarima${free!==1?'s':''} libres</div>`;
+      artsInSitu.forEach(a=>{cardsHTML+=buildArtCard(a,dayId,situId);});
+      if(free>0) cardsHTML+=`<div style="text-align:center;color:#444;font-size:10px;font-family:monospace;padding:8px 0;border-top:1px solid #2a2a32;margin-top:4px">${free} ${t('riserFull').replace('tarimas','').trim()||'tarima'} libre${free!==1?'s':''}</div>`;
     }
-    colsHTML+=`
-      <div style="min-width:220px;flex:1;background:#161619;border:1px solid ${isToday?'#f0c040':'#2a2a32'};border-radius:10px;overflow:hidden;display:flex;flex-direction:column">
-        <div style="padding:10px 14px;background:#1e1e23;border-bottom:1px solid #2a2a32;display:flex;justify-content:space-between;align-items:center;border-top:3px solid ${isToday?'#f0c040':'#3a3a42'}">
-          <div style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:${isToday?'#f0c040':'#e8e8ec'};font-weight:600">${esc(d.label)}</div>
-          <div style="font-family:'Courier New',monospace;font-size:22px;color:#f0c040;line-height:1">${mods}<span style="font-size:10px;color:#666;margin-left:3px">tar</span></div>
+    const accentCol=isActive?'#f0c040':'#3a3a42';
+    return `
+      <div style="min-width:200px;flex:1;background:#161619;border:1px solid ${isActive?'#f0c040':'#2a2a32'};border-radius:10px;overflow:hidden;display:flex;flex-direction:column">
+        <div style="padding:8px 12px;background:#1e1e23;border-bottom:1px solid #2a2a32;border-top:3px solid ${accentCol};display:flex;justify-content:space-between;align-items:center">
+          <div style="font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:${isActive?'#f0c040':'#e8e8ec'};font-weight:600">🎭 ${esc(situ.name)}</div>
+          <div style="font-family:'Courier New',monospace;font-size:18px;color:#f0c040;line-height:1">${mods}<span style="font-size:9px;color:#666;margin-left:2px">${t('riserAbbr')}</span></div>
         </div>
         <div style="padding:10px;flex:1">${cardsHTML}</div>
       </div>`;
-  });
+  }
+
+  // ── Si hay varios días, generar sección por día con columnas de situaciones ──
+  // Si solo hay un día, mostrar directamente las columnas de situaciones
+  let bodyHTML='';
+  if(state.days.length===1){
+    // Una sola sección, columnas = situaciones
+    const colsHTML=situaciones.map(s=>buildSituCol(s,curDayId,s.id===curSituId)).join('');
+    bodyHTML=`<div class="cols">${colsHTML}</div>`;
+  } else {
+    // Una sección por día, pero solo imprimimos el día activo con todas sus situaciones
+    // + tabla resumen de todos los días (solo situación activa, para referencia rápida)
+    const colsHTML=situaciones.map(s=>buildSituCol(s,curDayId,s.id===curSituId)).join('');
+    bodyHTML=`
+      <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#666;margin-bottom:8px">
+        📅 ${esc(day?.label||'')}
+      </div>
+      <div class="cols">${colsHTML}</div>
+      ${state.days.length>1?`<div style="font-size:10px;color:#555;margin-top:16px;padding-top:12px;border-top:1px solid #2a2a2a;font-family:monospace">
+        ${t('otherDays')}: ${state.days.filter(d=>d.id!==curDayId).map(d=>`${esc(d.label)} (${modsDay(d.id,sc.id,curSituId)} ${t('riserAbbr')})`).join(' · ')}
+      </div>`:''}`;
+  }
 
   const win=window.open('','_blank');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
@@ -4138,10 +4641,10 @@ function printKanban(){
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'JetBrains Mono',monospace;background:#0d0d0f;color:#e8e8ec;padding:20px;min-height:100vh}
-    h1{font-family:serif;font-size:24px;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;color:#f0c040}
-    .meta{font-size:11px;color:#666;margin-bottom:16px;display:flex;gap:20px;flex-wrap:wrap}
-    .stock-bar{height:6px;background:#222;border-radius:99px;margin-bottom:20px;overflow:hidden}
-    .stock-fill{height:100%;border-radius:99px;background:${pct>100?'#e8394a':pct>80?'#f5a623':'#3ecf6e'}}
+    h1{font-family:serif;font-size:22px;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;color:#f0c040}
+    .meta{font-size:11px;color:#666;margin-bottom:14px;display:flex;gap:16px;flex-wrap:wrap}
+    .stock-bar{height:6px;background:#222;border-radius:99px;margin-bottom:18px;overflow:hidden}
+    .stock-fill{height:100%;border-radius:99px;background:${pct>100?'#e8394a':pct>80?'#f5a623':'#3ecf6e'};print-color-adjust:exact;-webkit-print-color-adjust:exact}
     .cols{display:flex;gap:12px;align-items:flex-start;overflow-x:auto;padding-bottom:8px}
     @media print{
       body{background:#fff;color:#111;padding:12px}
@@ -4150,21 +4653,20 @@ function printKanban(){
       div[style*="background:#161619"]{background:#f8f8f8!important;border-color:#ddd!important}
       div[style*="background:#1e1e23"]{background:#eee!important}
       div[style*="background:#1a1a1d"]{background:#fff!important;border-color:#ddd!important}
-      div[style*="background:#1a1a1a"],div[style*="background:#111"]{background:#f0f0f0!important}
-      tr[style*="background:#111"]{background:#f0f0f0!important}
+      div[style*="background:#111"],tr[style*="background:#111"]{background:#f0f0f0!important}
       td,th{color:#333!important}
-      .stock-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}
     }
   </style>
   </head><body>
   <h1>${t('printTitle')} ${esc(state.festivalName)}</h1>
   <div class="meta">
     <span>🎪 ${esc(sc.name)}</span>
+    <span>📅 ${esc(day?.label||'')}</span>
     <span>📦 ${usedMods} / ${stockSc} ${t('modules')} · ${pct}% ${t('occupancy')}</span>
-    <span>📅 ${state.days.length} ${t('otherDaysLabel')}${state.days.length!==1&&lang==='es'?'s':''}</span>
+    ${situaciones.length>1?`<span>🎭 ${situaciones.length} ${lang==='es'?'situaciones':'situations'}</span>`:''}
   </div>
   <div class="stock-bar"><div class="stock-fill" style="width:${pct}%"></div></div>
-  <div class="cols">${colsHTML}</div>
+  ${bodyHTML}
   <script>window.onload=()=>window.print();<\/script>
   </body></html>`);
   win.document.close();
@@ -4181,7 +4683,7 @@ let undoIsRestoring=false;
 
 function snapshot(){
   if(undoIsRestoring)return;
-  undoStack.push(JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId}));
+  undoStack.push(JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,nSituId,curSceneId,curSituId}));
   if(undoStack.length>UNDO_MAX)undoStack.shift();
   // Cualquier acción nueva invalida el historial futuro
   redoStack=[];
@@ -4192,7 +4694,11 @@ function _restoreSnapshot(snap){
   undoIsRestoring=true;
   state=snap.state;nDayId=snap.nDayId;nArtId=snap.nArtId;nBloqueId=snap.nBloqueId;
   if(snap.nSceneId)nSceneId=snap.nSceneId;
+  if(snap.nSituId)nSituId=snap.nSituId;
   if(snap.curSceneId)curSceneId=snap.curSceneId;
+  if(snap.curSituId)curSituId=snap.curSituId;
+  if(!state.situaciones)state.situaciones=[{id:1,name:'S1'}];
+  if(!state.situaciones.find(s=>s.id===curSituId))curSituId=state.situaciones[0]?.id||1;
   if(!state.days.find(d=>d.id===curDayId))curDayId=state.days[0]?.id;
   if(!state.artistas.find(a=>a.id===selArtId))selArtId=null;
   undoIsRestoring=false;
@@ -4206,7 +4712,7 @@ function _restoreSnapshot(snap){
 function undo(){
   if(undoStack.length===0)return;
   // Guardar estado actual en redoStack antes de restaurar
-  redoStack.push(JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId}));
+  redoStack.push(JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,nSituId,curSceneId,curSituId}));
   if(redoStack.length>UNDO_MAX)redoStack.shift();
   const prev=JSON.parse(undoStack.pop());
   _restoreSnapshot(prev);
@@ -4215,7 +4721,7 @@ function undo(){
 function redo(){
   if(redoStack.length===0)return;
   // Guardar estado actual en undoStack antes de avanzar
-  undoStack.push(JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,curSceneId}));
+  undoStack.push(JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,nSituId,curSceneId,curSituId}));
   if(undoStack.length>UNDO_MAX)undoStack.shift();
   const next=JSON.parse(redoStack.pop());
   _restoreSnapshot(next);
@@ -4433,6 +4939,8 @@ const loaded = __EMBEDDED__ ? loadEmbedded(__EMBEDDED__) : loadData();
 if(!loaded){initDefault();}
 if(!curDayId&&state.days.length)curDayId=state.days[0].id;
 if(!curSceneId&&state.scenes?.length)curSceneId=state.scenes[0].id;
+if(!state.situaciones)state.situaciones=[{id:1,name:'S1'}];
+if(!curSituId&&state.situaciones?.length)curSituId=state.situaciones[0].id;
 if(state.festivalName)document.title=`${t('titlePrefix')} ${state.festivalName}`;
 handleResize();
 applyTheme();

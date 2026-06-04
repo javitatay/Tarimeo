@@ -16,7 +16,7 @@
 
 **Diseña y organiza la distribución de tarimas y escenarios de tu festival.**
 
-Una herramienta visual, rápida y sin complicaciones para planificar el montaje de tarimas modulares por días y escenarios. Funciona sin conexión.
+Una herramienta visual, rápida y sin complicaciones para planificar el montaje de tarimas modulares por días, escenarios y situaciones de plano. Funciona sin conexión.
 
 [![Usar en el navegador](https://img.shields.io/badge/🌐_Usar_en_el_navegador-c89838?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
 [![Invítame a un café](https://img.shields.io/badge/☕_Invítame_a_un_café-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000)](https://buymeacoffee.com/javitatay)
@@ -33,6 +33,8 @@ Tarimeo te ayuda a planificar dónde va cada tarima sobre el plano de un escenar
 
 - 🎪 **Plano por escenarios** — coloca los bloques sobre una cuadrícula arrastrándolos con el dedo o el ratón.
 - 📅 **Varios días** — planifica cada jornada del evento de forma independiente.
+- 🎭 **Situaciones de plano** — define múltiples disposiciones dentro del mismo día y escenario (soundcheck, show, cambio de grupo…) y navega entre ellas con un clic.
+- 🔄 **Vista de transición** — compara dos situaciones lado a lado, ve qué bloques se mueven y en qué dirección, y comprueba si el paso está libre antes de empujar.
 - 🎸 **Asignación a artistas** — visualiza de un vistazo quién ocupa qué, con código de color.
 - 📦 **Control de stock** — sabe en todo momento cuántos módulos usas y cuántos te quedan.
 - 🖨️ **Exporta y comparte** — genera planos para imprimir o PDF, exporta a CSV, guarda imágenes y crea copias de seguridad.
@@ -42,6 +44,27 @@ Tarimeo te ayuda a planificar dónde va cada tarima sobre el plano de un escenar
 - 📱 **Optimizado para móvil** — pan táctil y zoom con pellizco sobre el plano sin interferir con el dibujo de bloques.
 - 🌙 **Modo claro y oscuro** y **bilingüe** (español / inglés).
 - 📴 **Funciona sin conexión**, ideal para usar durante el montaje en el recinto.
+
+---
+
+## 🎭 Situaciones de plano
+
+Una **situación** es una foto fija de cómo están colocadas las tarimas en un momento concreto dentro de un mismo día y escenario. Puedes crear tantas como necesites y cambiar entre ellas sin perder ninguna.
+
+**Caso de uso típico — doble grupo en un mismo escenario:**
+
+| Situación | Grupo A | Grupo B |
+|---|---|---|
+| S1 · Soundcheck A | Tarimas al frente | Tarimas al fondo |
+| S2 · Show B | Tarimas al fondo | Tarimas al frente |
+| S3 · Show A | Tarimas al frente | Tarimas al fondo / fuera |
+
+**Cómo funciona:**
+
+1. Abre la barra de situaciones (justo encima de la toolbar del plano).
+2. Pulsa `+` para añadir una situación nueva — las posiciones actuales se copian como punto de partida.
+3. Mueve los bloques hasta dejar el plano como estará en ese momento.
+4. Usa el botón `⇒` entre dos situaciones para abrir la **vista de transición**: verás ambos planos en paralelo, la lista de movimientos con su distancia en metros y una indicación de si el paso está libre (`✓ Con ruedas`) o requiere comprobación (`⚠ Verificar paso`).
 
 ---
 
@@ -93,6 +116,16 @@ sw.js                   · service worker (instalable + offline)
 icons/                  · iconos de la app
 ```
 
+**Modelo de datos — clave de placement:**
+
+Las posiciones de los bloques se almacenan con clave de cuatro partes:
+
+```
+{bloqueId}_{díaId}_{escenarioId}_{situaciónId}
+```
+
+Los backups JSON de versiones anteriores (claves de 2 o 3 partes) se migran automáticamente a situación 1 al cargar.
+
 Para probarlo en local basta con servir la carpeta con cualquier servidor estático, por ejemplo:
 
 ```bash
@@ -127,7 +160,7 @@ Eres libre de usar, estudiar, modificar y compartir este software. La única con
 
 **Design and organise your festival's stage riser layout.**
 
-A visual, fast and straightforward tool for planning modular stage riser placement by day and stage. Works offline.
+A visual, fast and straightforward tool for planning modular stage riser placement by day, stage and layout situation. Works offline.
 
 [![Open in browser](https://img.shields.io/badge/🌐_Open_in_browser-c89838?style=for-the-badge)](https://javitatay.github.io/Tarimeo/)
 [![Buy me a coffee](https://img.shields.io/badge/☕_Buy_me_a_coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000)](https://buymeacoffee.com/javitatay)
@@ -144,6 +177,8 @@ Tarimeo helps you plan where each riser goes on a stage floor plan, organise the
 
 - 🎪 **Stage floor plan** — place blocks on a grid by dragging with your finger or mouse.
 - 📅 **Multiple days** — plan each day of the event independently.
+- 🎭 **Layout situations** — define multiple arrangements within the same day and stage (soundcheck, show, changeover…) and switch between them in one tap.
+- 🔄 **Transition view** — compare two situations side by side, see which blocks move and in which direction, and check whether the path is clear before you push.
 - 🎸 **Artist assignment** — see at a glance who occupies what, with colour coding.
 - 📦 **Stock control** — always know how many modules you are using and how many remain.
 - 🖨️ **Export and share** — generate printable/PDF layouts, export to CSV, save images and create backups.
@@ -153,6 +188,27 @@ Tarimeo helps you plan where each riser goes on a stage floor plan, organise the
 - 📱 **Mobile optimised** — touch pan and pinch-to-zoom on the floor plan without interfering with block drawing.
 - 🌙 **Light and dark mode**, **bilingual** (Spanish / English).
 - 📴 **Works offline**, ideal for use during load-in at the venue.
+
+---
+
+## 🎭 Layout situations
+
+A **situation** is a snapshot of how the risers are arranged at a specific moment within the same day and stage. Create as many as you need and switch between them without losing any.
+
+**Typical use case — two acts sharing one stage:**
+
+| Situation | Act A | Act B |
+|---|---|---|
+| S1 · Soundcheck A | Risers at front | Risers at back |
+| S2 · Show B | Risers at back | Risers at front |
+| S3 · Show A | Risers at front | Risers at back / offstage |
+
+**How it works:**
+
+1. Open the situations bar (just above the floor plan toolbar).
+2. Press `+` to add a new situation — the current positions are copied as a starting point.
+3. Move blocks to match how the stage will look at that moment.
+4. Use the `⇒` button between two situations to open the **transition view**: see both layouts side by side, the list of moves with distances in metres, and whether each path is clear (`✓ On wheels`) or needs checking (`⚠ Verify clearance`).
 
 ---
 
@@ -203,6 +259,16 @@ manifest.webmanifest    · PWA metadata
 sw.js                   · service worker (installable + offline)
 icons/                  · app icons
 ```
+
+**Data model — placement key:**
+
+Block positions are stored with a four-part key:
+
+```
+{blockId}_{dayId}_{stageId}_{situationId}
+```
+
+JSON backups from earlier versions (2- or 3-part keys) are automatically migrated to situation 1 on load.
 
 To run it locally, serve the folder with any static server, for example:
 
