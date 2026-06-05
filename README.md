@@ -31,13 +31,13 @@ Tarimeo te ayuda a planificar dónde va cada tarima sobre el plano de un escenar
 
 ### Funciones principales
 
-- 🎪 **Plano por escenarios** — coloca los bloques sobre una cuadrícula arrastrándolos con el dedo o el ratón.
+- 🎪 **Plano por escenarios** — coloca los bloques sobre una cuadrícula arrastrándolos con el dedo o el ratón. El área del plano la define el tamaño del escenario, no el número de tarimas.
 - 📅 **Varios días** — planifica cada jornada del evento de forma independiente.
 - 🎭 **Situaciones de plano** — define múltiples disposiciones dentro del mismo día y escenario (soundcheck, show, cambio de grupo…) y navega entre ellas con un clic.
 - 🔄 **Vista de transición** — compara dos situaciones lado a lado, ve qué bloques se mueven y en qué dirección, y comprueba si el paso está libre antes de empujar.
 - 🎸 **Asignación a artistas** — visualiza de un vistazo quién ocupa qué, con código de color.
-- 📦 **Control de stock** — sabe en todo momento cuántos módulos usas y cuántos te quedan.
-- 🖨️ **Exporta y comparte** — genera planos para imprimir o PDF, exporta a CSV, guarda imágenes y crea copias de seguridad.
+- 📦 **Control de stock** — sabe en todo momento cuántos módulos usas y cuántos te quedan. Dibujar nuevos bloques está limitado por el stock disponible; mover bloques ya colocados es libre por todo el escenario.
+- 🖨️ **Exporta y comparte** — genera planos para imprimir o PDF (una página por situación), exporta a CSV, guarda imágenes y crea copias de seguridad.
 - 🔍 **Buscador visual** — filtra bloques y artistas en tiempo real; el resto del plano se atenúa para que solo veas lo que buscas.
 - ↩️ **Deshacer y rehacer** — historial de hasta 30 pasos (Ctrl+Z / Ctrl+Y).
 - 🪜 **Extras de seguridad** — marca faldón, ruedas, escalera y barandilla por bloque. A partir de 60 cm de altura, la app sugiere escalera y barandilla automáticamente según normativa.
@@ -65,6 +65,17 @@ Una **situación** es una foto fija de cómo están colocadas las tarimas en un 
 2. Pulsa `+` para añadir una situación nueva — las posiciones actuales se copian como punto de partida.
 3. Mueve los bloques hasta dejar el plano como estará en ese momento.
 4. Usa el botón `⇒` entre dos situaciones para abrir la **vista de transición**: verás ambos planos en paralelo, la lista de movimientos con su distancia en metros y una indicación de si el paso está libre (`✓ Con ruedas`) o requiere comprobación (`⚠ Verificar paso`).
+
+---
+
+## 📐 Escenario y stock: cómo funciona el plano
+
+El área del plano la determina el **tamaño del escenario** (ancho × fondo en metros), no el número de tarimas disponibles. Esto permite trabajar con todo el espacio real aunque el stock sea limitado.
+
+- **Dibujar bloques nuevos** consume stock. Si no hay tarimas suficientes, el preview se pone en rojo y la creación queda bloqueada con un aviso claro.
+- **Mover bloques ya colocados** es completamente libre: puedes arrastrarlos a cualquier posición del escenario sin restricción de stock. Solo se comprueba que no haya solapamiento con otro bloque.
+
+Esto refleja la realidad de producción: una vez que las tarimas están montadas, puedes reorganizarlas por todo el escenario sin que el stock cambie.
 
 ---
 
@@ -126,6 +137,12 @@ Las posiciones de los bloques se almacenan con clave de cuatro partes:
 
 Los backups JSON de versiones anteriores (claves de 2 o 3 partes) se migran automáticamente a situación 1 al cargar.
 
+**Lógica de escenario y stock:**
+
+- El grid del plano se calcula a partir de las dimensiones del escenario (`widthM` × `depthM` en metros), donde cada celda representa una tarima de 2×1 m.
+- El stock (`sc.stock`) actúa únicamente como contador de inventario: limita la creación de nuevos bloques pero no restringe el movimiento de los ya existentes.
+- `canPlace()` solo valida límites del escenario y solapamiento entre bloques, sin comprobar stock.
+
 Para probarlo en local basta con servir la carpeta con cualquier servidor estático, por ejemplo:
 
 ```bash
@@ -175,13 +192,13 @@ Tarimeo helps you plan where each riser goes on a stage floor plan, organise the
 
 ### Key features
 
-- 🎪 **Stage floor plan** — place blocks on a grid by dragging with your finger or mouse.
+- 🎪 **Stage floor plan** — place blocks on a grid by dragging with your finger or mouse. The navigable area is defined by the stage dimensions, not by the number of risers.
 - 📅 **Multiple days** — plan each day of the event independently.
 - 🎭 **Layout situations** — define multiple arrangements within the same day and stage (soundcheck, show, changeover…) and switch between them in one tap.
 - 🔄 **Transition view** — compare two situations side by side, see which blocks move and in which direction, and check whether the path is clear before you push.
 - 🎸 **Artist assignment** — see at a glance who occupies what, with colour coding.
-- 📦 **Stock control** — always know how many modules you are using and how many remain.
-- 🖨️ **Export and share** — generate printable/PDF layouts, export to CSV, save images and create backups.
+- 📦 **Stock control** — always know how many modules you are using and how many remain. Drawing new blocks is limited by available stock; moving already-placed blocks is free across the entire stage.
+- 🖨️ **Export and share** — generate printable/PDF layouts (one page per situation), export to CSV, save images and create backups.
 - 🔍 **Visual search** — filter blocks and artists in real time; everything else dims so you only see what you need.
 - ↩️ **Undo and redo** — up to 30-step history (Ctrl+Z / Ctrl+Y).
 - 🪜 **Safety extras** — mark skirting, wheels, stairs and railing per block. Above 60 cm height, the app automatically suggests stairs and railing per safety regulations.
@@ -209,6 +226,17 @@ A **situation** is a snapshot of how the risers are arranged at a specific momen
 2. Press `+` to add a new situation — the current positions are copied as a starting point.
 3. Move blocks to match how the stage will look at that moment.
 4. Use the `⇒` button between two situations to open the **transition view**: see both layouts side by side, the list of moves with distances in metres, and whether each path is clear (`✓ On wheels`) or needs checking (`⚠ Verify clearance`).
+
+---
+
+## 📐 Stage area and stock: how the floor plan works
+
+The floor plan area is determined by the **stage dimensions** (width × depth in metres), not by the number of available risers. This lets you work across the full physical space even with limited stock.
+
+- **Drawing new blocks** consumes stock. If there are not enough risers, the preview turns red and the block cannot be created, with a clear message showing how many you need versus how many are available.
+- **Moving already-placed blocks** is completely free: drag them anywhere on the stage with no stock restriction. Only overlap with other blocks is checked.
+
+This mirrors real production: once risers are built, you can reorganise them freely without the stock count changing.
 
 ---
 
@@ -269,6 +297,12 @@ Block positions are stored with a four-part key:
 ```
 
 JSON backups from earlier versions (2- or 3-part keys) are automatically migrated to situation 1 on load.
+
+**Stage area and stock logic:**
+
+- The floor plan grid is calculated from the stage dimensions (`widthM` × `depthM` in metres), where each cell represents one 2×1 m riser module.
+- Stock (`sc.stock`) acts purely as an inventory counter: it limits the creation of new blocks but does not restrict movement of existing ones.
+- `canPlace()` only validates stage bounds and block overlap, without checking stock.
 
 To run it locally, serve the folder with any static server, for example:
 

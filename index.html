@@ -1330,6 +1330,8 @@ const LANGS = {
     altAbbr: 'alt.',
     orConnector: 'ó',
     noSpaceHint: (name) => `⚠ "${name}" creado pero sin espacio libre — aparece en "Sin colocar"`,
+    stockInsufficient: (need, have) => `⚠ Stock insuficiente: necesitas ${need} tarima${need!==1?'s':''}, disponibles ${have}`,
+    stockInsufficientShort: (need, have) => `⚠ ${need} tarimas · solo ${have} disponibles`,
     csvUnplaced: 'Sin colocar',
     occupancy: 'ocupación',
     sizeAndRisers: 'Tamaño',
@@ -1517,6 +1519,8 @@ const LANGS = {
     altAbbr: 'h.',
     orConnector: 'or',
     noSpaceHint: (name) => `⚠ "${name}" created but no free space — appears in "Unplaced"`,
+    stockInsufficient: (need, have) => `⚠ Not enough stock: need ${need} riser${need!==1?'s':''}, only ${have} available`,
+    stockInsufficientShort: (need, have) => `⚠ ${need} risers · only ${have} available`,
     csvUnplaced: 'Unplaced',
     occupancy: 'usage',
     sizeAndRisers: 'Size',
@@ -1621,8 +1625,8 @@ function renderHelp(){
     ],
     s2:'📐 Vista de Planta',
     s2b:[
-      '<b>Dibujar bloque:</b> arrastra sobre celdas vacías para definir el tamaño y suelta para abrir el formulario.',
-      '<b>Mover:</b> arrastra un bloque colocado a otra posición libre.',
+      '<b>Dibujar bloque:</b> arrastra sobre celdas vacías para definir el tamaño y suelta para abrir el formulario. El ancho y fondo del escenario determinan el área total disponible.',
+      '<b>Mover:</b> arrastra un bloque ya colocado a cualquier posición libre del escenario — sin restricción de stock.',
       '<b>Editar:</b> toca o haz clic en un bloque para abrir el panel de detalle.',
       '<b>Redimensionar:</b> usa los botones + / − de Frente y Fondo en el panel de detalle.',
       '<b>Buscar:</b> escribe en el campo de búsqueda para resaltar bloques por nombre o artista — el resto se atenúa.'
@@ -1640,11 +1644,13 @@ function renderHelp(){
       'El botón <b>⇒</b> entre dos situaciones abre la <b>vista de transición</b>: compara los dos planos en paralelo y muestra qué bloques se mueven, a qué distancia y si el paso está libre (✓ Con ruedas) o necesita comprobación (⚠ Verificar paso).',
       'La impresión de planta genera una página por situación, permitiendo entregar un dossier completo al equipo de producción.'
     ],
-    s5:'📦 Stock y extras',
+    s5:'📦 Stock y control de movimiento',
     s5b:[
-      'El panel lateral muestra cuántos módulos usas en total y cuántos te quedan.',
-      'Cada bloque puede llevar <b>Faldón</b> 🇫, <b>Ruedas</b> ⚙, <b>Escalera</b> 🪜 y <b>Barandilla</b> 🚧.',
-      'A partir de <b>60 cm de altura</b>, la app sugiere automáticamente escalera y barandilla según normativa de seguridad.',
+      'El panel lateral muestra cuántos módulos usas hoy y cuántos te quedan según el stock total del festival.',
+      '<b>Dibujar bloques nuevos</b> está limitado por el stock disponible: si no hay tarimas suficientes, el preview se pone en rojo y la creación queda bloqueada.',
+      '<b>Mover bloques ya colocados</b> es libre por toda el área del escenario, sin restricción de stock — solo se verifica que no haya solapamiento.',
+      'El área navegable del plano la determina el tamaño del escenario (ancho × fondo en metros), no el número de tarimas.',
+      'Cada bloque puede llevar <b>Faldón</b> 🇫, <b>Ruedas</b> ⚙, <b>Escalera</b> 🪜 y <b>Barandilla</b> 🚧. A partir de 60 cm de altura, la app sugiere escalera y barandilla automáticamente.',
       'Los extras aparecen en el plano, en el Kanban y se exportan al CSV.'
     ],
     s6:'💾 Guardar y exportar',
@@ -1678,8 +1684,8 @@ function renderHelp(){
     ],
     s2:'📐 Floor view',
     s2b:[
-      '<b>Draw a block:</b> drag across empty cells to set the size, then release to open the form.',
-      '<b>Move:</b> drag a placed block to a new free position.',
+      '<b>Draw a block:</b> drag across empty cells to set the size, then release to open the form. The stage width and depth define the total navigable area.',
+      '<b>Move:</b> drag a placed block anywhere on the stage — no stock restriction applies to repositioning.',
       '<b>Edit:</b> tap or click a block to open the detail panel.',
       '<b>Resize:</b> use the + / − buttons for Front and Depth in the detail panel.',
       '<b>Search:</b> type in the search field to highlight blocks by name or artist — the rest dims out.'
@@ -1697,11 +1703,13 @@ function renderHelp(){
       'The <b>⇒</b> button between two situations opens the <b>transition view</b>: compare both layouts side by side and see which blocks move, how far, and whether the path is clear (✓ On wheels) or needs checking (⚠ Verify clearance).',
       'The floor plan print generates one page per situation, producing a complete handout for your production crew.'
     ],
-    s5:'📦 Stock and extras',
+    s5:'📦 Stock and movement control',
     s5b:[
-      'The side panel shows how many modules you are using and how many remain.',
-      'Each block can have <b>Skirting</b> 🇫, <b>Wheels</b> ⚙, <b>Stairs</b> 🪜 and <b>Railing</b> 🚧.',
-      'Above <b>60 cm height</b>, the app automatically suggests stairs and railing per safety regulations.',
+      'The side panel shows how many modules you are using today and how many remain from the festival total stock.',
+      '<b>Drawing new blocks</b> is limited by available stock: if there are not enough risers, the preview turns red and the block cannot be created.',
+      '<b>Moving already-placed blocks</b> is free across the entire stage area, with no stock restriction — only overlap is checked.',
+      'The navigable area of the floor plan is determined by the stage dimensions (width × depth in metres), not by the number of risers.',
+      'Each block can have <b>Skirting</b> 🇫, <b>Wheels</b> ⚙, <b>Stairs</b> 🪜 and <b>Railing</b> 🚧. Above 60 cm height, the app automatically suggests stairs and railing.',
       'Extras appear on the floor plan, in the Kanban and are exported to CSV.'
     ],
     s6:'💾 Save and export',
@@ -2273,11 +2281,10 @@ function updateStock(noRender){
   state.gridCols=dims.cols;
   state.gridRows=dims.rows;
 
-  // Cálculo combinado: capacidad del espacio, tarimas usadas hoy, ajuste
+  // Stock: tarimas físicas disponibles vs. usadas en el escenario hoy
   const used=modsDay(curDayId);
   const capacity=dims.capacity;          // cuántas tarimas caben en el espacio
-  const limit=Math.min(sc.stock,capacity); // límite real = lo menor entre stock y capacidad
-  const free=limit-used;
+  const free=sc.stock-used;             // puede ser negativo si se excede el stock
 
   // Actualizar label: metros · capacidad · ajuste
   const lbl=document.getElementById('gridDimsLabel');
@@ -2292,7 +2299,7 @@ function updateStock(noRender){
     if(pl.col+b.largo>dims.cols||pl.row+b.ancho>dims.rows)delete state.placements[k];
   });
 
-  const pct=Math.min((used/Math.max(limit,1))*100,100);
+  const pct=Math.min((used/Math.max(sc.stock,1))*100,100);
   const cls=pct>100?'bar-danger':pct>80?'bar-warn':'bar-ok';
   document.getElementById('skGrid').innerHTML=`
     <div class="sk-cell"><div class="sk-cl">${t('risersToday')}</div><div class="sk-cv" style="color:var(--accent)">${used}</div></div>
@@ -2507,16 +2514,12 @@ function renderGrid(){
   grid.id='stageGrid';grid.className='stage-grid';
   grid.style.cssText=`width:${W}px;height:${H}px;grid-template-columns:repeat(${sc.cols},${cw}px);grid-template-rows:repeat(${sc.rows},${ch}px);gap:${GAP}px`;
 
-  // BG cells — celdas dentro del stock son activas, las sobrantes están bloqueadas
-  const totalCells=sc.cols*sc.rows;
-  const stockCells=sc.stock; // exactamente los módulos disponibles
+  // BG cells — todas las celdas del escenario son activas (el stock es un contador, no un mapa)
   for(let r=0;r<sc.rows;r++){
     for(let c=0;c<sc.cols;c++){
-      const idx=r*sc.cols+c;
-      const inStock=idx<stockCells;
       const bg=document.createElement('div');
-      bg.className='bgc'+(inStock?'':' bgc-out');
-      bg.dataset.c=c;bg.dataset.r=r;bg.dataset.in=inStock?'1':'0';
+      bg.className='bgc';
+      bg.dataset.c=c;bg.dataset.r=r;bg.dataset.in='1';
       bg.style.cssText=`grid-column:${c+1};grid-row:${r+1}`;
       grid.appendChild(bg);
     }
@@ -2813,8 +2816,6 @@ function attachGridEvents(grid,cw,ch,sc){
     if(e.target.closest('.pb'))return;
     const cell=cellFromXY(grid,e.clientX,e.clientY,cw,ch);
     if(!cell)return;
-    const idx=cell.row*sc.cols+cell.col;
-    if(idx>=sc.stock)return;
     isDrawing=true;dragMoved=false;
     drawStart=cell;drawEnd=cell;
     e.preventDefault();
@@ -2853,7 +2854,6 @@ function attachGridEvents(grid,cw,ch,sc){
     if(key===_lastHoverCell)return; // sin cambio, no actualizar DOM
     _lastHoverCell=key;
     grid.querySelectorAll('.bgc').forEach(bg=>{
-      if(bg.dataset.in!=='1'){bg.className='bgc bgc-out';return;}
       const c=parseInt(bg.dataset.c),r=parseInt(bg.dataset.r);
       bg.className='bgc'+(cell&&c===cell.col&&r===cell.row?' hover-ok':'');
     });
@@ -2870,8 +2870,6 @@ function attachGridEvents(grid,cw,ch,sc){
     const t=e.touches[0];
     const cell=cellFromXY(grid,t.clientX,t.clientY,cw,ch);
     if(!cell)return;
-    const idx=cell.row*sc.cols+cell.col;
-    if(idx>=sc.stock)return;
     isDrawing=true;dragMoved=false;
     drawStart=cell;drawEnd=cell;
     e.preventDefault();
@@ -2913,9 +2911,7 @@ function resetBgcColors(grid){
   grid.querySelectorAll('.bgc').forEach(bg=>{
     const c=parseInt(bg.dataset.c),r=parseInt(bg.dataset.r);
     const isPicked=pickedCells.some(p=>p.col===c&&p.row===r);
-    const inStock=bg.dataset.in==='1';
-    if(!inStock) bg.className='bgc bgc-out';
-    else bg.className='bgc'+(isPicked?' picked':'');
+    bg.className='bgc'+(isPicked?' picked':'');
   });
 }
 
@@ -2926,16 +2922,25 @@ function updateDrawPreview(cw,ch,sc){
   const left=rect.col*(cw+GAP),top=rect.row*(ch+GAP);
   const w=rect.largo*(cw+GAP)-GAP,h=rect.ancho*(ch+GAP)-GAP;
   prev.style.cssText=`display:flex;left:${left}px;top:${top}px;width:${w}px;height:${h}px`;
-  const mods=rect.largo*rect.ancho;
-  const fits=sc?canPlace(-1,curDayId,rect.col,rect.row,rect.largo,rect.ancho,sc):true;
   const n=rect.largo*rect.ancho; // N tarimas (1 celda = 1 tarima)
+  const fits=sc?canPlace(-1,curDayId,rect.col,rect.row,rect.largo,rect.ancho,sc):true;
+  // Validación de stock: cuántas tarimas usadas ya vs stock total
+  const usedNow=modsDay(curDayId);
+  const freeStock=curScene().stock-usedNow;
+  const stockOk=n<=freeStock;
+  const ok=fits&&stockOk;
   const surfA=`${rect.largo*2}×${rect.ancho} m`; // lado largo horizontal
   const surfB=`${rect.largo}×${rect.ancho*2} m`; // lado corto horizontal
   document.getElementById('dpLabel').textContent=t('riserCount',n);
-  document.getElementById('dpMods').textContent=`${surfA}  ${t('orConnector')}  ${surfB}`;
-  // Color del preview según si cabe
-  prev.style.borderColor=fits?'var(--accent)':'var(--danger)';
-  prev.style.background=fits?'rgba(200,152,56,.1)':'rgba(232,57,74,.1)';
+  // Si excede stock, mostrar aviso inline en el label de módulos
+  if(!stockOk&&fits){
+    document.getElementById('dpMods').textContent=t('stockInsufficientShort',n,Math.max(0,freeStock));
+  } else {
+    document.getElementById('dpMods').textContent=`${surfA}  ${t('orConnector')}  ${surfB}`;
+  }
+  // Color del preview según si cabe Y si hay stock
+  prev.style.borderColor=ok?'var(--accent)':'var(--danger)';
+  prev.style.background=ok?'rgba(200,152,56,.1)':'rgba(232,57,74,.1)';
 }
 function hideDrawPreview(){
   const prev=document.getElementById('drawPreview');
@@ -2963,9 +2968,7 @@ function updatePickedUI(grid){
     grid.querySelectorAll('.bgc').forEach(bg=>{
       const c=parseInt(bg.dataset.c),r=parseInt(bg.dataset.r);
       const isPicked=pickedCells.some(p=>p.col===c&&p.row===r);
-      const isOut=bg.dataset.in!=='1';
-      if(isOut) bg.className='bgc bgc-out';
-      else bg.className='bgc'+(isPicked?' picked':'');
+      bg.className='bgc'+(isPicked?' picked':'');
     });
   }
   // Actualizar botón flotante
@@ -3132,6 +3135,7 @@ function openDrawModal(rect){
       </div>
     </div>
     <div class="modal-ft">
+      ${(()=>{const _u=modsDay(curDayId),_f=curScene().stock-_u,_n=rect.largo*rect.ancho;return _n>_f?`<div style="width:100%;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--danger);background:rgba(232,57,74,.08);border:1px solid rgba(232,57,74,.25);border-radius:5px;padding:6px 10px;text-align:center">${t('stockInsufficient',_n,Math.max(0,_f))}</div>`:'';})()}
       <button class="modal-btn primary" onclick="confirmDraw(${rect.col},${rect.row},${rect.largo},${rect.ancho})">${t('createBlock')}</button>
       <button class="modal-btn secondary" onclick="closeModal()">${t('cancel')}</button>
     </div>
@@ -3201,6 +3205,15 @@ function confirmDraw(col,row,largo,ancho){
     artId=parseInt(artSel);
   }
 
+  // Validar stock antes de crear: no se pueden colocar más tarimas de las disponibles
+  const _usedNow=modsDay(curDayId);
+  const _freeStock=curScene().stock-_usedNow;
+  const _nNeed=modalLargo*modalAncho;
+  if(_nNeed>_freeStock){
+    flashHint(t('stockInsufficient',_nNeed,Math.max(0,_freeStock)));
+    closeModal();return;
+  }
+
   // Calcular metros reales según orientación elegida
   // modalLargo=cols (nº tarimas ancho), modalAncho=rows (nº tarimas fondo)
   // Orient A (lado largo=2m al frente): superficie = cols*2 × rows*1 m
@@ -3266,13 +3279,7 @@ function canPlace(bid,dayId,col,row,largo,ancho,scOverride){
     bLargo=b.largo;bAncho=b.ancho;
   }
   if(col+bLargo>sc2.cols||row+bAncho>sc2.rows)return false;
-  // Verificar que todas las celdas están dentro del stock
-  for(let r=row;r<row+bAncho;r++)
-    for(let c=col;c<col+bLargo;c++){
-      const idx=r*sc2.cols+c;
-      if(idx>=sc2.stock)return false;
-    }
-  if(bid===-1)return true; // preview: solo verificar límites (ya comprobados arriba)
+  if(bid===-1)return true; // preview: solo verificar límites del escenario
   // Verificar solapamiento con otros bloques
   for(let r=row;r<row+bAncho;r++)
     for(let c=col;c<col+bLargo;c++)
@@ -4397,9 +4404,7 @@ function printView(){
     let gridHTML='';
     for(let r=0;r<sc.rows;r++)
       for(let c=0;c<sc.cols;c++){
-        const idx=r*sc.cols+c;
-        const inStock=idx<sc.stock;
-        gridHTML+=`<div style="grid-column:${c+1};grid-row:${r+1};${inStock?'border:1px solid rgba(255,255,255,0.06);border-radius:2px;':''}" ></div>`;
+        gridHTML+=`<div style="grid-column:${c+1};grid-row:${r+1};border:1px solid rgba(255,255,255,0.06);border-radius:2px;" ></div>`;
       }
     state.bloques.forEach(b=>{
       const pl=state.placements[plKey(b.id,curDayId,sc.id,situId)];
