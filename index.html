@@ -104,7 +104,7 @@ input,button,select,textarea{font-family:inherit}
 @media(max-width:1180px){.ub-lbl{display:none}.ub{padding:6px 8px}}
 /* Modal de ayuda */
 @keyframes modalFadeIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
-@keyframes blockPlaced{0%{box-shadow:0 0 0 0 rgba(46,165,90,.7)}60%{box-shadow:0 0 0 6px rgba(46,165,90,.0)}100%{box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.04)}}
+@keyframes blockPlaced{0%{opacity:.65;outline:2px solid rgba(46,165,90,.85);outline-offset:0px}60%{opacity:1;outline:2px solid rgba(46,165,90,0);outline-offset:4px}100%{opacity:1;outline:none;outline-offset:0}}
 @keyframes overlayFadeIn{from{opacity:0}to{opacity:1}}
 .help-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:1200;align-items:center;justify-content:center;padding:20px}
 .help-ov.open{display:flex;animation:overlayFadeIn 150ms ease-out}
@@ -152,7 +152,7 @@ input,button,select,textarea{font-family:inherit}
 .main{display:flex;flex:1;overflow:hidden;position:relative}
 
 /* SIDEBAR */
-.sb{width:var(--sb-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .25s cubic-bezier(.4,0,.2,1),border-color .25s;z-index:10;position:relative}
+.sb{width:var(--sb-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width 250ms cubic-bezier(.32,.72,0,1),border-color 250ms ease;z-index:10;position:relative}
 .sb.collapsed{width:0;overflow:hidden;border-right:none}
 .sb-inner{width:var(--sb-w);height:100%;display:flex;flex-direction:column}
 .sb-scroll{flex:1;overflow-y:auto;padding:16px}
@@ -172,7 +172,7 @@ input,button,select,textarea{font-family:inherit}
 .sk-cl{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:1px}
 .sk-cv{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
 .sk-bar{height:4px;background:var(--border);border-radius:99px;overflow:hidden}
-.sk-fill{height:100%;border-radius:99px;transition:width .4s,background .3s}
+.sk-fill{height:100%;border-radius:99px;transition:width 250ms cubic-bezier(.23,1,.32,1),background 250ms ease}
 .bar-ok{background:linear-gradient(90deg,var(--ok),#2fb55a)}
 .bar-warn{background:linear-gradient(90deg,var(--warn),#e0891e)}
 .bar-danger{background:linear-gradient(90deg,var(--danger),#c0293a)}
@@ -313,7 +313,7 @@ input,button,select,textarea{font-family:inherit}
   box-shadow:0 2px 8px rgba(0,0,0,.25);
 }
 /* bg cells */
-.bgc{border:1px solid var(--border2);border-radius:3px;cursor:crosshair;transition:background .08s,border-color .08s;position:relative;z-index:1;display:flex;align-items:center;justify-content:center}
+.bgc{border:1px solid var(--border2);border-radius:3px;cursor:crosshair;transition:background 120ms ease,border-color 120ms ease;position:relative;z-index:1;display:flex;align-items:center;justify-content:center}
 /* dotted center line to suggest 2:1 module */
 
 /* Celdas fuera del stock disponible */
@@ -1035,6 +1035,24 @@ body.light .sk-cl{color:var(--muted);font-weight:500}
   -moz-osx-font-smoothing:grayscale;
 }
 .ac-name,.bl-name-in,.kcard-name{text-rendering:optimizeLegibility}
+
+/* ── 7. HOVER GUARDS PARA TOUCH ─────────────────────── */
+/* En dispositivos táctiles el :hover se dispara en tap
+   y queda "pegado" — lo desactivamos para non-pointer */
+@media(hover:none){
+  .btn-icon:hover{color:var(--muted);background:none}
+  .ub:hover{color:var(--muted);background:none;border-color:transparent}
+  .sb-add:hover{color:var(--muted2);border-color:var(--border)}
+  .day-del:hover{color:var(--muted2)}
+  .ac-del:hover{color:var(--muted2)}
+  .bl-del:hover{color:var(--muted2)}
+  .add-bl:hover{border-color:var(--border);color:var(--muted2)}
+  .dt-del:hover{color:var(--muted2)}
+  .uc:hover{border-color:var(--border2);color:var(--muted)}
+  .situ-del:hover{color:var(--muted2)}
+  .help-x:hover{color:var(--muted);background:none}
+  .save-btn:hover{box-shadow:0 2px 12px rgba(200,152,56,.25)}
+}
 
 /* ════ FIN PARCHE UI UX PRO MAX ════════════════════════ */
 </style>
