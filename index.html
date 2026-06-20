@@ -941,6 +941,102 @@ body.mobile-more #mobilePanel{display:block}
   transition:background .12s;
 }
 .cdm-opt:hover{background:var(--surface2);color:var(--accent)}
+
+/* ════════════════════════════════════════════════════════
+ *  UI UX PRO MAX PATCH — aplicado con nextlevelbuilder/ui-ux-pro-max-skill
+ *  Categoría: Live Events Production Tool
+ *  Estética intacta — solo se añaden capas de accesibilidad,
+ *  consistencia y reducción de movimiento.
+ * ════════════════════════════════════════════════════════ */
+
+/* ── 1. FOCUS VISIBLE GLOBAL (WCAG AA) ───────────────── */
+*:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+  border-radius:4px;
+}
+/* Inputs ya usan border-color en focus → no duplicar outline */
+.modal-in:focus-visible,
+.day-in:focus-visible,
+.gsz:focus-visible,
+.sk-in:focus-visible,
+.di:focus-visible,
+.pos-in:focus-visible,
+.det-notes:focus-visible,
+.fest-in:focus-visible,
+.situ-name-in:focus-visible,
+.sc-name-in:focus-visible,
+.ac-name:focus-visible,
+.bl-name-in:focus-visible{
+  outline:none;
+}
+/* Tarimas sobre fondo oscuro → outline blanco */
+.pb:focus-visible{
+  outline:2.5px solid #fff;
+  outline-offset:2px;
+}
+
+/* ── 2. PREFERS-REDUCED-MOTION ──────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:0.01ms!important;
+    scroll-behavior:auto!important;
+  }
+  /* Sidebar y panel de detalle: sin slide */
+  .sb,.det{transition:none!important}
+  /* Modales: sin fade */
+  .modal-bg.open .modal,
+  .modal-bg.open .modal-content,
+  .help-ov.open .help-box,
+  .trans-overlay.open .trans-modal{animation:none!important}
+  /* Spinner: borde estático */
+  .spin{animation:none!important;border-color:var(--accent)!important;opacity:.7}
+  /* Demo animada en ayuda: posición final */
+  .demo-block{animation:none!important;transform:translate(20px,16px)!important}
+  .help-demo .demo-hand{animation:none!important;transform:translate(20px,16px) translate(8px,10px)!important}
+  /* Confirmación de bloque colocado: sin flash */
+  .pb{animation:none!important}
+}
+
+/* ── 3. MODO CLARO — CONTRASTE ───────────────────────── */
+body.light .sk-cv{color:var(--text);font-weight:700}
+body.light .dc{color:var(--accent);font-weight:600}
+body.light .bl-status{font-weight:500}
+body.light .od span{font-weight:600}
+body.light .tag,.body.light .stack-chip{border-color:var(--border2)}
+body.light .spin{border-color:var(--border2);border-top-color:var(--accent)}
+body.light .pb-name{font-weight:700}
+body.light .pb-dim{opacity:.8}
+body.light .det-v{color:var(--text);font-weight:500}
+body.light .sk-cl{color:var(--muted);font-weight:500}
+
+/* ── 4. TRANSICIONES CONSISTENTES ───────────────────── */
+.bgc{transition:background var(--speed) ease,border-color var(--speed) ease}
+.ub{transition:color var(--speed) ease,background var(--speed) ease,border-color var(--speed) ease}
+.ac{transition:border-color var(--speed) ease,box-shadow var(--speed) ease}
+.dt{transition:color var(--speed) ease,border-color var(--speed) ease,background var(--speed) ease}
+.situ-tab{transition:color var(--speed) ease,border-color var(--speed) ease,background var(--speed) ease}
+.sc-tab{transition:color var(--speed) ease,border-color var(--speed) ease}
+
+/* ── 5. MICRO-MEJORAS DE INTERACCIÓN ────────────────── */
+.stage-grid{cursor:crosshair}
+.stage-grid .pb{cursor:grab}
+.stage-grid .pb:active{cursor:grabbing}
+.modal-bg{background:rgba(0,0,0,.78)}
+.save-btn:hover{box-shadow:0 4px 20px rgba(200,152,56,.45)}
+.det{box-shadow:-6px 0 32px rgba(0,0,0,.55)}
+
+/* ── 6. LEGIBILIDAD Y SCROLL ─────────────────────────── */
+.sb-scroll,.det-body,.help-bd,.modal-bd,.trans-bd{scroll-behavior:smooth}
+.tb-logo,.alt-disp,.sk-cv,.kcm,.trans-title,.modal-title{
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+.ac-name,.bl-name-in,.kcard-name{text-rendering:optimizeLegibility}
+
+/* ════ FIN PARCHE UI UX PRO MAX ════════════════════════ */
 </style>
 </head>
 <body>
