@@ -698,7 +698,7 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
 .preset.on{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
 
 /* DET PANEL */
-.det{position:fixed;right:0;top:var(--th);bottom:0;width:270px;background:var(--surface);border-left:1px solid var(--border);z-index:400;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 24px rgba(0,0,0,.4)}
+.det{position:fixed;right:0;top:var(--th);bottom:0;width:340px;background:var(--surface);border-left:1px solid var(--border);z-index:400;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 24px rgba(0,0,0,.4)}
 .det.open{transform:translateX(0)}
 .det-h{padding:13px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 @media(max-width:767px){.det-h::before{content:'';display:block;width:36px;height:4px;background:var(--border2);border-radius:99px;position:absolute;top:8px;left:50%;transform:translateX(-50%)}}
@@ -706,7 +706,7 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
 .det-badge{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);background:var(--surface2);border-radius:4px;padding:2px 8px;margin-top:2px}
 .det-close{background:none;border:none;color:var(--muted);font-size:19px;cursor:pointer;padding:2px 4px;border-radius:4px;transition:color .2s;line-height:1}
 .det-close:hover{color:var(--text)}
-.det-body{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:12px}
+.det-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px}
 .det-f{display:flex;flex-direction:column;gap:4px}
 .det-l{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)}
 .det-v{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);background:var(--surface2);border-radius:5px;padding:7px 9px}
@@ -726,7 +726,7 @@ select.modal-in{-webkit-appearance:none;cursor:pointer}
 .od{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);line-height:1.7}
 .od span{color:var(--text)}
 .det-acts{display:flex;gap:6px}
-.det-btn{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:5px;padding:8px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;transition:color .15s,background .15s,border-color .15s;text-align:center}
+.det-btn{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:10px 8px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;transition:color .15s,background .15s,border-color .15s;text-align:center}
 .det-btn:hover{color:var(--text);border-color:var(--border2)}
 .det-btn.danger:hover{color:var(--danger);border-color:var(--danger)}
 
@@ -2008,16 +2008,28 @@ function saveToFile(){
   try{
     const payload=JSON.stringify({state,nDayId,nArtId,nBloqueId,nSceneId,nSituId,curSceneId,curSituId});
     const fname=(state.festivalName||t('riserFull')).replace(/[^\w\s\u00e0-\u00ff_-]/g,'').trim()||'tarimas';
-    // Obtener el source del script original usando un truco: el script tag tiene id __main__
-    const fullSrc='<!DOCTYPE html>'+document.documentElement.outerHTML;
-    const saved=fullSrc.replace(
+    let fullSrc='<!DOCTYPE html>'+document.documentElement.outerHTML;
+
+    // safePayload: escapar </ → <\/ para que el contenido JSON no cierre el tag accidentalmente
+    // JSON.parse() acepta \/ como escape válido de /
+    const safePayload=payload.replace(/<\//g,'<\\/');
+
+    // Método 1 (principal): inyectar en el tag <script type="application/json" id="__tarimeo_state__">
+    // Usamos '<'+'/' para no escribir </ literalmente en el fuente JS (cerraría el script actual)
+    const tagOpen='<script type="application/json" id="__tarimeo_state__">';
+    const tagCloseReal='<'+'/script>';
+    const tagRe=new RegExp('(<script[^>]+id="__tarimeo_state__">)[\\s\\S]*?(<'+'\\/script>)');
+    let saved=fullSrc.replace(tagRe,function(_,open,close){return open+safePayload+close;});
+    const tagOk=saved.includes(tagOpen+safePayload);
+
+    // Método 2 (compat/fallback): también actualizar __EMBEDDED__ legacy
+    saved=saved.replace(
       /const __EMBEDDED__=\/\*__SAVED_STATE__\*\/[\s\S]*?\/\*__END_STATE__\*\//,
       'const __EMBEDDED__=/*__SAVED_STATE__*/'+payload+'/*__END_STATE__*/'
     );
-    if(!saved.includes('/*__SAVED_STATE__*/'+payload)){
-      // El reemplazo no encontró el marcador — guardar igualmente el HTML
-      // con el marcador inyectado antes del cierre del script
-      console.warn('Marcador no encontrado, usando método alternativo');
+
+    if(!tagOk){
+      console.warn('Tag JSON no encontrado, solo se usó el método legacy');
     }
     download(saved,fname+'.html');
     markSaved();
@@ -2898,9 +2910,9 @@ function renderGrid(){
 
   area.appendChild(wrap);
 
-  // Unassigned
+  // Unassigned — solo mostrar cuando hay un único día
   const unass=state.bloques.filter(b=>state.placements[plKey(b.id,curDayId)]===undefined);
-  if(unass.length){
+  if(unass.length && state.days.length<=1){
     const up=document.createElement('div');up.className='unass';
     up.innerHTML=`<div class="unass-title">${t('unplacedToday',unass.length)}</div>`;
     const ul=document.createElement('div');ul.className='unass-list';
@@ -3490,12 +3502,12 @@ function openDet(bid,did){
     const ctrl=document.createElement('div');
     ctrl.style.cssText='display:flex;align-items:center;gap:6px';
     const minus=document.createElement('button');
-    minus.textContent='−';minus.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:16px;cursor:pointer;width:26px;height:26px;line-height:1;display:flex;align-items:center;justify-content:center';
+    minus.textContent='−';minus.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:18px;cursor:pointer;width:32px;height:32px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0';
     const valEl=document.createElement('span');
-    valEl.style.cssText='font-family:"Bebas Neue",sans-serif;font-size:22px;color:var(--accent);min-width:20px;text-align:center';
+    valEl.style.cssText='font-family:"Bebas Neue",sans-serif;font-size:24px;color:var(--accent);min-width:24px;text-align:center';
     valEl.textContent=b[field];
     const plus=document.createElement('button');
-    plus.textContent='+';plus.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:16px;cursor:pointer;width:26px;height:26px;line-height:1;display:flex;align-items:center;justify-content:center';
+    plus.textContent='+';plus.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:18px;cursor:pointer;width:32px;height:32px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0';
     const update=(delta)=>{
       const pl2=state.placements[plKey(bid,did)];
       if(!pl2)return;
@@ -3553,11 +3565,11 @@ function openDet(bid,did){
   const ef=document.createElement('div');ef.className='det-f';
   ef.innerHTML=`<div class="det-l">${t('extras')}</div>`;
   const etg=document.createElement('div');etg.className='toggle-group';
-  etg.style.cssText='display:flex;gap:7px';
+  etg.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:7px';
   [{key:'faldon',icon:'🇫',label:t('faldonLabel')},{key:'ruedas',icon:'⚙',label:t('ruedasLabel')},{key:'escalera',icon:'🪜',label:t('escaleraLabel')},{key:'barandilla',icon:'🚧',label:t('barandillaLabel')}].forEach(opt=>{
     const tog=document.createElement('div');
     tog.className='toggle-opt'+(b[opt.key]?' on':'');
-    tog.style.cssText='flex:1;min-width:100px';
+    tog.style.cssText='';
     tog.innerHTML=`<span class="toggle-icon">${opt.icon}</span><span class="toggle-label">${opt.label}</span><span class="toggle-check">${b[opt.key]?'✓':''}</span>`;
     tog.addEventListener('click',()=>{
       snapshot();
@@ -3862,7 +3874,7 @@ function renderKanban(){
       body.appendChild(card);
     });
     const sin=state.bloques.filter(b=>state.placements[plKey(b.id,day.id)]===undefined).length;
-    if(sin>0)body.innerHTML+=`<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted2);text-align:center;padding:4px;border-top:1px solid var(--border);margin-top:4px">${t('sinColocar',sin)}</div>`;
+    if(sin>0 && state.days.length<=1)body.innerHTML+=`<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted2);text-align:center;padding:4px;border-top:1px solid var(--border);margin-top:4px">${t('sinColocar',sin)}</div>`;
     col.appendChild(body);wrap.appendChild(col);
   });
   area.appendChild(wrap);
@@ -4525,7 +4537,9 @@ async function exportImg(fmt){
 // ── FEAT 2: vista imprimible ─────────────────────────
 function printView(){
   const sc=curScene();
-  const cw=CW(),ch=CH();
+  // Tamaño de celda fijo para impresión (no depende del viewport)
+  const PRINT_CW=52,PRINT_CH=26;
+  const cw=PRINT_CW,ch=PRINT_CH;
   const W=sc.cols*(cw+GAP)-GAP;
   const H=sc.rows*(ch+GAP)-GAP;
   const day=state.days.find(d=>d.id===curDayId);
@@ -4534,35 +4548,36 @@ function printView(){
 
   // ── Construye el HTML de un plano para una situación concreta ──
   function buildGridHTML(situId){
-    let gridHTML='';
+    // Capa 1: celdas de fondo (grid)
+    let cellsHTML='';
     for(let r=0;r<sc.rows;r++)
       for(let c=0;c<sc.cols;c++){
-        gridHTML+=`<div style="grid-column:${c+1};grid-row:${r+1};border:1px solid rgba(255,255,255,0.06);border-radius:2px;" ></div>`;
+        cellsHTML+=`<div style="grid-column:${c+1};grid-row:${r+1};border:1px solid rgba(255,255,255,0.06);border-radius:2px;"></div>`;
       }
+    // Capa 2: bloques usando grid-column/row span para alineación exacta
+    let blocksHTML='';
     state.bloques.forEach(b=>{
       const pl=state.placements[plKey(b.id,curDayId,sc.id,situId)];
       if(!pl||!pl.artistaId)return;
       const a=state.artistas.find(x=>x.id===pl.artistaId);
       if(!a)return;
       const ac=alturaColor(b.altura);
-      const left=pl.col*(cw+GAP),top=pl.row*(ch+GAP);
-      const w=b.largo*(cw+GAP)-GAP,h2=b.ancho*(ch+GAP)-GAP;
       const extraStr=(b.faldon?'🇫 ':'')+(b.ruedas?'⚙ ':'')+(b.escalera?'🪜 ':'')+(b.barandilla?'🚧':'');
-      gridHTML+=`<div style="position:absolute;left:${left}px;top:${top}px;width:${w}px;height:${h2}px;
+      blocksHTML+=`<div style="grid-column:${pl.col+1}/span ${b.largo};grid-row:${pl.row+1}/span ${b.ancho};
         background:${ac.bg}0.28);border:2px solid ${ac.border};border-radius:4px;
-        display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:3px">
+        display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:3px;position:relative">
         <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:${a.color}"></div>
         <div style="font-weight:700;font-size:10px;color:${a.color};padding-left:6px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a.name||'?')}</div>
         ${b.name?`<div style="font-size:8px;color:#bbb;padding-left:6px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(b.name)}</div>`:''}
         <div style="font-size:8px;color:${ac.border};font-weight:600;margin-top:1px">${b.metrosW||b.largo*2}×${b.metrosD||b.ancho}m · ${b.altura}cm${extraStr?' · '+extraStr.trim():''}</div>
       </div>`;
     });
-    return gridHTML;
+    return cellsHTML+blocksHTML;
   }
 
   // ── Construye la tabla resumen para una situación ──
   function buildTableHTML(situId){
-    let tableHTML=`<tr><th>${t('printThArtist')}</th><th>${t('printThBlock')}</th><th>${t('printThSurface')}</th><th>${t('printThRisers')}</th><th>${t('printThHeight')}</th><th>${t('printThExtras')}</th><th>${t('printThPos')}</th></tr>`;
+    let tableHTML=`<tr><th>${t('printThArtist')}</th><th>${t('printThBlock')}</th><th>${t('printThSurface')}</th><th>${t('printThRisers')}</th><th>${t('printThHeight')}</th><th>${t('printThExtras')}</th></tr>`;
     const bloquesPrint=state.bloques.filter(b=>{
       const pl=state.placements[plKey(b.id,curDayId,sc.id,situId)];
       return pl&&pl.artistaId;
@@ -4587,11 +4602,10 @@ function printView(){
         <td style="text-align:center">${b.tarimas||b.largo*b.ancho}</td>
         <td><span style="color:${ac.border};font-weight:700">${b.altura} cm</span></td>
         <td style="color:#666">${extras}</td>
-        <td style="font-family:monospace">(${pl.col+1}, ${pl.row+1})</td>
       </tr>`;
     });
     if(!bloquesPrint.length)
-      tableHTML+=`<tr><td colspan="7" style="text-align:center;color:#999;padding:20px">${t('printNoBlocks')}</td></tr>`;
+      tableHTML+=`<tr><td colspan="6" style="text-align:center;color:#999;padding:20px">${t('printNoBlocks')}</td></tr>`;
     return tableHTML;
   }
 
@@ -4701,7 +4715,6 @@ function printKanban(){
           <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;text-align:center;color:#aaa">${b.tarimas||b.largo*b.ancho}</td>
           <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:11px;color:${ac.border};font-weight:600;text-align:center">${b.altura}cm</td>
           <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:10px;color:#666">${extras||'—'}</td>
-          <td style="padding:5px 8px;border-bottom:1px solid #2a2a2a;font-size:10px;color:#555;font-family:monospace">${pl?`(${pl.col+1},${pl.row+1})`:''}</td>
         </tr>`;
     });
     return `
@@ -4718,7 +4731,6 @@ function printKanban(){
               <th style="padding:4px 8px;font-size:9px;text-align:center;color:#555;text-transform:uppercase;letter-spacing:1px">${t('riserAbbr').toUpperCase()}</th>
               <th style="padding:4px 8px;font-size:9px;text-align:center;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThHeight').slice(0,4)}</th>
               <th style="padding:4px 8px;font-size:9px;text-align:left;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThExtras')}</th>
-              <th style="padding:4px 8px;font-size:9px;text-align:left;color:#555;text-transform:uppercase;letter-spacing:1px">${t('printThPos')}</th>
             </tr>
           </thead>
           <tbody>${rowsHTML}</tbody>
@@ -5071,9 +5083,18 @@ function syncZoomBarVisibility(){
   if(bar)bar.style.display=isMobile()?'flex':'none';
 }
 // BOOT
-// Estado incrustado al guardar (generado por saveToFile)
+// Orden de carga: (1) tag JSON embebido al guardar, (2) __EMBEDDED__ (compat), (3) localStorage
+function loadFromStateTag(){
+  try{
+    const el=document.getElementById('__tarimeo_state__');
+    if(!el||!el.textContent.trim())return false;
+    const data=JSON.parse(el.textContent);
+    return loadEmbedded(data);
+  }catch(e){return false;}
+}
+// Estado incrustado al guardar (generado por saveToFile) — mecanismo legacy
 const __EMBEDDED__=/*__SAVED_STATE__*/null/*__END_STATE__*/;
-const loaded = __EMBEDDED__ ? loadEmbedded(__EMBEDDED__) : loadData();
+const loaded = loadFromStateTag() || (__EMBEDDED__ ? loadEmbedded(__EMBEDDED__) : loadData());
 if(!loaded){initDefault();}
 if(!curDayId&&state.days.length)curDayId=state.days[0].id;
 if(!curSceneId&&state.scenes?.length)curSceneId=state.scenes[0].id;
@@ -5098,6 +5119,7 @@ syncZoomBarVisibility();
 
 function resizeGrid(){onSizeChange();}
 </script>
+<script type="application/json" id="__tarimeo_state__"></script>
 <script>
 // Registro del service worker: habilita instalación y funcionamiento offline.
 if ('serviceWorker' in navigator) {
