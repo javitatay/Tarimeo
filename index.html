@@ -199,6 +199,10 @@ input,button,select,textarea{font-family:inherit}
 .ac-name:focus{border-bottom-color:var(--accent)}
 .ac-del{background:none;border:none;color:var(--muted2);font-size:12px;cursor:pointer;padding:2px 3px;border-radius:3px;line-height:1;transition:color .15s}
 .ac-del:hover{color:var(--danger)}
+.ac-coll{background:none;border:none;color:var(--muted2);font-size:11px;cursor:pointer;padding:2px 5px;border-radius:3px;line-height:1;transition:color .15s,transform .2s;flex-shrink:0}
+.ac-coll:hover{color:var(--text)}
+.ac-coll.open{transform:rotate(0deg)}
+.ac-coll.closed{transform:rotate(-90deg)}
 .ac-tags{padding:0 12px 9px;display:flex;gap:4px;flex-wrap:wrap}
 .tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:2px 5px}
 .tag.hl{color:var(--accent);border-color:rgba(200,152,56,.3);background:var(--accent-dim)}
@@ -346,7 +350,7 @@ input,button,select,textarea{font-family:inherit}
 .ruler-h{height:20px;top:-24px;font-size:10px;padding:0 6px}
 .ruler-v{width:20px;left:-26px;font-size:9px;writing-mode:vertical-lr;transform:rotate(180deg);padding:4px 0}
 /* placed bloques */
-.pb{position:absolute;border-radius:6px;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:grab;overflow:hidden;padding:8px 3px 3px;z-index:3;transition:box-shadow .12s,transform .1s,border-color .1s;user-select:none;box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.04)}
+.pb{position:absolute;border-radius:6px;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:grab;overflow:hidden;padding:6px 3px 2px;z-index:3;transition:box-shadow .12s,transform .1s,border-color .1s;user-select:none;box-shadow:0 1px 3px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.04)}
 @media(hover:hover)and(pointer:fine){.pb:hover{box-shadow:0 0 0 3px rgba(255,255,255,.22),0 4px 16px rgba(0,0,0,.5);z-index:8;transform:scale(1.025)}}
 .pb:active{cursor:grabbing;transform:scale(0.97)}
 .pb.conflict{border-color:var(--danger)!important;box-shadow:0 0 0 2px rgba(232,57,74,.4)!important}
@@ -1964,6 +1968,7 @@ let nDayId=1,nArtId=1,nBloqueId=1,nSceneId=2,nSituId=2;
 let curSceneId=1,curSituId=1;
 let curDayId=null,curView='grid';
 let selArtId=null,detBid=null,detDid=null;
+const collapsedArts=new Set(); // IDs de artistas contraídos en sidebar
 let sbOpen=window.innerWidth>=1024; // desktop: starts open
 // Draw state
 const drawMode=true; // siempre en modo dibujo
@@ -2504,15 +2509,28 @@ function renderArts(){
     ni.addEventListener('click',e=>e.stopPropagation());
     const del=document.createElement('button');del.className='ac-del';del.textContent='×';
     del.addEventListener('click',e=>{e.stopPropagation();delArt(a.id)});
-    head.appendChild(dot);head.appendChild(ni);head.appendChild(del);
+    // Botón colapso — solo visible si tiene bloques
+    const isCollapsed=collapsedArts.has(a.id);
+    const collBtn=document.createElement('button');
+    collBtn.className='ac-coll '+(isCollapsed?'closed':'open');
+    collBtn.title=isCollapsed?t('expand')||'Expandir':t('collapse')||'Contraer';
+    collBtn.textContent='▾';
+    collBtn.style.display=bl.length>0?'':'none';
+    collBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(collapsedArts.has(a.id)) collapsedArts.delete(a.id);
+      else collapsedArts.add(a.id);
+      renderArts();
+    });
+    head.appendChild(dot);head.appendChild(ni);head.appendChild(del);head.appendChild(collBtn);
 
     const tags=document.createElement('div');tags.className='ac-tags';
     if(blDay.length>0){const tagEl=document.createElement('span');tagEl.className='tag hl';tagEl.textContent=`${mDay} ${t('riserAbbr')} hoy`;tags.appendChild(tagEl);}
     const t2=document.createElement('span');t2.className='tag';t2.textContent=t('blockCount',bl.length);tags.appendChild(t2);
     card.appendChild(head);card.appendChild(tags);
 
-    // Bloques list
-    if(bl.length>0||isSel){
+    // Bloques list — oculto si está contraído
+    if((bl.length>0||isSel)&&!isCollapsed){
       const blist=document.createElement('div');blist.className='bl-list';
       bl.forEach(b=>{
         const placed=state.placements[plKey(b.id,curDayId)]!==undefined;
@@ -2675,14 +2693,41 @@ function renderGrid(){
     const w=b.largo*(cw+GAP)-GAP,h=b.ancho*(ch+GAP)-GAP;
     const ac=alturaColor(b.altura);
     const aColor=a?.color||'#666';const aName=esc(a?.name||t('unassigned').replace(/—/g,'').trim());
-    el.style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px;background:${aColor}18;border-color:${aColor};color:var(--text)`;
-    el.innerHTML=`
-      <div class="pb-alt-bar" style="background:${ac.border}" title="${b.altura}cm"></div>
-      ${b.name?`<div class="pb-name" style="color:var(--text);font-weight:700;font-size:12px">${esc(b.name)}</div>`:''}
+    // Padding adaptativo: bloques pequeños no tienen espacio para padding alto
+    const pTop=h<28?'3px':'5px';
+    el.style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px;background:${aColor}18;border-color:${aColor};color:var(--text);padding:${pTop} 3px 2px`;
+    // Contenido adaptativo: cuánto texto cabe según área disponible
+    const extrasStr=(b.faldon?' 🇫':'')+(b.ruedas?' ⚙':'')+(b.escalera?' 🪜':'')+(b.barandilla?' 🚧':'')+(b.notas?' 📝':'');
+    const dimStr=`${b.metrosW||b.largo}×${b.metrosD||b.ancho}m`;
+    const altStr=`${b.altura}cm${extrasStr}`;
+    const isShort=h<30;   // 1 tarima fondo
+    const isNarrow=w<55;  // 1 tarima ancho
+    const isTiny=isShort&&isNarrow;  // 1×1 → solo cabe 1 línea
+
+    let innerHTML;
+    if(isTiny){
+      // 1×1: solo barra de color + nombre artista ultra-compacto
+      innerHTML=`<div class="pb-alt-bar" style="background:${ac.border}" title="${b.altura}cm · ${dimStr}"></div>
+      <div style="font-size:8px;line-height:1;color:${aColor};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;opacity:.9">${aName}</div>`;
+    } else if(isShort){
+      // 1 tarima fondo pero varios anchos (3×1, 4×1 etc)
+      innerHTML=`<div class="pb-alt-bar" style="background:${ac.border}" title="${b.altura}cm · ${dimStr}"></div>
+      <div style="font-size:9px;line-height:1.1;color:${aColor};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center">${aName}${b.name?` · <b>${esc(b.name)}</b>`:''} <span style="opacity:.6">${dimStr}</span></div>`;
+    } else if(isNarrow){
+      // 1 tarima ancho pero varios fondos (1×2, 1×3 etc)
+      innerHTML=`<div class="pb-alt-bar" style="background:${ac.border}" title="${b.altura}cm"></div>
+      ${b.name?`<div class="pb-name" style="font-size:9px">${esc(b.name)}</div>`:''}
+      <div class="pb-art" style="color:${aColor};font-size:9px">${aName}</div>
+      <div class="pb-dim" style="font-size:8px">${dimStr}</div>`;
+    } else {
+      // Normal: toda la info
+      innerHTML=`<div class="pb-alt-bar" style="background:${ac.border}" title="${b.altura}cm"></div>
+      ${b.name?`<div class="pb-name">${esc(b.name)}</div>`:''}
       <div class="pb-art" style="color:${aColor};font-size:10px;opacity:.85">${aName}</div>
-      <div class="pb-dim">${b.metrosW||b.largo}×${b.metrosD||b.ancho}m</div>
-      <div class="pb-dim" style="font-size:10px;color:${ac.text};font-weight:600">${b.altura}cm${b.faldon?' 🇫':''}${b.ruedas?' ⚙':''}${b.escalera?' 🪜':''}${b.barandilla?' 🚧':''}${b.notas?' 📝':''}</div>
-    `;
+      <div class="pb-dim">${dimStr}</div>
+      <div class="pb-dim" style="font-size:10px;color:${ac.text};font-weight:600">${altStr}</div>`;
+    }
+    el.innerHTML=innerHTML;
     // Indicador de reutilización: puntitos de colores de artistas en otros días
     const otherDays=state.days.filter(d=>d.id!==curDayId);
     const reuseArtIds=[];
@@ -5122,11 +5167,14 @@ function resizeGrid(){onSizeChange();}
 <script type="application/json" id="__tarimeo_state__"></script>
 <script>
 // Registro del service worker: habilita instalación y funcionamiento offline.
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('sw.js').catch(function (err) {
-      console.warn('No se pudo registrar el service worker:', err);
-    });
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    try{
+      const swUrl=new URL('sw.js',location.href).href;
+      if(swUrl.startsWith(location.origin)&&location.origin.startsWith('http')){
+        navigator.serviceWorker.register('sw.js').catch(function(){});
+      }
+    }catch(e){}
   });
 }
 </script>
