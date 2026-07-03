@@ -16,6 +16,50 @@
 
 **🇪🇸 Español**
 
+- [📑 Índice / Index](#-índice--index)
+- [¿Qué es Tarimeo?](#qué-es-tarimeo)
+- [🎭 Situaciones de plano](#-situaciones-de-plano)
+- [📐 Escenario y stock: cómo funciona el plano](#-escenario-y-stock-cómo-funciona-el-plano)
+- [📲 Cómo instalar Tarimeo (recomendado)](#-cómo-instalar-tarimeo-recomendado)
+- [⬇️ Alternativa: instalar el APK (Android)](#-alternativa-instalar-el-apk-android)
+- [💾 Tus datos](#-tus-datos)
+- [🛠️ Para desarrolladores](#-para-desarrolladores)
+- [🔗 Más herramientas](#-más-herramientas)
+- [📄 Licencia](#-licencia)
+
+**🇬🇧 English**
+
+- [What is Tarimeo?](#what-is-tarimeo)
+- [🎭 Layout situations](#-layout-situations)
+- [📐 Stage area and stock: how the floor plan works](#-stage-area-and-stock-how-the-floor-plan-works)
+- [📲 How to install Tarimeo (recommended)](#-how-to-install-tarimeo-recommended)
+- [⬇️ Alternative: install the APK (Android)](#-alternative-install-the-apk-android)
+- [💾 Your data](#-your-data)
+- [🛠️ For developers](#-for-developers)
+- [🔗 More tools](#-more-tools)
+- [📄 Licence](#-licence)
+- [✉️ Contact / Contacto](#-contact--contacto)
+
+---
+
+<div align="center">
+
+<img src="banner.png" alt="Tarimeo" width="100%">
+
+# Tarimeo
+
+<a href="#español">🇪🇸 Español</a> · <a href="#english">🇬🇧 English</a>
+
+</div>
+
+---
+
+<a name="español"></a>
+
+## 📑 Índice / Index
+
+**🇪🇸 Español**
+
 - [¿Qué es Tarimeo?](#qué-es-tarimeo)
 - [🎭 Situaciones de plano](#situaciones-de-plano)
 - [📐 Escenario y stock: cómo funciona el plano](#escenario-y-stock-cómo-funciona-el-plano)
