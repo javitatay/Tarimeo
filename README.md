@@ -12,6 +12,35 @@
 
 <a name="español"></a>
 
+## 📑 Índice / Index
+
+**🇪🇸 Español**
+
+- [¿Qué es Tarimeo?](#qué-es-tarimeo)
+- [🎭 Situaciones de plano](#situaciones-de-plano)
+- [📐 Escenario y stock: cómo funciona el plano](#escenario-y-stock-cómo-funciona-el-plano)
+- [📲 Cómo instalar Tarimeo (recomendado)](#cómo-instalar-tarimeo-recomendado)
+- [⬇️ Alternativa: instalar el APK (Android)](#alternativa-instalar-el-apk-android)
+- [💾 Tus datos](#tus-datos)
+- [🛠️ Para desarrolladores](#para-desarrolladores)
+- [🔗 Más herramientas](#más-herramientas)
+- [📄 Licencia](#licencia)
+
+**🇬🇧 English**
+
+- [What is Tarimeo?](#what-is-tarimeo)
+- [🎭 Layout situations](#layout-situations)
+- [📐 Stage area and stock: how the floor plan works](#stage-area-and-stock-how-the-floor-plan-works)
+- [📲 How to install Tarimeo (recommended)](#how-to-install-tarimeo-recommended)
+- [⬇️ Alternative: install the APK (Android)](#alternative-install-the-apk-android)
+- [💾 Your data](#your-data)
+- [🛠️ For developers](#for-developers)
+- [🔗 More tools](#more-tools)
+- [📄 Licence](#licence)
+- [✉️ Contact / Contacto](#contact--contacto)
+
+---
+
 <div align="center">
 
 **Diseña y organiza la distribución de tarimas y escenarios de tu festival.**
@@ -149,6 +178,18 @@ Para probarlo en local basta con servir la carpeta con cualquier servidor estát
 python3 -m http.server 8080
 # y abrir http://localhost:8080
 ```
+
+---
+
+## 🔗 Más herramientas
+
+Otras herramientas para producción de eventos en directo:
+
+- ⏱️ **Tatimer** — Temporizador para el monitor del ponente en shows en vivo. [Ver proyecto](https://github.com/javitatay/Tatimer) · [Demo](https://javitatay.github.io/Tatimer/)
+- 📡 **RFTDT** — Consulta de frecuencias TDT libres para microfonía inalámbrica. [Ver proyecto](https://github.com/javitatay/RFTDT) · [Demo](https://javitatay.github.io/RFTDT/)
+- 🔷 **VectorSlice** — Convierte vectores de Illustrator en Slices de Resolume Arena. [Ver proyecto](https://github.com/javitatay/VectorSlice) · [Demo](https://javitatay.github.io/VectorSlice/)
+- 🎬 **QLab Live Scripts** — Controla PowerPoint, Chrome, Zoom, PDF y Spotify desde QLab 5. [Ver proyecto](https://github.com/javitatay/QLab-Scripts-Live-Events) · [Demo](https://javitatay.github.io/QLab-Scripts-Live-Events/)
+- 🎓 **AVV Lab** — Plataforma educativa interactiva de Animación Visual en Vivo. [Ver proyecto](https://github.com/javitatay/AVV) · [Demo](https://javitatay.github.io/AVV/)
 
 ---
 
@@ -313,6 +354,18 @@ python3 -m http.server 8080
 
 ---
 
+## 🔗 More tools
+
+Other tools for live event production:
+
+- ⏱️ **Tatimer** — Speaker-monitor timer for live events and conferences. [View project](https://github.com/javitatay/Tatimer) · [Demo](https://javitatay.github.io/Tatimer/)
+- 📡 **RFTDT** — Free TDT frequency lookup for wireless microphone systems. [View project](https://github.com/javitatay/RFTDT) · [Demo](https://javitatay.github.io/RFTDT/)
+- 🔷 **VectorSlice** — Converts Illustrator vectors into Resolume Arena Slices. [View project](https://github.com/javitatay/VectorSlice) · [Demo](https://javitatay.github.io/VectorSlice/)
+- 🎬 **QLab Live Scripts** — Controls PowerPoint, Chrome, Zoom, PDF and Spotify from QLab 5. [View project](https://github.com/javitatay/QLab-Scripts-Live-Events) · [Demo](https://javitatay.github.io/QLab-Scripts-Live-Events/)
+- 🎓 **AVV Lab** — Interactive educational platform for live visual production. [View project](https://github.com/javitatay/AVV) · [Demo](https://javitatay.github.io/AVV/)
+
+---
+
 ## 📄 Licence
 
 Tarimeo is distributed under the **[GNU General Public License v3.0](LICENSE)**.
@@ -320,6 +373,13 @@ Tarimeo is distributed under the **[GNU General Public License v3.0](LICENSE)**.
 You are free to use, study, modify and share this software. The one important condition is that if you distribute a modified version, it must remain open source under this same licence, so that improvements stay available to everyone.
 
 [![Licence: GPL v3](https://img.shields.io/badge/Licence-GPLv3-c89838?style=flat-square)](LICENSE)
+
+---
+
+## ✉️ Contact / Contacto
+
+**Javier Tatay Rubio**
+📧 j.tatayrubio@edu.gva.es · javitatay@gmail.com
 
 ---
 
