@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=yes,viewport-fit=cover">
 <title>Tarimeo · Tarimas de festival</title>
+<meta name="description" content="Diseña y organiza la distribución de tarimas y escenarios de tu festival, sin conexión.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tarimeo — Gestión de tarimas para festivales">
+<meta property="og:description" content="Diseña y organiza la distribución de tarimas y escenarios de tu festival. Funciona sin conexión.">
+<meta property="og:image" content="https://javitatay.github.io/Tarimeo/banner.png">
+<meta property="og:url" content="https://javitatay.github.io/Tarimeo/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tarimeo — Gestión de tarimas para festivales">
+<meta name="twitter:description" content="Diseña y organiza la distribución de tarimas y escenarios de tu festival.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#141210">
 <meta name="mobile-web-app-capable" content="yes">
@@ -2776,13 +2785,14 @@ function renderGrid(){
           ghost.style.pointerEvents='none';
           ghost.style.zIndex='9999';
           ghost.style.position='fixed';
+          ghost.style.left='0';
+          ghost.style.top='0';
           ghost.style.transition='none';
           ghost.style.border='2px dashed '+aColor;
           document.body.appendChild(ghost);
         }
         if(dragging&&ghost){
-          ghost.style.left=(ev.clientX-el.offsetWidth/2)+'px';
-          ghost.style.top=(ev.clientY-el.offsetHeight/2)+'px';
+          ghost.style.transform='translate('+(ev.clientX-el.offsetWidth/2)+'px,'+(ev.clientY-el.offsetHeight/2)+'px)';
           // ── Snap guide: highlight target cells ──
           const gridEl=document.querySelector('.stage-grid');
           if(gridEl){
@@ -2799,15 +2809,14 @@ function renderGrid(){
               }
               if(!snapGuide){
                 snapGuide=document.createElement('div');
-                snapGuide.style.cssText='position:absolute;pointer-events:none;z-index:14;border-radius:5px;transition:left .06s,top .06s,background .1s,border-color .1s';
+                snapGuide.style.cssText='position:absolute;left:0;top:0;pointer-events:none;z-index:14;border-radius:5px;transition:transform .06s,background .1s,border-color .1s';
                 gridEl.appendChild(snapGuide);
               }
               const gx=cell.col*(cw2+GAP);
               const gy=cell.row*(ch2+GAP);
               const gw=b.largo*(cw2+GAP)-GAP;
               const gh=b.ancho*(ch2+GAP)-GAP;
-              snapGuide.style.left=gx+'px';
-              snapGuide.style.top=gy+'px';
+              snapGuide.style.transform='translate('+gx+'px,'+gy+'px)';
               snapGuide.style.width=gw+'px';
               snapGuide.style.height=gh+'px';
               snapGuide.style.background=fits?'rgba(80,140,100,.25)':'rgba(160,75,55,.25)';
