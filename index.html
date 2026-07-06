@@ -1068,6 +1068,33 @@ body.light .sk-cl{color:var(--muted);font-weight:500}
 }
 
 /* ════ FIN PARCHE UI UX PRO MAX ════════════════════════ */
+
+/* ── Touch targets WCAG 2.5.5: mínimo 44×44px en dispositivos de toque ── */
+@media (pointer: coarse) {
+  .btn-icon,
+  .det-close,
+  .help-x,
+  .modal-close-btn,
+  .search-clear {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .zoom-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .sb-add {
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+  /* iOS hace zoom automático al enfocar un campo con font-size < 16px */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
 </style>
 </head>
 <body>
