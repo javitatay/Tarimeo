@@ -308,23 +308,26 @@ input,button,select,textarea{font-family:inherit}
 }
 .zoom-bar{
   display:none; /* solo visible en móvil, activado vía media query */
-  align-items:center;gap:6px;
   position:absolute;bottom:10px;right:10px;z-index:50;
 }
+.zoom-dock{
+  display:flex;align-items:center;gap:2px;
+  background:var(--surface2);border:1px solid var(--border2);border-radius:999px;
+  padding:4px;box-shadow:0 2px 8px rgba(0,0,0,.35);backdrop-filter:blur(4px);
+}
 .zoom-btn{
-  width:34px;height:34px;border-radius:8px;border:1px solid var(--border2);
-  background:var(--surface2);color:var(--text);font-size:18px;font-weight:300;
+  width:30px;height:30px;border-radius:50%;border:none;
+  background:transparent;color:var(--text);font-size:17px;font-weight:300;
   cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 8px rgba(0,0,0,.35);backdrop-filter:blur(4px);
   transition:background .12s;line-height:1;
 }
-.zoom-btn:active{background:var(--surface3)}
+.zoom-btn:hover{background:var(--surface3)}
+.zoom-btn:active{background:var(--border2)}
 .zoom-level{
   font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);
-  background:var(--surface2);border:1px solid var(--border2);
-  border-radius:6px;padding:4px 7px;min-width:42px;text-align:center;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
+  padding:0 6px;min-width:38px;text-align:center;
 }
+.zoom-divider{width:1px;height:18px;background:var(--border2);margin:0 2px;flex-shrink:0}
 /* bg cells */
 .bgc{border:1px solid var(--border2);border-radius:3px;cursor:crosshair;transition:background 120ms ease,border-color 120ms ease;position:relative;z-index:1;display:flex;align-items:center;justify-content:center}
 /* dotted center line to suggest 2:1 module */
@@ -514,12 +517,14 @@ input,button,select,textarea{font-family:inherit}
 .sc-tab.active .sc-name-in{color:var(--ok)}
 /* KANBAN */
 .kw{display:flex;gap:14px;align-items:flex-start}
-.kc{min-width:210px;max-width:250px;background:var(--surface);border:1px solid var(--border);border-radius:9px;overflow:hidden;flex-shrink:0}
-.kch{padding:9px 13px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.kc{min-width:210px;max-width:250px;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;flex-shrink:0;transition:border-color .15s;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.kc:hover{border-color:var(--border2)}
+.kch{padding:10px 13px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .kct{font-family:'JetBrains Mono',monospace;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text)}
 .kcm{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent)}
-.kcb{padding:9px;display:flex;flex-direction:column;gap:7px}
-.kcard{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:9px;border-left:3px solid transparent}
+.kcb{padding:10px;display:flex;flex-direction:column;gap:8px}
+.kcard{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;border-left:3px solid transparent;transition:border-color .15s,transform .12s}
+.kcard:hover{border-color:var(--border2);transform:translateY(-1px)}
 .kcard-name{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kbr{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
 .kbr:last-of-type{border-bottom:none}
@@ -527,7 +532,8 @@ input,button,select,textarea{font-family:inherit}
 .kbn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
 .kbi{color:var(--muted);white-space:nowrap}
 .ktot{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-top:7px;padding-top:5px;border-top:1px solid var(--border)}
-.kemp{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted2);text-align:center;padding:18px;font-style:italic}
+.kemp{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted2);text-align:center;padding:22px 12px;border:1px dashed var(--border2);border-radius:8px}
+.kc-unassigned{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);text-align:center;padding:6px 8px;border:1px dashed var(--border);border-radius:6px;margin-top:4px;background:var(--surface3)}
 
 /* ══════════════════════════════════════════════
    MODAL — diseño 2 columnas en desktop
@@ -1271,11 +1277,14 @@ body.light .sk-cl{color:var(--muted);font-weight:500}
         Arrastra → dibuja · Clic simple → selecciona celdas sueltas · Clic en bloque → edita
       </div>
       <!-- Zoom controls: visible only on mobile via CSS -->
-      <div id="modeZoomBar" style="display:none;align-items:center;gap:5px;margin-left:auto">
-        <button class="zoom-btn" onclick="zoomStep(-1)" title="Alejar">−</button>
-        <span class="zoom-level" id="zoomLabel">100%</span>
-        <button class="zoom-btn" onclick="zoomStep(+1)" title="Acercar">+</button>
-        <button class="zoom-btn" onclick="zoomReset()" title="Reset zoom" style="font-size:13px">⊙</button>
+      <div id="modeZoomBar" style="display:none;margin-left:auto">
+        <div class="zoom-dock">
+          <button class="zoom-btn" onclick="zoomStep(-1)" title="Alejar">−</button>
+          <span class="zoom-level" id="zoomLabel">100%</span>
+          <button class="zoom-btn" onclick="zoomStep(+1)" title="Acercar">+</button>
+          <span class="zoom-divider"></span>
+          <button class="zoom-btn" onclick="zoomReset()" title="Reset zoom" style="font-size:13px">⊙</button>
+        </div>
       </div>
     </div>
 
@@ -2686,10 +2695,10 @@ function alturaColor(cm){
   // Opción C — escala dorado accent de Tarimeo
   // border: color de la franja visual  |  text: color legible en fondo oscuro
   if(cm<=20) return {bg:'rgba(253,230,138,', border:'#fde68a', text:'#c89838'};
-  if(cm<=40) return {bg:'rgba(251,191,36,',  border:'#fbbf24', text:'#fbbf24'};
-  if(cm<=60) return {bg:'rgba(217,119,6,',   border:'#d97706', text:'#d97706'};
-  if(cm<=80) return {bg:'rgba(194,65,12,',   border:'#c2410c', text:'#e07040'};
-  return       {bg:'rgba(153,27,27,',        border:'#991b1b', text:'#e05555'};
+  if(cm<=40) return {bg:'rgba(253,186,74,',  border:'#fdba4a', text:'#fdba4a'};
+  if(cm<=60) return {bg:'rgba(242,121,63,',  border:'#f2793f', text:'#f2793f'};
+  if(cm<=80) return {bg:'rgba(224,82,79,',   border:'#e0524f', text:'#f08a86'};
+  return       {bg:'rgba(163,41,79,',        border:'#a3294f', text:'#e0709a'};
 }
 // ═════════════════════════════════════════════════════
 // GRID VIEW
@@ -2954,7 +2963,7 @@ function renderGrid(){
 
   // Zoom bar overlay (mobile)
   const zb=document.createElement('div');zb.className='zoom-bar';
-  zb.innerHTML=`<button class="zoom-btn" onclick="zoomStep(-1)" title="Alejar">−</button><span class="zoom-level" id="zoomBadge">100%</span><button class="zoom-btn" onclick="zoomStep(+1)" title="Acercar">+</button><button class="zoom-btn" onclick="zoomReset()" title="Reset" style="font-size:13px">⊙</button>`;
+  zb.innerHTML=`<div class="zoom-dock"><button class="zoom-btn" onclick="zoomStep(-1)" title="Alejar">−</button><span class="zoom-level" id="zoomBadge">100%</span><button class="zoom-btn" onclick="zoomStep(+1)" title="Acercar">+</button><span class="zoom-divider"></span><button class="zoom-btn" onclick="zoomReset()" title="Reset" style="font-size:13px">⊙</button></div>`;
   wrap.appendChild(zb);
 
   // Attach pan/zoom touch gestures to wrap
@@ -2975,7 +2984,7 @@ function renderGrid(){
   // Leyenda de alturas
   const altLeg=document.createElement('div');
   altLeg.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:8px;border-top:1px solid var(--border2)';
-  [[20,'#fde68a'],[40,'#fbbf24'],[60,'#d97706'],[80,'#c2410c'],[100,'#991b1b']].forEach(([h,c])=>{
+  [[20,'#fde68a'],[40,'#fdba4a'],[60,'#f2793f'],[80,'#e0524f'],[100,'#a3294f']].forEach(([h,c])=>{
     altLeg.innerHTML+=`<div style="display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)"><div style="width:18px;height:5px;border-radius:3px;background:${c}"></div>≤${h}cm</div>`;
   });
   wrap.appendChild(altLeg);
@@ -3955,7 +3964,7 @@ function renderKanban(){
       body.appendChild(card);
     });
     const sin=state.bloques.filter(b=>state.placements[plKey(b.id,day.id)]===undefined).length;
-    if(sin>0 && state.days.length<=1)body.innerHTML+=`<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted2);text-align:center;padding:4px;border-top:1px solid var(--border);margin-top:4px">${t('sinColocar',sin)}</div>`;
+    if(sin>0 && state.days.length<=1)body.innerHTML+=`<div class="kc-unassigned">${t('sinColocar',sin)}</div>`;
     col.appendChild(body);wrap.appendChild(col);
   });
   area.appendChild(wrap);
@@ -4713,7 +4722,7 @@ function printView(){
       <span>${Math.round(Math.min(usedMods/stockSc,1)*100)}%</span>
     </div>
     <div class="legend">
-      ${[[20,'#fde68a'],[40,'#fbbf24'],[60,'#d97706'],[80,'#c2410c'],[100,'#991b1b']].map(([h,c])=>`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>≤${h}cm</div>`).join('')}
+      ${[[20,'#fde68a'],[40,'#fdba4a'],[60,'#f2793f'],[80,'#e0524f'],[100,'#a3294f']].map(([h,c])=>`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div>≤${h}cm</div>`).join('')}
       ${state.artistas.filter(a=>state.bloques.some(b=>{const p=state.placements[plKey(b.id,curDayId,sc.id,situId)];return p&&p.artistaId===a.id;})).map(a=>`<div class="legend-item"><div class="legend-dot" style="background:${a.color};border-radius:50%"></div>${esc(a.name||'?')}</div>`).join('')}
     </div>
     <div class="grid-wrap"><div class="grid">${gridHTML}</div></div>
