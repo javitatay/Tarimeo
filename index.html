@@ -14,7 +14,7 @@
 <meta name="twitter:title" content="Tarimeo — Gestión de tarimas para festivales">
 <meta name="twitter:description" content="Diseña y organiza la distribución de tarimas y escenarios de tu festival.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#1b1917">
+<meta name="theme-color" content="#f7f6f3">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -2214,7 +2214,7 @@ function toggleLang() {
   setLang(lang === 'es' ? 'en' : 'es');
 }
 
-let theme = localStorage.getItem('tarimas-theme') || 'dark';
+let theme = localStorage.getItem('tarimas-theme') || 'light';
 function applyTheme(){
   document.body.classList.toggle('light', theme==='light');
   // Icono SVG según el tema destino (luna en claro, sol en oscuro)
